@@ -12,6 +12,7 @@ NA_SYMS = ['QQQ', 'AAPL', 'NVDA', 'AMZN', 'GOOGL', 'TSLA']
 ORB_SYMS = ['QQQ', 'MSFT', 'NVDA', 'AMZN', 'TSLA']
 SLEEVES = len(NA_SYMS) + len(ORB_SYMS)
 LOG = os.environ.get('VANTEX_LOG', 'logs/live_log.jsonl')
+DAILY_LOSS_LIMIT = 0.01   # stop trading for the day if the account is down 1% (about $1,000)
 
 def log(**k):
     k['ts'] = datetime.now(ET).isoformat(timespec='seconds'); print(json.dumps(k), flush=True); remember(k)
@@ -124,7 +125,7 @@ def orb_step(now, orders, eq):
 ALL_SYMS = list(dict.fromkeys(NA_SYMS + ORB_SYMS))
 EVENTS = []
 def remember(k):
-    if k.get('event') in ('order', 'orb_signal', 'flatten', 'error') or (k.get('event') == 'na_check' and k.get('have') != k.get('want')):
+    if k.get('event') in ('order', 'orb_signal', 'flatten', 'error', 'loss_limit') or (k.get('event') == 'na_check' and k.get('have') != k.get('want')):
         EVENTS.append(k); del EVENTS[:-60]
 
 def snapshot(market_open=True):
@@ -197,7 +198,9 @@ def loop(max_minutes=None):
                 log(event='market_closed', next_open=c['next_open']); return
             time.sleep(min(max(wait, 5), 300)); continue
         now = datetime.now(ET); m = now.hour * 60 + now.minute - 570
-        eq = equity()
+        a = req('GET', f'{TRADE}/v2/account').json(); eq = float(a['equity']); start_eq = float(a['last_equity'])
+        if eq - start_eq <= -DAILY_LOSS_LIMIT * start_eq and 'limit' not in done:
+            log(event='loss_limit', pl=round(eq - start_eq, 2)); flatten(); done.update({'limit', 'orb', 'flat'} | {f'na{k}' for k in range(30, 390, 30)})
         if 5 <= m < 15 and 'orb' not in done:
             orb_step(now, today_orders(), eq); done.add('orb')
         for k in range(30, 390, 30):
