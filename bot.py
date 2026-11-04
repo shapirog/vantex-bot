@@ -1,5 +1,5 @@
 """Vantex paper bot: noise-area momentum + 5-min opening range breakout, shares, Alpaca PAPER only."""
-import os, sys, json, math, time, requests, numpy as np, pandas as pd
+import os, sys, json, math, time, subprocess, requests, numpy as np, pandas as pd
 from datetime import datetime, timedelta
 from zoneinfo import ZoneInfo
 ET = ZoneInfo('America/New_York')
@@ -14,7 +14,7 @@ SLEEVES = len(NA_SYMS) + len(ORB_SYMS)
 LOG = os.environ.get('VANTEX_LOG', 'logs/live_log.jsonl')
 
 def log(**k):
-    k['ts'] = datetime.now(ET).isoformat(timespec='seconds'); print(json.dumps(k), flush=True)
+    k['ts'] = datetime.now(ET).isoformat(timespec='seconds'); print(json.dumps(k), flush=True); remember(k)
     os.makedirs(os.path.dirname(LOG) or '.', exist_ok=True)
     open(LOG, 'a').write(json.dumps(k) + '\n')
 
@@ -27,7 +27,6 @@ def req(method, url, **kw):
 
 def clock(): return req('GET', f'{TRADE}/v2/clock').json()
 def equity(): return float(req('GET', f'{TRADE}/v2/account').json()['equity'])
-def positions(): return {p['symbol']: float(p['qty']) for p in req('GET', f'{TRADE}/v2/positions').json()}
 
 def bars(sym, start, end, feed):
     out, tok = [], None
@@ -76,10 +75,17 @@ def na_levels(sym, now):
     tdy = hist[hist.index.date == today]
     return sig, prev_close, (tdy.o.iloc[0] if len(tdy) else None)
 
+_LV = {}
+def levels(sym, now):
+    hit = _LV.get(sym)
+    if hit and hit[0] == now.date() and hit[3] is not None: return hit[1:]
+    sig, pc, op = na_levels(sym, now); _LV[sym] = (now.date(), sig, pc, op)
+    return sig, pc, op
+
 def na_step(now, slot_k, orders, eq):
     for sym in NA_SYMS:
         try:
-            sig, pc, op = na_levels(sym, now)
+            sig, pc, op = levels(sym, now)
             live = session_minutes(bars(sym, now.replace(hour=9, minute=30, second=0, microsecond=0), now, 'iex'))
             if op is None: op = live.o.iloc[0]
             live = live[live.k < slot_k]; p = live.c.iloc[-1]
@@ -115,12 +121,71 @@ def orb_step(now, orders, eq):
         except Exception as e:
             log(event='error', where='orb', sym=sym, err=str(e)[:300])
 
+ALL_SYMS = list(dict.fromkeys(NA_SYMS + ORB_SYMS))
+EVENTS = []
+def remember(k):
+    if k.get('event') in ('order', 'orb_signal', 'flatten', 'error') or (k.get('event') == 'na_check' and k.get('have') != k.get('want')):
+        EVENTS.append(k); del EVENTS[:-60]
+
+def snapshot(market_open=True):
+    now = datetime.now(ET)
+    acct = req('GET', f'{TRADE}/v2/account').json()
+    pos = {p['symbol']: p for p in req('GET', f'{TRADE}/v2/positions').json()}
+    orders = today_orders(); flat = []
+    for o in orders: flat += [o] + (o.get('legs') or [])
+    out = {}
+    for sym in ALL_SYMS:
+        try:
+            b = session_minutes(bars(sym, now.replace(hour=9, minute=30, second=0, microsecond=0), now, 'iex'))
+            if not len(b): continue
+            price = float(b.c.iloc[-1]); tp = (b.h + b.l + b.c) / 3; vw = float((tp * b.v).sum() / max(b.v.sum(), 1))
+            d = dict(price=round(price, 2), vwap=round(vw, 2), series=[[int(k), round(float(c), 2)] for k, c in zip(b.k, b.c)][-150:],
+                     strategies=[x for x, L in (('NA', NA_SYMS), ('ORB', ORB_SYMS)) if sym in L])
+            if sym in NA_SYMS:
+                sig, pc, op = levels(sym, now); op = op or float(b.o.iloc[0]); m = min(int(b.k.iloc[-1]), 389)
+                d.update(upper=round(max(op, pc) * (1 + sig[m]), 2), lower=round(min(op, pc) * (1 - sig[m]), 2),
+                         na_pos=int(np.sign(sleeve_qty(orders, f'NA-{sym}-'))))
+            ob = [o for o in orders if (o.get('client_order_id') or '').startswith(f'ORB-{sym}-')]
+            if ob:
+                o = ob[0]; legs = o.get('legs') or []
+                stop = next((l.get('stop_price') for l in legs if l.get('stop_price')), None)
+                tgt = next((l.get('limit_price') for l in legs if l.get('limit_price')), None)
+                d['orb'] = dict(dir=1 if o['side'] == 'buy' else -1, stop=stop, target=tgt,
+                                open=any(l['status'] not in ('filled', 'canceled', 'expired') for l in legs))
+            cash = sum((1 if o['side'] == 'sell' else -1) * float(o.get('filled_qty') or 0) * float(o.get('filled_avg_price') or 0) for o in flat if o['symbol'] == sym)
+            q = float(pos[sym]['qty']) if sym in pos else 0.0
+            d.update(qty=q, pl_day=round(cash + q * price, 2), trades=sum(1 for o in flat if o['symbol'] == sym and float(o.get('filled_qty') or 0) > 0))
+            out[sym] = d
+        except Exception as e:
+            out[sym] = dict(error=str(e)[:200])
+    fills = sorted([dict(id=o['id'], sym=o['symbol'], side=o['side'], qty=float(o['filled_qty']), price=float(o.get('filled_avg_price') or 0), ts=o['filled_at'],
+                         strat=('ORB' if (o.get('client_order_id') or '').startswith('ORB') else 'NA' if (o.get('client_order_id') or '').startswith('NA') else 'exit'))
+                    for o in flat if float(o.get('filled_qty') or 0) > 0 and o.get('filled_at')], key=lambda x: x['ts'])
+    state = dict(updated=now.isoformat(timespec='seconds'), market_open=market_open, equity=float(acct['equity']), fills=fills[-80:],
+                 day_pl=round(float(acct['equity']) - float(acct['last_equity']), 2), symbols=out, events=EVENTS[-40:])
+    push_state(state)
+
+def push_state(state):
+    d = '/tmp/vantex-live'; os.makedirs(d, exist_ok=True)
+    json.dump(state, open(f'{d}/state.json', 'w'), separators=(',', ':'))
+    tok, repo = os.environ.get('GH_TOKEN'), os.environ.get('GITHUB_REPOSITORY')
+    if not (tok and repo): return
+    g = ['git', '-C', d, '-c', 'user.name=vantex-bot', '-c', 'user.email=vantex-bot@users.noreply.github.com']
+    try:
+        subprocess.run(['rm', '-rf', f'{d}/.git'], check=True)
+        subprocess.run(['git', 'init', '-q', '-b', 'live', d], check=True)
+        subprocess.run(g + ['add', 'state.json'], check=True)
+        subprocess.run(g + ['commit', '-q', '-m', 'live state'], check=True)
+        subprocess.run(g + ['push', '-q', '-f', f'https://x-access-token:{tok}@github.com/{repo}.git', 'live'], check=True, timeout=60, capture_output=True)
+    except Exception as e:
+        print('push failed', str(e)[:200], flush=True)
+
 def flatten():
     r = req('DELETE', f'{TRADE}/v2/positions', params=dict(cancel_orders='true'))
     log(event='flatten', status=r.status_code)
 
 def loop(max_minutes=None):
-    done = set(); t0 = time.time()
+    done = set(); t0 = time.time(); last_snap = 0
     while True:
         if max_minutes and time.time() - t0 > max_minutes * 60:
             log(event='handoff', why='runtime limit'); sys.exit(3)
@@ -139,8 +204,16 @@ def loop(max_minutes=None):
             if k <= m < k + 10 and f'na{k}' not in done:
                 na_step(now, k, today_orders(), eq); done.add(f'na{k}')
         if m >= 385 and 'flat' not in done:
-            flatten(); done.add('flat'); return
-        time.sleep(20)
+            flatten(); done.add('flat'); time.sleep(20)
+            try: snapshot(market_open=False)
+            except Exception as e: log(event='error', where='snapshot', err=str(e)[:300])
+            return
+        if time.time() - last_snap > 55:
+            try: snapshot()
+            except Exception as e: log(event='error', where='snapshot', err=str(e)[:300])
+            last_snap = time.time()
+        time.sleep(10)
 
 if __name__ == '__main__':
+    if len(sys.argv) > 1 and sys.argv[1] == 'snapshot': snapshot(); sys.exit()
     loop(float(sys.argv[2]) if len(sys.argv) > 2 else None)
