@@ -127,3 +127,4 @@
 {"event": "order", "sym": "GOOGL", "side": "sell", "qty": 32, "cid": "NA-GOOGL-20261105-360-1793910605", "status": 200, "resp": "pending_new", "ts": "2026-11-05T15:30:05-05:00"}
 {"event": "na_check", "sym": "TSLA", "slot": 360, "price": 342.78, "upper": 391.95, "lower": 367.63, "vwap": 347.24, "have": -1, "want": -1, "ts": "2026-11-05T15:30:05-05:00"}
 {"event": "flatten", "status": 207, "ts": "2026-11-05T15:55:08-05:00"}
+{"event": "flatten", "status": 207, "ts": "2026-11-05T15:56:49-05:00"}
