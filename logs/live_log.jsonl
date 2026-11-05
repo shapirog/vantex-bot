@@ -117,3 +117,13 @@
 {"event": "order", "sym": "GOOGL", "side": "buy", "qty": 32, "cid": "NA-GOOGL-20261105-330-1793908804", "status": 200, "resp": "pending_new", "ts": "2026-11-05T15:00:04-05:00"}
 {"event": "na_check", "sym": "TSLA", "slot": 330, "price": 344.53, "upper": 391.77, "lower": 367.81, "vwap": 347.68, "have": -1, "want": -1, "ts": "2026-11-05T15:00:04-05:00"}
 {"event": "handoff", "why": "runtime limit", "ts": "2026-11-05T15:16:45-05:00"}
+{"event": "na_check", "sym": "QQQ", "slot": 360, "price": 651.4, "upper": 697.13, "lower": 677.87, "vwap": 657.94, "have": -1, "want": -1, "ts": "2026-11-05T15:30:02-05:00"}
+{"event": "na_check", "sym": "AAPL", "slot": 360, "price": 345.16, "upper": 357.42, "lower": 346.11, "vwap": 347.13, "have": 0, "want": -1, "ts": "2026-11-05T15:30:03-05:00"}
+{"event": "order", "sym": "AAPL", "side": "sell", "qty": 26, "cid": "NA-AAPL-20261105-360-1793910603", "status": 200, "resp": "pending_new", "ts": "2026-11-05T15:30:03-05:00"}
+{"event": "na_check", "sym": "NVDA", "slot": 360, "price": 183.24, "upper": 202.38, "lower": 194.03, "vwap": 186.25, "have": -1, "want": -1, "ts": "2026-11-05T15:30:04-05:00"}
+{"event": "na_check", "sym": "AMZN", "slot": 360, "price": 259.27, "upper": 275.31, "lower": 262.33, "vwap": 260.54, "have": 0, "want": -1, "ts": "2026-11-05T15:30:04-05:00"}
+{"event": "order", "sym": "AMZN", "side": "sell", "qty": 35, "cid": "NA-AMZN-20261105-360-1793910604", "status": 200, "resp": "pending_new", "ts": "2026-11-05T15:30:05-05:00"}
+{"event": "na_check", "sym": "GOOGL", "slot": 360, "price": 283.73, "upper": 297.33, "lower": 285.72, "vwap": 284.88, "have": 0, "want": -1, "ts": "2026-11-05T15:30:05-05:00"}
+{"event": "order", "sym": "GOOGL", "side": "sell", "qty": 32, "cid": "NA-GOOGL-20261105-360-1793910605", "status": 200, "resp": "pending_new", "ts": "2026-11-05T15:30:05-05:00"}
+{"event": "na_check", "sym": "TSLA", "slot": 360, "price": 342.78, "upper": 391.95, "lower": 367.63, "vwap": 347.24, "have": -1, "want": -1, "ts": "2026-11-05T15:30:05-05:00"}
+{"event": "flatten", "status": 207, "ts": "2026-11-05T15:55:08-05:00"}
