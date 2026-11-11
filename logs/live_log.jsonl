@@ -241,3 +241,13 @@
 {"event": "na_check", "sym": "GOOGL", "slot": 360, "price": 287.48, "upper": 292.41, "lower": 284.7, "vwap": 288.43, "have": 0, "want": 0, "ts": "2026-11-10T15:30:11-05:00"}
 {"event": "na_check", "sym": "TSLA", "slot": 360, "price": 377.88, "upper": 386.82, "lower": 361.84, "vwap": 376.36, "have": 0, "want": 0, "ts": "2026-11-10T15:30:12-05:00"}
 {"event": "flatten", "status": 207, "ts": "2026-11-10T15:55:07-05:00"}
+{"event": "na_check", "sym": "QQQ", "slot": 360, "price": 691.17, "upper": 694.93, "lower": 667.3, "vwap": 691.25, "have": 0, "want": 0, "ts": "2026-11-11T15:30:09-05:00"}
+{"event": "na_check", "sym": "AAPL", "slot": 360, "price": 354.97, "upper": 353.82, "lower": 344.31, "vwap": 353.71, "have": 0, "want": 1, "ts": "2026-11-11T15:30:09-05:00"}
+{"event": "order", "sym": "AAPL", "side": "buy", "qty": 25, "cid": "NA-AAPL-20261111-360-1794429009", "status": 200, "resp": "pending_new", "ts": "2026-11-11T15:30:09-05:00"}
+{"event": "na_check", "sym": "NVDA", "slot": 360, "price": 174.8, "upper": 176.2, "lower": 165.43, "vwap": 175.03, "have": 0, "want": 0, "ts": "2026-11-11T15:30:10-05:00"}
+{"event": "na_check", "sym": "AMZN", "slot": 360, "price": 266.21, "upper": 277.46, "lower": 266.79, "vwap": 267.8, "have": 0, "want": -1, "ts": "2026-11-11T15:30:11-05:00"}
+{"event": "order", "sym": "AMZN", "side": "sell", "qty": 34, "cid": "NA-AMZN-20261111-360-1794429011", "status": 200, "resp": "pending_new", "ts": "2026-11-11T15:30:11-05:00"}
+{"event": "na_check", "sym": "GOOGL", "slot": 360, "price": 293.98, "upper": 293.49, "lower": 284.03, "vwap": 292.46, "have": 0, "want": 1, "ts": "2026-11-11T15:30:11-05:00"}
+{"event": "order", "sym": "GOOGL", "side": "buy", "qty": 31, "cid": "NA-GOOGL-20261111-360-1794429011", "status": 200, "resp": "pending_new", "ts": "2026-11-11T15:30:11-05:00"}
+{"event": "na_check", "sym": "TSLA", "slot": 360, "price": 391.82, "upper": 395.93, "lower": 370.79, "vwap": 392.16, "have": 0, "want": 0, "ts": "2026-11-11T15:30:12-05:00"}
+{"event": "flatten", "status": 207, "ts": "2026-11-11T15:55:05-05:00"}
