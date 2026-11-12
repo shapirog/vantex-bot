@@ -1,8 +1,20 @@
 name: Vantex paper trading
 on:
   schedule:
-    - cron: '15 13 * * 1-5'
-    - cron: '0 14 * * 1-5'
+    # Several staggered starts (UTC), off the busy top of the hour, so a skipped or late
+    # GitHub schedule can't keep the bot offline. Covers the 9:30 AM ET open in both EST and EDT.
+    # Extra runs simply wait in the queue; the bot never trades twice on the same signal.
+    - cron: '7 12 * * 1-5'
+    - cron: '41 12 * * 1-5'
+    - cron: '13 13 * * 1-5'
+    - cron: '47 13 * * 1-5'
+    - cron: '9 14 * * 1-5'
+    - cron: '23 14 * * 1-5'
+    - cron: '52 14 * * 1-5'
+    - cron: '37 15 * * 1-5'
+    - cron: '37 16 * * 1-5'
+    - cron: '37 17 * * 1-5'
+    - cron: '37 18 * * 1-5'
   workflow_dispatch:
 permissions:
   contents: write
@@ -25,6 +37,7 @@ jobs:
         env:
           APCA_API_KEY_ID: ${{ secrets.APCA_API_KEY_ID }}
           APCA_API_SECRET_KEY: ${{ secrets.APCA_API_SECRET_KEY }}
+          NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
           GH_TOKEN: ${{ github.token }}
         run: |
           set +e
