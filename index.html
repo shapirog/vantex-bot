@@ -33,11 +33,13 @@ button{font:600 11px var(--mono);color:var(--ink);background:rgba(30,24,80,.8);b
 .log{list-style:none;margin:0;padding:0;font-size:11.5px;display:grid;gap:3px}.log li{display:grid;grid-template-columns:62px 1fr;gap:6px}.tm{color:var(--dim)}
 .board{transition:opacity .2s}.board h3{margin:0}.board .bt{all:unset;cursor:pointer;display:flex;gap:8px;align-items:center;font:700 10px var(--display);letter-spacing:.16em;color:var(--dim)}
 .board .bt b{font:700 12px var(--mono);letter-spacing:0}.board ol{margin-top:6px}.board.min{min-width:0;padding:6px 10px}.board.min ol{display:none}
-.bottom{bottom:calc(62px + env(safe-area-inset-bottom))!important;padding-bottom:6px!important}
+.bottom{bottom:var(--tabs,calc(66px + env(safe-area-inset-bottom)))!important;padding-bottom:8px!important;padding-top:22px!important}
+.hint{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tape{background:rgba(6,5,26,.85);border:1px solid var(--line);border-radius:8px;padding:6px 9px}
 .tabs{position:fixed;z-index:8;left:0;right:0;bottom:0;background:rgba(6,5,26,.96);border-top:1px solid var(--line);padding:7px max(8px,env(safe-area-inset-left)) calc(env(safe-area-inset-bottom) + 7px) max(8px,env(safe-area-inset-right));display:grid;grid-template-columns:repeat(6,1fr);gap:5px}
 .tabs button{display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 1px;font:600 9.5px var(--mono);color:var(--dim);border-radius:10px;min-width:0}
 .tabs button svg{width:17px;height:17px}.tabs button[aria-current=page]{color:var(--ink);border-color:var(--ema);box-shadow:0 0 12px rgba(77,216,255,.35)}
-.pane{position:fixed;z-index:7;left:0;right:0;top:calc(env(safe-area-inset-top) + 76px);bottom:calc(62px + env(safe-area-inset-bottom));overflow-y:auto;background:rgba(6,5,26,.95);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);padding:6px max(14px,env(safe-area-inset-right)) 18px max(14px,env(safe-area-inset-left))}
+.pane{position:fixed;z-index:7;left:0;right:0;top:calc(env(safe-area-inset-top) + 76px);bottom:var(--tabs,calc(66px + env(safe-area-inset-bottom)));overflow-y:auto;background:rgba(6,5,26,.95);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);padding:6px max(14px,env(safe-area-inset-right)) 18px max(14px,env(safe-area-inset-left))}
 .pane[hidden]{display:none}.pane h2{margin:4px 0 6px;font:700 18px var(--display);letter-spacing:.12em}.pane .note{font-size:11.5px;color:var(--dim);line-height:1.5;margin:0 0 10px}
 .card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px;margin-bottom:10px}
 .r{display:flex;justify-content:space-between;gap:8px;padding:5px 0;border-bottom:1px solid rgba(120,110,255,.14);font-variant-numeric:tabular-nums;align-items:center}.r:last-child{border-bottom:0}
@@ -78,7 +80,7 @@ button{font:600 11px var(--mono);color:var(--ink);background:rgba(30,24,80,.8);b
   <div class="clock"><span class="t" id="clock">–</span><span class="pnl" id="total">$0</span></div>
 </div>
 <div class="board" id="boardBox"><h3><button class="bt" id="boardBtn" aria-expanded="true">TODAY <b id="boardSum"></b> <span id="boardArrow">▴</span></button></h3><ol id="board"></ol></div>
-<div class="hud bottom"><div class="hint">Tap a tower to look inside · drag to orbit · updates every minute</div><div class="tape" id="tape"></div></div>
+<div class="hud bottom"><div class="hint">Tap a tower to look inside · drag to orbit</div><div class="tape" id="tape"></div></div>
 <div class="wait" id="wait" hidden></div>
 <nav class="tabs" id="tabs" aria-label="Sections">
   <button data-v="city"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4" fill="currentColor"/></svg>City</button>
@@ -257,6 +259,7 @@ const store={get(k,d){try{const v=localStorage.getItem(k);return v==null?d:JSON.
 let boardOpen=store.get('vx_board2',true);
 function setBoard(o){boardOpen=o;$('boardBox').classList.toggle('min',!o);$('boardBtn').setAttribute('aria-expanded',o);$('boardArrow').textContent=o?'▴':'▾';store.set('vx_board2',o)}
 setBoard(true);
+new ResizeObserver(()=>document.documentElement.style.setProperty('--tabs',$('tabs').getBoundingClientRect().height+'px')).observe($('tabs'));
 function placeStrip(){const h=document.querySelector('.hud.top');$('boardBox').style.top=(Math.max(...[...h.children].map(c=>c.getBoundingClientRect().bottom))+10)+'px'}
 new ResizeObserver(placeStrip).observe(document.querySelector('.hud.top'));
 function env0(){const t=document.createElement('div');t.style.cssText='position:fixed;top:env(safe-area-inset-top)';document.body.appendChild(t);const v=t.getBoundingClientRect().top;t.remove();return v}
