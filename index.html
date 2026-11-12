@@ -9,13 +9,15 @@
 *{box-sizing:border-box}html,body{height:100%;margin:0;overflow:hidden}
 body{background:var(--night);color:var(--ink);font:13px var(--mono);-webkit-tap-highlight-color:transparent}
 #bg{position:fixed;inset:-40px;background-size:cover;background-position:center;filter:blur(28px) brightness(.45) saturate(1.2);z-index:0}
-#stage{position:fixed;z-index:1;overflow:hidden;border-radius:14px;container-type:inline-size;box-shadow:0 0 0 1px rgba(120,110,255,.25),0 10px 40px rgba(0,0,0,.5);touch-action:manipulation}
-#world{position:absolute;inset:0;transform-origin:0 0;transition:transform .75s cubic-bezier(.65,0,.3,1)}
+#stage{position:fixed;z-index:1;overflow:hidden;border-radius:14px;box-shadow:0 0 0 1px rgba(120,110,255,.25),0 10px 40px rgba(0,0,0,.5);touch-action:manipulation}
+#stage.full{border-radius:0;box-shadow:none}
+#stage.full::after{content:'';position:absolute;left:0;right:0;bottom:0;height:18%;background:linear-gradient(transparent,rgba(6,5,26,.85));pointer-events:none}
+#world{position:absolute;left:0;top:0;container-type:inline-size;transform-origin:0 0;transition:transform .75s cubic-bezier(.65,0,.3,1)}
 #world img{position:absolute;inset:0;width:100%;height:100%;display:block;user-select:none;-webkit-user-drag:none}
 #fx{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
 .tw{animation:tw var(--d) ease-in-out infinite var(--o)}@keyframes tw{0%,100%{opacity:.05}50%{opacity:1}}
 .sp{animation:sp var(--d) ease-in-out infinite var(--o)}@keyframes sp{0%,100%{opacity:0;transform:scaleX(.4)}50%{opacity:.9;transform:scaleX(1)}}
-.lbl{position:absolute;box-sizing:border-box;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.08em;text-align:center;cursor:pointer;
+.lbl{position:absolute;box-sizing:border-box;translate:var(--nx,0) 0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.08em;text-align:center;cursor:pointer;
   background:#09091a;border:.32cqw solid var(--b,#8b7bff);border-radius:.9cqw;font-size:calc(var(--w) * .145cqw);line-height:1.1;color:#e9e7ff;
   box-shadow:0 0 1.4cqw color-mix(in srgb,var(--b,#8b7bff) 55%,transparent);font-family:"Chakra Petch",system-ui,sans-serif;font-weight:700;transition:box-shadow .3s,transform .3s}
 .lbl span{display:block;white-space:nowrap}
@@ -30,6 +32,7 @@ body{background:var(--night);color:var(--ink);font:13px var(--mono);-webkit-tap-
 @keyframes vg{50%{opacity:.35;transform:scale(1.25)}}
 .vring{position:absolute;border:.35cqw solid rgba(255,201,77,.75);border-radius:50%;pointer-events:none;animation:vr 3s ease-out infinite}
 @keyframes vr{0%{transform:scale(.85);opacity:.9}100%{transform:scale(1.25);opacity:0}}
+.hud.bottom .hint{text-shadow:0 1px 3px #000,0 0 8px #000}
 @media (prefers-reduced-motion:reduce){.tw,.sp,.vglow,.vring,.lbl.long,.lbl.short{animation:none}#world{transition:none}}
 .hud{position:fixed;left:0;right:0;z-index:5;pointer-events:none;padding-left:max(12px,env(safe-area-inset-left));padding-right:max(12px,env(safe-area-inset-right))}.hud *{pointer-events:auto}
 .top{top:0;padding-top:calc(env(safe-area-inset-top) + 10px);padding-bottom:18px;background:linear-gradient(rgba(6,5,26,.97) 70%,rgba(6,5,26,0))!important;display:flex;flex-wrap:wrap;gap:6px 12px;align-items:center;justify-content:space-between;background:linear-gradient(var(--night),transparent)}
@@ -253,15 +256,23 @@ function burst(sym,side,qty){const T=towers[sym];if(!T)return;const el=T.label.e
   const[x,y,w]=SPOTS[sym].l,p=document.createElement('div');p.className='pop';p.style.color=fc;p.style.left=pct(x+w/2,IW);p.style.top=pct(y-8,IH);p.textContent=`${side.toUpperCase()} ${qty}`;$('labels').appendChild(p);setTimeout(()=>p.remove(),2500)}
 
 /* layout: fit the picture between the TODAY strip and the trade ticker */
-function layout(){const st=$('stage'),top=$('boardBox').getBoundingClientRect().bottom+8,bot=document.querySelector('.hud.bottom').getBoundingClientRect().top-4;
-  const availH=Math.max(200,bot-top),availW=innerWidth-16;let w=availW,h=w*IH/IW;if(h>availH){h=availH;w=h*IW/IH}
-  Object.assign(st.style,{width:w+'px',height:h+'px',left:((innerWidth-w)/2)+'px',top:(top+(availH-h)/2)+'px'})}
+let VW={ox:0,oy:0,iw:1,ih:1};
+function layout(){const st=$('stage'),top=$('boardBox').getBoundingClientRect().bottom+6,tabsTop=$('tabs').getBoundingClientRect().top;
+  const W=innerWidth,H=Math.max(240,tabsTop-top);
+  /* phones: fill the whole area (cover). wide screens: fit the height and center */
+  let k=Math.max(W/IW,H/IH);if(W>760)k=H/IH;
+  const iw=IW*k,ih=IH*k,ox=(W-iw)/2,oy=0,full=iw>=W-1;
+  st.classList.toggle('full',full);Object.assign(st.style,{width:W+'px',height:H+'px',left:'0px',top:top+'px',borderRadius:full?'0':'14px'});
+  const w=$('world');Object.assign(w.style,{width:iw+'px',height:ih+'px',left:ox+'px',top:oy+'px'});VW={ox,oy,iw,ih};
+  /* keep every label fully on screen when the sides are trimmed */
+  document.querySelectorAll('#labels .lbl').forEach(el=>{const[x,,lw]=SPOTS[el.dataset.go].l,L=ox+x/IW*iw,R=L+lw/IW*iw;let nx=0;
+    if(L<4)nx=4-L;else if(R>W-4)nx=(W-4)-R;el.style.setProperty('--nx',nx.toFixed(1)+'px')})}
 $('bg').style.backgroundImage=`url(${$('cityImg').src})`;
 
 /* zoom into a building, then open its inside view */
 let zoomed=false;
-function zoomTo(id,done){const[cx,cy]=SPOTS[id].c,st=$('stage'),W=st.clientWidth,H=st.clientHeight,k=2.6,x=cx/IW*W,y=cy/IH*H;
-  const tx=Math.min(0,Math.max(W-W*k,W/2-x*k)),ty=Math.min(0,Math.max(H-H*k,H/2-y*k));zoomed=true;
+function zoomTo(id,done){const[cx,cy]=SPOTS[id].c,st=$('stage'),W=st.clientWidth,H=st.clientHeight,k=2.4,{ox,oy,iw,ih}=VW,px=cx/IW*iw,py=cy/IH*ih;
+  const tx=W/2-ox-px*k,ty=H/2-oy-py*k;zoomed=true;
   const w=$('world');w.style.transform=`translate(${tx}px,${ty}px) scale(${k})`;let fired=false;const fin=()=>{if(fired)return;fired=true;done&&done()};w.addEventListener('transitionend',fin,{once:true});setTimeout(fin,850)}
 function zoomOut(){zoomed=false;$('world').style.transform=''}
 $('labels').addEventListener('click',e=>{const t=e.target.closest('[data-go]');if(t)open(t.dataset.go)});
@@ -528,7 +539,7 @@ $('vPos').addEventListener('click',e=>{const r=e.target.closest('[data-vopen]');
 addEventListener('keydown',e=>{if(e.key!=='Escape')return;if(!$('vaultv').hidden)closeVault();else if($('sheet').classList.contains('open'))$('sClose').click()});
 $('board').addEventListener('click',e=>{const li=e.target.closest('li');if(!li)return;if(li.dataset.w){show('scanner');pickStock(li.dataset.w);return}open(li.dataset.s)});
 $('sClose').onclick=()=>{$('sheet').classList.remove('open','inside');openSym=null;goHome()};
-addEventListener('resize',layout);new ResizeObserver(layout).observe(document.querySelector('.hud.bottom'));new ResizeObserver(layout).observe($('boardBox'));
+addEventListener('resize',layout);new ResizeObserver(layout).observe(document.querySelector('.hud.bottom'));new ResizeObserver(layout).observe($('boardBox'));new ResizeObserver(layout).observe($('tabs'));
 layout();setTimeout(layout,300);setTimeout(layout,1200);
 document.fonts&&document.fonts.ready.then(()=>{placeStrip();layout();S&&apply()});
 })();
