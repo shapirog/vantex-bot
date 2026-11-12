@@ -253,3 +253,53 @@
 {"event": "flatten", "status": 207, "ts": "2026-11-11T15:55:05-05:00"}
 {"event": "market_closed", "next_open": "2026-11-12T09:30:00-05:00", "ts": "2026-11-11T16:04:16-05:00"}
 {"event": "market_closed", "next_open": "2026-11-12T09:30:00-05:00", "ts": "2026-11-12T07:13:05-05:00"}
+{"event": "na_check", "sym": "QQQ", "slot": 150, "price": 691.59, "upper": 696.67, "lower": 674.09, "vwap": 688.44, "have": 0, "want": 0, "ts": "2026-11-12T12:00:06-05:00"}
+{"event": "na_check", "sym": "AAPL", "slot": 150, "price": 357.33, "upper": 362.06, "lower": 351.56, "vwap": 357.6, "have": 0, "want": 0, "ts": "2026-11-12T12:00:07-05:00"}
+{"event": "na_check", "sym": "NVDA", "slot": 150, "price": 165.28, "upper": 176.38, "lower": 148.79, "vwap": 161.2, "have": 0, "want": 0, "ts": "2026-11-12T12:00:07-05:00"}
+{"event": "na_check", "sym": "AMZN", "slot": 150, "price": 269.98, "upper": 271.43, "lower": 262.87, "vwap": 270.58, "have": 0, "want": 0, "ts": "2026-11-12T12:00:07-05:00"}
+{"event": "na_check", "sym": "GOOGL", "slot": 150, "price": 300.21, "upper": 296.36, "lower": 290.99, "vwap": 296.75, "have": 0, "want": 1, "ts": "2026-11-12T12:00:08-05:00"}
+{"event": "order", "sym": "GOOGL", "side": "buy", "qty": 30, "cid": "NA-GOOGL-20261112-150-1794502808", "status": 200, "resp": "pending_new", "ts": "2026-11-12T12:00:08-05:00"}
+{"event": "na_check", "sym": "TSLA", "slot": 150, "price": 391.92, "upper": 400.11, "lower": 377.15, "vwap": 391.94, "have": 0, "want": 0, "ts": "2026-11-12T12:00:08-05:00"}
+{"event": "na_check", "sym": "QQQ", "slot": 180, "price": 690.38, "upper": 697.03, "lower": 673.74, "vwap": 688.58, "have": 0, "want": 0, "ts": "2026-11-12T12:30:01-05:00"}
+{"event": "na_check", "sym": "AAPL", "slot": 180, "price": 356.5, "upper": 362.23, "lower": 351.39, "vwap": 357.51, "have": 0, "want": 0, "ts": "2026-11-12T12:30:01-05:00"}
+{"event": "na_check", "sym": "NVDA", "slot": 180, "price": 163.98, "upper": 176.63, "lower": 148.57, "vwap": 161.4, "have": 0, "want": 0, "ts": "2026-11-12T12:30:02-05:00"}
+{"event": "na_check", "sym": "AMZN", "slot": 180, "price": 269.51, "upper": 271.46, "lower": 262.84, "vwap": 270.47, "have": 0, "want": 0, "ts": "2026-11-12T12:30:02-05:00"}
+{"event": "na_check", "sym": "GOOGL", "slot": 180, "price": 301.94, "upper": 296.21, "lower": 291.14, "vwap": 297.17, "have": 1, "want": 1, "ts": "2026-11-12T12:30:02-05:00"}
+{"event": "na_check", "sym": "TSLA", "slot": 180, "price": 391.44, "upper": 400.58, "lower": 376.69, "vwap": 391.91, "have": 0, "want": 0, "ts": "2026-11-12T12:30:03-05:00"}
+{"event": "na_check", "sym": "QQQ", "slot": 210, "price": 691.27, "upper": 697.22, "lower": 673.55, "vwap": 688.76, "have": 0, "want": 0, "ts": "2026-11-12T13:00:06-05:00"}
+{"event": "na_check", "sym": "AAPL", "slot": 210, "price": 355.25, "upper": 362.24, "lower": 351.39, "vwap": 357.34, "have": 0, "want": 0, "ts": "2026-11-12T13:00:07-05:00"}
+{"event": "na_check", "sym": "NVDA", "slot": 210, "price": 164.9, "upper": 176.8, "lower": 148.43, "vwap": 161.6, "have": 0, "want": 0, "ts": "2026-11-12T13:00:07-05:00"}
+{"event": "na_check", "sym": "AMZN", "slot": 210, "price": 269.21, "upper": 271.56, "lower": 262.75, "vwap": 270.37, "have": 0, "want": 0, "ts": "2026-11-12T13:00:07-05:00"}
+{"event": "na_check", "sym": "GOOGL", "slot": 210, "price": 302.01, "upper": 296.55, "lower": 290.81, "vwap": 297.53, "have": 1, "want": 1, "ts": "2026-11-12T13:00:08-05:00"}
+{"event": "na_check", "sym": "TSLA", "slot": 210, "price": 391.65, "upper": 400.54, "lower": 376.72, "vwap": 391.93, "have": 0, "want": 0, "ts": "2026-11-12T13:00:08-05:00"}
+{"event": "na_check", "sym": "QQQ", "slot": 240, "price": 690.69, "upper": 697.47, "lower": 673.3, "vwap": 688.88, "have": 0, "want": 0, "ts": "2026-11-12T13:30:07-05:00"}
+{"event": "na_check", "sym": "AAPL", "slot": 240, "price": 355.75, "upper": 362.36, "lower": 351.27, "vwap": 357.21, "have": 0, "want": 0, "ts": "2026-11-12T13:30:07-05:00"}
+{"event": "na_check", "sym": "NVDA", "slot": 240, "price": 165.88, "upper": 176.93, "lower": 148.31, "vwap": 161.78, "have": 0, "want": 0, "ts": "2026-11-12T13:30:08-05:00"}
+{"event": "na_check", "sym": "AMZN", "slot": 240, "price": 269.32, "upper": 271.74, "lower": 262.56, "vwap": 270.3, "have": 0, "want": 0, "ts": "2026-11-12T13:30:08-05:00"}
+{"event": "na_check", "sym": "GOOGL", "slot": 240, "price": 301.3, "upper": 297.05, "lower": 290.31, "vwap": 297.93, "have": 1, "want": 1, "ts": "2026-11-12T13:30:09-05:00"}
+{"event": "na_check", "sym": "TSLA", "slot": 240, "price": 392.07, "upper": 400.46, "lower": 376.8, "vwap": 391.92, "have": 0, "want": 0, "ts": "2026-11-12T13:30:09-05:00"}
+{"event": "na_check", "sym": "QQQ", "slot": 270, "price": 689.16, "upper": 697.6, "lower": 673.18, "vwap": 688.93, "have": 0, "want": 0, "ts": "2026-11-12T14:00:04-05:00"}
+{"event": "na_check", "sym": "AAPL", "slot": 270, "price": 355.84, "upper": 362.62, "lower": 351.01, "vwap": 357.09, "have": 0, "want": 0, "ts": "2026-11-12T14:00:04-05:00"}
+{"event": "na_check", "sym": "NVDA", "slot": 270, "price": 164.75, "upper": 176.94, "lower": 148.3, "vwap": 161.96, "have": 0, "want": 0, "ts": "2026-11-12T14:00:05-05:00"}
+{"event": "na_check", "sym": "AMZN", "slot": 270, "price": 269.17, "upper": 271.92, "lower": 262.39, "vwap": 270.2, "have": 0, "want": 0, "ts": "2026-11-12T14:00:05-05:00"}
+{"event": "na_check", "sym": "GOOGL", "slot": 270, "price": 300.63, "upper": 297.0, "lower": 290.35, "vwap": 298.19, "have": 1, "want": 1, "ts": "2026-11-12T14:00:06-05:00"}
+{"event": "na_check", "sym": "TSLA", "slot": 270, "price": 391.11, "upper": 400.15, "lower": 377.11, "vwap": 391.89, "have": 0, "want": 0, "ts": "2026-11-12T14:00:07-05:00"}
+{"event": "na_check", "sym": "QQQ", "slot": 300, "price": 688.88, "upper": 697.51, "lower": 673.26, "vwap": 688.93, "have": 0, "want": 0, "ts": "2026-11-12T14:30:09-05:00"}
+{"event": "na_check", "sym": "AAPL", "slot": 300, "price": 355.67, "upper": 362.81, "lower": 350.82, "vwap": 357.02, "have": 0, "want": 0, "ts": "2026-11-12T14:30:10-05:00"}
+{"event": "na_check", "sym": "NVDA", "slot": 300, "price": 164.57, "upper": 177.04, "lower": 148.22, "vwap": 162.07, "have": 0, "want": 0, "ts": "2026-11-12T14:30:11-05:00"}
+{"event": "na_check", "sym": "AMZN", "slot": 300, "price": 269.1, "upper": 271.86, "lower": 262.44, "vwap": 270.14, "have": 0, "want": 0, "ts": "2026-11-12T14:30:11-05:00"}
+{"event": "na_check", "sym": "GOOGL", "slot": 300, "price": 300.2, "upper": 297.02, "lower": 290.33, "vwap": 298.36, "have": 1, "want": 1, "ts": "2026-11-12T14:30:12-05:00"}
+{"event": "na_check", "sym": "TSLA", "slot": 300, "price": 390.07, "upper": 399.81, "lower": 377.45, "vwap": 391.83, "have": 0, "want": 0, "ts": "2026-11-12T14:30:12-05:00"}
+{"event": "na_check", "sym": "QQQ", "slot": 330, "price": 687.92, "upper": 697.01, "lower": 673.76, "vwap": 688.87, "have": 0, "want": 0, "ts": "2026-11-12T15:00:08-05:00"}
+{"event": "na_check", "sym": "AAPL", "slot": 330, "price": 355.49, "upper": 362.31, "lower": 351.31, "vwap": 356.97, "have": 0, "want": 0, "ts": "2026-11-12T15:00:09-05:00"}
+{"event": "na_check", "sym": "NVDA", "slot": 330, "price": 164.26, "upper": 177.1, "lower": 148.16, "vwap": 162.16, "have": 0, "want": 0, "ts": "2026-11-12T15:00:10-05:00"}
+{"event": "na_check", "sym": "AMZN", "slot": 330, "price": 268.15, "upper": 271.88, "lower": 262.43, "vwap": 269.99, "have": 0, "want": 0, "ts": "2026-11-12T15:00:10-05:00"}
+{"event": "na_check", "sym": "GOOGL", "slot": 330, "price": 299.67, "upper": 296.96, "lower": 290.39, "vwap": 298.44, "have": 1, "want": 1, "ts": "2026-11-12T15:00:11-05:00"}
+{"event": "na_check", "sym": "TSLA", "slot": 330, "price": 390.24, "upper": 399.96, "lower": 377.3, "vwap": 391.76, "have": 0, "want": 0, "ts": "2026-11-12T15:00:12-05:00"}
+{"event": "na_check", "sym": "QQQ", "slot": 360, "price": 687.33, "upper": 697.74, "lower": 673.04, "vwap": 688.77, "have": 0, "want": 0, "ts": "2026-11-12T15:30:07-05:00"}
+{"event": "na_check", "sym": "AAPL", "slot": 360, "price": 355.49, "upper": 362.48, "lower": 351.15, "vwap": 356.91, "have": 0, "want": 0, "ts": "2026-11-12T15:30:07-05:00"}
+{"event": "na_check", "sym": "NVDA", "slot": 360, "price": 164.02, "upper": 177.19, "lower": 148.09, "vwap": 162.25, "have": 0, "want": 0, "ts": "2026-11-12T15:30:07-05:00"}
+{"event": "na_check", "sym": "AMZN", "slot": 360, "price": 268.1, "upper": 272.0, "lower": 262.31, "vwap": 269.78, "have": 0, "want": 0, "ts": "2026-11-12T15:30:08-05:00"}
+{"event": "na_check", "sym": "GOOGL", "slot": 360, "price": 299.39, "upper": 297.01, "lower": 290.34, "vwap": 298.5, "have": 1, "want": 1, "ts": "2026-11-12T15:30:08-05:00"}
+{"event": "na_check", "sym": "TSLA", "slot": 360, "price": 397.98, "upper": 400.17, "lower": 377.09, "vwap": 393.52, "have": 0, "want": 0, "ts": "2026-11-12T15:30:09-05:00"}
+{"event": "flatten", "status": 207, "ts": "2026-11-12T15:55:03-05:00"}
