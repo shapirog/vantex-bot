@@ -252,3 +252,4 @@
 {"event": "na_check", "sym": "TSLA", "slot": 360, "price": 391.82, "upper": 395.93, "lower": 370.79, "vwap": 392.16, "have": 0, "want": 0, "ts": "2026-11-11T15:30:12-05:00"}
 {"event": "flatten", "status": 207, "ts": "2026-11-11T15:55:05-05:00"}
 {"event": "market_closed", "next_open": "2026-11-12T09:30:00-05:00", "ts": "2026-11-11T16:04:16-05:00"}
+{"event": "market_closed", "next_open": "2026-11-12T09:30:00-05:00", "ts": "2026-11-12T07:13:05-05:00"}
