@@ -1,0 +1,34 @@
+name: Vantex crypto paper trading
+on:
+  schedule:
+    - cron: '3 * * * *'   # every hour; each run trades for about 55 minutes, so coverage is 24/7
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: vantex-crypto
+  cancel-in-progress: false
+jobs:
+  crypto:
+    runs-on: ubuntu-latest
+    timeout-minutes: 70
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install requests
+      - name: Run crypto bot (paper account only)
+        env:
+          APCA_API_KEY_ID: ${{ secrets.APCA_API_KEY_ID }}
+          APCA_API_SECRET_KEY: ${{ secrets.APCA_API_SECRET_KEY }}
+          NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
+          GH_TOKEN: ${{ github.token }}
+        run: python crypto.py 55
+      - name: Save crypto log
+        if: always()
+        run: |
+          git config user.name "vantex-bot"
+          git config user.email "vantex-bot@users.noreply.github.com"
+          git add logs || true
+          git commit -m "Crypto log $(date -u +%F-%H)" && git pull --rebase && git push || true
