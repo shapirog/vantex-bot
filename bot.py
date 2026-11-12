@@ -13,6 +13,16 @@ ORB_SYMS = ['QQQ', 'MSFT', 'NVDA', 'AMZN', 'TSLA']
 SLEEVES = len(NA_SYMS) + len(ORB_SYMS)
 LOG = os.environ.get('VANTEX_LOG', 'logs/live_log.jsonl')
 DAILY_LOSS_LIMIT = 0.01   # stop trading for the day if the account is down 1% (about $1,000)
+LIVE_DIR = '/tmp/vantex-live'
+NTFY = os.environ.get('NTFY_TOPIC')
+SCAN_EVERY = 300          # seconds between full-market scans
+HIST_EVERY = 1800         # seconds between track-record refreshes
+
+def notify(title, msg, tags=''):
+    """Push a phone alert through ntfy.sh. Never raises: alerts must not break trading."""
+    if not NTFY: return
+    try: requests.post(f'https://ntfy.sh/{NTFY}', data=msg.encode('utf-8'), headers={'Title': title, 'Tags': tags}, timeout=10)
+    except Exception as e: print('notify failed', str(e)[:120], flush=True)
 
 def log(**k):
     k['ts'] = datetime.now(ET).isoformat(timespec='seconds'); print(json.dumps(k), flush=True); remember(k)
@@ -161,13 +171,73 @@ def snapshot(market_open=True):
             out[sym] = dict(error=str(e)[:200])
     fills = sorted([dict(id=o['id'], sym=o['symbol'], side=o['side'], qty=float(o['filled_qty']), price=float(o.get('filled_avg_price') or 0), ts=o['filled_at'],
                          strat=('ORB' if (o.get('client_order_id') or '').startswith('ORB') else 'NA' if (o.get('client_order_id') or '').startswith('NA') else 'exit'))
-                    for o in flat if float(o.get('filled_qty') or 0) > 0 and o.get('filled_at')], key=lambda x: x['ts'])
+                    for o in flat if o['symbol'] in ALL_SYMS and float(o.get('filled_qty') or 0) > 0 and o.get('filled_at')], key=lambda x: x['ts'])
     state = dict(updated=now.isoformat(timespec='seconds'), market_open=market_open, equity=float(acct['equity']), fills=fills[-80:],
                  day_pl=round(float(acct['equity']) - float(acct['last_equity']), 2), symbols=out, events=EVENTS[-40:])
+    alert_fills(fills, out)
+    if not market_open:
+        notify('Vantex day recap', f"Day P/L {state['day_pl']:+,.2f} · {len(fills)} fills · equity ${state['equity']:,.2f}", 'bar_chart')
     push_state(state)
 
+_SEEN = None
+def alert_fills(fills, syms):
+    global _SEEN
+    ids = {f['id'] for f in fills}
+    if _SEEN is None: _SEEN = ids; return          # first snapshot of this run: don't re-alert earlier fills
+    why = {'NA': 'noise-area', 'ORB': 'opening breakout', 'exit': 'exit'}
+    for f in fills:
+        if f['id'] in _SEEN: continue
+        pl = (syms.get(f['sym']) or {}).get('pl_day')
+        extra = f" · {f['sym']} day P/L {pl:+,.2f}" if isinstance(pl, (int, float)) else ''
+        notify(f"Vantex {f['side'].upper()} {f['sym']}", f"{f['side'].upper()} {f['qty']:g} {f['sym']} @ {f['price']:.2f} ({why.get(f['strat'], f['strat'])}){extra}",
+               'green_circle' if f['side'] == 'buy' else 'red_circle')
+    _SEEN |= ids
+
+def load_assets():
+    """Every active, tradable US-listed stock (about 10,000), cached for the day, saved for the page's search box."""
+    today = datetime.now(ET).date()
+    if _ASSETS.get('day') == today and _ASSETS.get('list'): return _ASSETS['list']
+    r = req('GET', f'{TRADE}/v2/assets', params=dict(status='active', asset_class='us_equity'))
+    ok = ('NYSE', 'NASDAQ', 'ARCA', 'AMEX', 'BATS')
+    lst = sorted((a['symbol'], (a.get('name') or '')[:48]) for a in r.json()
+                 if a.get('tradable') and a.get('exchange') in ok and a['symbol'].isalpha())
+    _ASSETS.update(day=today, list=lst)
+    os.makedirs(LIVE_DIR, exist_ok=True)
+    json.dump(dict(updated=datetime.now(ET).isoformat(timespec='seconds'), assets=[list(x) for x in lst]),
+              open(f'{LIVE_DIR}/assets.json', 'w'), separators=(',', ':'))
+    return lst
+_ASSETS = {}
+
+def market_scan():
+    """Price, % change, volume and relative volume for every stock, from Alpaca snapshots (IEX feed)."""
+    syms = [s for s, _ in load_assets()]
+    rows = []
+    for i in range(0, len(syms), 400):
+        d = req('GET', f'{DATA}/v2/stocks/snapshots', params=dict(symbols=','.join(syms[i:i + 400]), feed='iex')).json() or {}
+        if isinstance(d.get('snapshots'), dict): d = d['snapshots']
+        for sym, sn in d.items():
+            if not isinstance(sn, dict): continue
+            db, pb = sn.get('dailyBar') or {}, sn.get('prevDailyBar') or {}
+            px = (sn.get('latestTrade') or {}).get('p') or db.get('c'); pc = pb.get('c')
+            if not px or not pc: continue
+            v, pv = int(db.get('v') or 0), int(pb.get('v') or 0)
+            rows.append([sym, round(px, 4 if px < 1 else 2), round((px / pc - 1) * 100, 2), v, round(v / pv, 2) if pv else None])
+    os.makedirs(LIVE_DIR, exist_ok=True)
+    json.dump(dict(updated=datetime.now(ET).isoformat(timespec='seconds'), feed='iex', rows=rows),
+              open(f'{LIVE_DIR}/market.json', 'w'), separators=(',', ':'))
+    return len(rows)
+
+def track_record():
+    """Daily equity and P/L for the paper account (last 3 months) for the page's equity curve."""
+    d = req('GET', f'{TRADE}/v2/account/portfolio/history', params=dict(period='3M', timeframe='1D')).json()
+    days = [[datetime.fromtimestamp(t, ET).strftime('%Y-%m-%d'), round(e, 2), round(p or 0, 2)]
+            for t, e, p in zip(d.get('timestamp') or [], d.get('equity') or [], d.get('profit_loss') or []) if e]
+    os.makedirs(LIVE_DIR, exist_ok=True)
+    json.dump(dict(updated=datetime.now(ET).isoformat(timespec='seconds'), days=days),
+              open(f'{LIVE_DIR}/history.json', 'w'), separators=(',', ':'))
+
 def push_state(state):
-    d = '/tmp/vantex-live'; os.makedirs(d, exist_ok=True)
+    d = LIVE_DIR; os.makedirs(d, exist_ok=True)
     json.dump(state, open(f'{d}/state.json', 'w'), separators=(',', ':'))
     tok, repo = os.environ.get('GH_TOKEN'), os.environ.get('GITHUB_REPOSITORY')
     if not (tok and repo): return
@@ -175,18 +245,26 @@ def push_state(state):
     try:
         subprocess.run(['rm', '-rf', f'{d}/.git'], check=True)
         subprocess.run(['git', 'init', '-q', '-b', 'live', d], check=True)
-        subprocess.run(g + ['add', 'state.json'], check=True)
+        subprocess.run(g + ['add', '-A'], check=True)
         subprocess.run(g + ['commit', '-q', '-m', 'live state'], check=True)
         subprocess.run(g + ['push', '-q', '-f', f'https://x-access-token:{tok}@github.com/{repo}.git', 'live'], check=True, timeout=60, capture_output=True)
     except Exception as e:
         print('push failed', str(e)[:200], flush=True)
 
 def flatten():
-    r = req('DELETE', f'{TRADE}/v2/positions', params=dict(cancel_orders='true'))
-    log(event='flatten', status=r.status_code)
+    """Cancel stock orders and close stock positions only; crypto positions keep running."""
+    for o in req('GET', f'{TRADE}/v2/orders', params=dict(status='open', limit=500, nested='false')).json():
+        if o.get('asset_class', 'us_equity') == 'us_equity': req('DELETE', f"{TRADE}/v2/orders/{o['id']}")
+    time.sleep(2); codes = []
+    for attempt in range(2):
+        left = [p for p in req('GET', f'{TRADE}/v2/positions').json() if p.get('asset_class') == 'us_equity']
+        if not left: break
+        for p in left: codes.append(req('DELETE', f"{TRADE}/v2/positions/{p['symbol']}").status_code)
+        time.sleep(3)
+    log(event='flatten', status=codes)
 
 def loop(max_minutes=None):
-    done = set(); t0 = time.time(); last_snap = 0
+    done = set(); t0 = time.time(); last_snap = 0; last_scan = 0; last_hist = 0
     while True:
         if max_minutes and time.time() - t0 > max_minutes * 60:
             log(event='handoff', why='runtime limit'); sys.exit(3)
@@ -200,7 +278,7 @@ def loop(max_minutes=None):
         now = datetime.now(ET); m = now.hour * 60 + now.minute - 570
         a = req('GET', f'{TRADE}/v2/account').json(); eq = float(a['equity']); start_eq = float(a['last_equity'])
         if eq - start_eq <= -DAILY_LOSS_LIMIT * start_eq and 'limit' not in done:
-            log(event='loss_limit', pl=round(eq - start_eq, 2)); flatten(); done.update({'limit', 'orb', 'flat'} | {f'na{k}' for k in range(30, 390, 30)})
+            log(event='loss_limit', pl=round(eq - start_eq, 2)); notify('Vantex loss limit hit', f'Down {eq - start_eq:,.2f} today. Stocks closed, trading stopped until tomorrow.', 'warning'); flatten(); done.update({'limit', 'orb', 'flat'} | {f'na{k}' for k in range(30, 390, 30)})
         if 5 <= m < 15 and 'orb' not in done:
             orb_step(now, today_orders(), eq); done.add('orb')
         for k in range(30, 390, 30):
@@ -208,9 +286,19 @@ def loop(max_minutes=None):
                 na_step(now, k, today_orders(), eq); done.add(f'na{k}')
         if m >= 385 and 'flat' not in done:
             flatten(); done.add('flat'); time.sleep(20)
+            try: track_record()
+            except Exception as e: log(event='error', where='track_record', err=str(e)[:300])
             try: snapshot(market_open=False)
             except Exception as e: log(event='error', where='snapshot', err=str(e)[:300])
             return
+        if time.time() - last_scan > SCAN_EVERY:
+            try: log(event='market_scan', stocks=market_scan())
+            except Exception as e: log(event='error', where='market_scan', err=str(e)[:300])
+            last_scan = time.time()
+        if time.time() - last_hist > HIST_EVERY:
+            try: track_record()
+            except Exception as e: log(event='error', where='track_record', err=str(e)[:300])
+            last_hist = time.time()
         if time.time() - last_snap > 55:
             try: snapshot()
             except Exception as e: log(event='error', where='snapshot', err=str(e)[:300])
