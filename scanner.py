@@ -26,6 +26,7 @@ GOOD = [('FDA', r'\bfda\b|approv|clearance|breakthrough designation|orphan drug'
         ('DEAL', r'merger|acquisi|acquire|buyout|takeover|definitive agreement'), ('CONTRACT', r'contract|award|order|purchase order|government'),
         ('PARTNER', r'partner|collaborat|alliance|joint venture|licens'), ('EARNINGS', r'earnings|revenue|results|guidance|profit|record quarter'),
         ('AI', r'\bai\b|artificial intelligence|quantum|nvidia'), ('CRYPTO', r'bitcoin|crypto|blockchain|treasury'), ('UPLIST', r'uplist|nasdaq listing|regains compliance')]
+ROUNDUP = r'stocks moving|movers|top gainers|top losers|biggest movers|stocks to watch|stocks trading|mid-day|midday update|market update|session\b'
 BAD = [('OFFERING', r'offering|dilut|registered direct|at-the-market|warrant'), ('SPLIT', r'reverse (stock )?split'),
        ('DELIST', r'delist|non-compliance|deficiency'), ('BANKRUPT', r'bankrupt|chapter 11|going concern')]
 
@@ -81,8 +82,10 @@ def news(hours=36, pages=18):
         d = r.json()
         for n in d.get('news') or []:
             if not n.get('symbols'): continue
-            items.append(dict(t=n['created_at'], h=n.get('headline', '')[:220], s=n.get('source', ''), u=n.get('url', ''),
-                              sy=[x for x in n['symbols'] if x.isalpha()][:8], sm=(n.get('summary') or '')[:240]))
+            sy = [x for x in n['symbols'] if x.isalpha()]
+            h = n.get('headline', '')[:220]
+            items.append(dict(t=n['created_at'], h=h, s=n.get('source', ''), u=n.get('url', ''), sy=sy[:8], sm=(n.get('summary') or '')[:240],
+                              ru=len(sy) > 4 or bool(re.search(ROUNDUP, h.lower()))))   # round-up lists of movers are not catalysts
         tok = d.get('next_page_token')
         if not tok: break
     return items
@@ -98,8 +101,11 @@ def radar(rows, names, items):
     t_now = datetime.now(timezone.utc); out = []
     for sym, p, chg, v, rv in rows:
         if not (MIN_PRICE <= p <= MAX_PRICE): continue
+        if chg < -2: continue                                    # radar hunts for stocks going up
+        if chg > 300 and (rv is None or rv < 1): continue        # a giant jump on no volume is a split, not a move
         nl = by.get(sym, [])
-        fresh = [n for n in nl if (t_now - datetime.fromisoformat(n['t'].replace('Z', '+00:00'))).total_seconds() < 24 * 3600]
+        recent = [n for n in nl if (t_now - datetime.fromisoformat(n['t'].replace('Z', '+00:00'))).total_seconds() < 24 * 3600]
+        fresh = [n for n in recent if not n.get('ru')]           # real, company-specific news only
         age_h = min(((t_now - datetime.fromisoformat(n['t'].replace('Z', '+00:00'))).total_seconds() / 3600 for n in fresh), default=None)
         dollar = v * p
         cat = bool(fresh)
@@ -110,14 +116,14 @@ def radar(rows, names, items):
         score = min(chg, 150) / 10 + (math.log2(rv) * 1.5 if rv and rv > 1 else 0) + (3 if cat else 0) + 1.2 * min(len(good), 2) - 1.5 * len(bad)
         if dollar >= 1_000_000: score += 1
         tg = []
-        if age_h is not None and age_h <= 3 and chg < 25 and good and not bad: tg.append('EARLY'); score += 2
+        if age_h is not None and age_h <= 3 and -2 <= chg < 25 and good and not bad: tg.append('EARLY'); score += 2
         if cat: tg += [f'NEWS {g}' for g in good[:2]] or ['NEWS']
-        if rv and rv >= 3: tg.append(f'VOL {rv:.0f}x')
+        if rv and rv >= 3: tg.append('VOL 999x+' if rv >= 999 else f'VOL {rv:.0f}x')
         if chg >= 20: tg.append('RUNNER')
         if p < 5: tg.append('PENNY')
         tg += [f'RISK {b}' for b in bad[:1]]
         out.append(dict(sym=sym, name=names.get(sym, ''), p=p, chg=chg, v=v, rv=rv, score=round(score, 2), tags=tg,
-                        news=[dict(t=n['t'], h=n['h'], s=n['s'], u=n['u']) for n in fresh[:3]]))
+                        news=[dict(t=n['t'], h=n['h'], s=n['s'], u=n['u']) for n in (fresh + [n for n in recent if n.get('ru')])[:3]]))
     out.sort(key=lambda x: -x['score'])
     return out[:40]
 
