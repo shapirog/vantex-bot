@@ -295,6 +295,7 @@ canvas.vc{width:100%;display:block;touch-action:pan-y;cursor:crosshair}
     <div class="ksrow"><code>{"trading": "stop"}</code><span>Close everything now. No new orders.</span></div>
     <a class="nbtn" style="display:inline-block;text-decoration:none;color:var(--ink)" href="https://github.com/shapirog/vantex-bot/edit/main/control.json" target="_blank" rel="noopener">Open control.json on GitHub ↗</a></div>
   <div class="card"><div class="r"><span>Daily loss limit</span><b id="rkLim"></b></div><div class="mbar"><div id="rkBar"></div></div><p class="note" id="rkTxt" style="margin:0"></p></div>
+  <div class="card"><div class="r"><span>Daily profit lock</span><b id="ptgLim"></b></div><div class="mbar"><div id="ptgBar" style="background:linear-gradient(90deg,var(--ema),var(--call))"></div></div><p class="note" id="ptgTxt" style="margin:0"></p></div>
   <div class="card" id="rkRules"></div>
   <div class="card"><h3>Real money: locked</h3><div id="rkReady"></div><p class="note" style="margin-top:8px">This page is public, so it never holds brokerage keys or places real orders. Going live means swapping the bot's own key, after the paper record earns it.</p><div id="rkGate"></div></div></div></section>
 
@@ -753,15 +754,15 @@ function renderActivity(){const isJ=act==='journal';$('jSeg').style.display=isJ?
   const why={NA:'noise-area',ORB:'opening breakout',exit:'exit'};
   why.crypto='crypto trend';const allF=[...(S.fills||[]),...((CR&&CR.fills)||[]).map(f=>({...f,sym:f.coin,strat:'crypto'}))].sort((a,b)=>new Date(a.ts)-new Date(b.ts));
   if(act==='fills'){$('actList').innerHTML=allF.slice().reverse().map(f=>`<li class="tap" data-open="${f.sym}" style="cursor:pointer"><span class="tm">${hhmm(f.ts)}</span><span><b>${f.sym}</b> <span class="${f.side==='buy'?'up':'dn'}">${f.side.toUpperCase()} ${+f.qty.toFixed(6)} @ ${f.price.toFixed(2)}</span> <span class="tm">${why[f.strat]||f.strat}</span></span></li>`).join('')||'<li><span></span><span class="tm">No fills yet today</span></li>';return}
-  const N={order:'Order sent',orb_signal:'Breakout signal',na_check:'Signal change',flatten:'Closed all positions',error:'Error',loss_limit:'Daily loss limit hit'};
+  const N={order:'Order sent',orb_signal:'Breakout signal',na_check:'Signal change',flatten:'Closed all positions',error:'Error',loss_limit:'Daily loss limit hit',profit_target:'🎯 Profit target hit',lock_armed:'🔒 Profit lock armed',profit_lock_hit:'🔒 Profit locked in, stocks closed',day_done:'Day locked in'};
   $('actList').innerHTML=(S.events||[]).slice().reverse().map(e=>{let x='';if(e.event==='order')x=`${e.side.toUpperCase()} ${e.qty} ${e.sym}`;else if(e.event==='na_check')x=`${e.sym} at ${e.price}: ${['short','flat','long'][e.have+1]} → ${['short','flat','long'][e.want+1]}`;else if(e.event==='orb_signal')x=`${e.sym} ${e.dir>0?'long':'short'} @ ${e.price}, stop ${e.stop}, target ${e.target}`;else if(e.event==='error')x=`${e.where||''} ${e.sym||''}`;
     return`<li><span class="tm">${hhmm(e.ts)}</span><span><b>${N[e.event]||e.event}</b> <span class="tm">${x}</span></span></li>`}).join('')||'<li><span></span><span class="tm">No bot decisions logged yet today</span></li>'}
 
 function renderRisk(){const start=S.equity-S.day_pl,lim=start*.01,used=Math.max(0,-S.day_pl);
   $('rkLim').textContent=`$${used.toFixed(2)} of $${lim.toFixed(2)}`;$('rkBar').style.width=Math.min(100,used/lim*100)+'%';
   $('rkTxt').textContent=used>=lim?'Limit reached: the bot closed everything and stopped for the day.':`If the account drops $${lim.toFixed(0)} (1%) in one day, the bot closes everything and stops until tomorrow.`;
-  $('rkRules').innerHTML='<h3>Bot rules</h3>'+[['Mode','Paper only'],['Size per sleeve','$'+Math.round(S.equity/11).toLocaleString()],['Strategies','Noise-area + opening breakout'],['Max position','$'+((S.limits&&S.limits.max_order)||12000).toLocaleString()+' (enforced by the bot)'],['Max orders per day',String((S.limits&&S.limits.max_orders)||40)],['Stale data','Skips signals if prices are over '+((S.limits&&S.limits.stale_min)||10)+' min old'],['Rejected orders','Phone alert, no retry'],['End of day','All closed 3:55 PM ET'],['Stocks',SYMS.join(', ')]].map(([a,b])=>`<div class="r"><span class="tm">${a}</span><span style="text-align:right">${b}</span></div>`).join('');
-  renderKill();
+  $('rkRules').innerHTML='<h3>Bot rules</h3>'+[['Mode','Paper only'],['Size per sleeve','$'+Math.round(S.equity/11).toLocaleString()],['Strategies','Noise-area + opening breakout'],['Max position','$'+((S.limits&&S.limits.max_order)||12000).toLocaleString()+' (enforced by the bot)'],['Max orders per day',String((S.limits&&S.limits.max_orders)||40)],['Profit lock',(S.limits&&S.limits.profit_lock)?'Arms at +$'+S.limits.profit_lock.toLocaleString()+', closes stocks if it slips below':(S.limits&&S.limits.profit_target)?'Take profit at +$'+S.limits.profit_target.toLocaleString():'Off (set in control.json)'],['Stale data','Skips signals if prices are over '+((S.limits&&S.limits.stale_min)||10)+' min old'],['Rejected orders','Phone alert, no retry'],['End of day','All closed 3:55 PM ET'],['Stocks',SYMS.join(', ')]].map(([a,b])=>`<div class="r"><span class="tm">${a}</span><span style="text-align:right">${b}</span></div>`).join('');
+  renderKill();renderTarget();
   if(JR&&JR.gate){renderGate();return}
   const T=trackStats();
   const gate=[[T&&T.n>=20,`20+ trading days of paper results${T?` (${T.n} so far)`:''}`],[T&&T.n>=20&&T.total>0,`Profitable over that stretch${T?` (${m2(T.total)})`:''}`],[T&&T.n>=20&&T.worst>-(S.equity*.01),`Worst day inside the 1% loss limit${T?` (worst ${m2(T.worst)})`:''}`],[false,'Bot reports live every market day (you confirm)'],[false,'Live key added with a small starting size (you decide)']];
@@ -825,6 +826,17 @@ function renderScore(){const box=$('scBox');if(!box)return;if(!JR){box.innerHTML
   const covH=cov.length?`<div class="scx" style="margin-top:10px">Stock bot checks per day (12 = full day)</div><div class="cov">${cov.map(c=>`<i class="${c.checks<c.of-1?'part':''}" title="${c.day}: ${c.checks} of ${c.of}"><b style="height:${Math.max(6,c.checks/c.of*100)}%"></b></i>`).join('')}</div><div class="scx">${cov.filter(c=>c.checks>=c.of-1).length} of ${cov.length} market days were full days</div>`:'';
   box.innerHTML=readyBadge()+acct+(X.trades?`<div class="scx" style="margin-top:8px">All bots: ${X.trades} trades · ${m2(X.net)} after est. costs · profit factor ${X.pf==null?'–':X.pf.toFixed(2)}</div>`:'')+
     ['NA','ORB','CRYPTO'].map(k=>bot(k,B[k])).join('')+covH+`<p class="note" style="margin:8px 0 0">${escH(JR.costs_note||'')} Updated ${dshort(JR.updated)}, ${hhmm(JR.updated)} ET. Full list in Activity → Journal.</p>`}
+function renderTarget(){const L=S.limits||{},t=L.profit_target||0,lk=L.profit_lock||0,ds=S.day_status||{},today=String(S.updated).slice(0,10),D=ds.date===today?ds:{};
+  const up=Math.max(0,S.day_pl);
+  if(lk){$('ptgLim').textContent=`${m2(S.day_pl)} · lock $${lk.toLocaleString()}`;$('ptgBar').style.width=Math.min(100,up/lk*100)+'%';
+    $('ptgTxt').textContent=D.done==='profit_lock_hit'?`Locked in: profit slipped under $${lk.toLocaleString()}, so stocks closed. Trading resumes tomorrow.`:
+      D.done==='loss_limit'?'Daily loss limit hit: stocks closed for today.':
+      D.armed?`🔒 Lock ARMED. Still trading. If today's profit falls below $${lk.toLocaleString()}, stocks close and the day is locked in.`:
+      `Once today's profit reaches $${lk.toLocaleString()}, the lock arms and trading continues. If it then falls back below $${lk.toLocaleString()}, stocks close for the day. Crypto keeps running.`;
+    $('ptgBar').style.background=D.armed?'linear-gradient(90deg,var(--vwap),var(--call))':'';return}
+  if(!t){$('ptgLim').textContent='Off';$('ptgBar').style.width='0%';$('ptgTxt').innerHTML='Add <code>"profit_lock": 900</code> to control.json: once the day is up $900 the lock arms, and a slide back below $900 closes stocks for the day.';return}
+  $('ptgLim').textContent=`${m2(S.day_pl)} of $${t.toLocaleString()}`;$('ptgBar').style.width=Math.min(100,up/t*100)+'%';
+  $('ptgTxt').textContent=D.done==='profit_target'?'Target reached: stocks closed and the profit locked in. Trading resumes tomorrow.':`When the account is up $${t.toLocaleString()} today, the bot closes all stocks and stops until tomorrow. Crypto keeps running.`}
 function renderGate(){$('rkReady').innerHTML=readyBadge();
   const ic={pass:'✓',track:'…',fail:'✕'};
   $('rkGate').innerHTML=JR.gate.items.map(i=>`<div class="ck ${i.state==='pass'?'ok':i.state}"><span>${ic[i.state]}</span><span>${escH(i.t)}</span><i>${escH(i.v)}</i></div>`).join('')+
