@@ -1,10 +1,11 @@
 name: Vantex crypto paper trading
 on:
   schedule:
-    - cron: '3 * * * *'   # every hour; each run trades for about 55 minutes, so coverage is 24/7
+    - cron: '3 * * * *'   # backup timer: every hour, in case the hand-off below ever fails
   workflow_dispatch:
 permissions:
   contents: write
+  actions: write
 concurrency:
   group: vantex-crypto
   cancel-in-progress: false
@@ -18,13 +19,27 @@ jobs:
         with:
           python-version: '3.12'
       - run: pip install requests
+      - name: Alert if the crypto bot was offline
+        env:
+          NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
+        run: |
+          last=$(curl -fsS "https://raw.githubusercontent.com/${{ github.repository }}/live-crypto/crypto.json?t=$(date +%s)" | python -c "import json,sys,datetime;print(int(datetime.datetime.fromisoformat(json.load(sys.stdin)['updated']).timestamp()))") || exit 0
+          gap=$(( ($(date +%s) - last) / 60 ))
+          echo "Last crypto update was $gap minutes ago"
+          if [ "$gap" -gt 75 ] && [ -n "$NTFY_TOPIC" ]; then
+            curl -s -H "Title: Vantex crypto bot was offline" -H "Tags: warning" -d "No crypto updates for $gap minutes. It is running again now." "https://ntfy.sh/$NTFY_TOPIC" > /dev/null
+          fi
       - name: Run crypto bot (paper account only)
+        id: bot
         env:
           APCA_API_KEY_ID: ${{ secrets.APCA_API_KEY_ID }}
           APCA_API_SECRET_KEY: ${{ secrets.APCA_API_SECRET_KEY }}
           NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
           GH_TOKEN: ${{ github.token }}
-        run: python crypto.py 55
+        run: |
+          set +e
+          python crypto.py 55
+          echo "code=$?" >> "$GITHUB_OUTPUT"
       - name: Save crypto log
         if: always()
         run: |
@@ -32,3 +47,13 @@ jobs:
           git config user.email "vantex-bot@users.noreply.github.com"
           git add logs || true
           git commit -m "Crypto log $(date -u +%F-%H)" && git pull --rebase && git push || true
+      - name: Hand off to the next run (keeps crypto trading 24/7)
+        if: steps.bot.outputs.code == '0'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run crypto.yml --ref main
+      - name: Mark the run failed if the bot crashed
+        if: steps.bot.outputs.code != '0'
+        run: |
+          echo "crypto.py exited with code ${{ steps.bot.outputs.code }}; the hourly timer will retry"
+          exit 1
