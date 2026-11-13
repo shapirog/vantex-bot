@@ -23,6 +23,8 @@ MIN_PRICE = 0.05
 MIN_DOLLAR_VOL = 50_000   # skip names too thin to trade
 MAX_QUOTE_AGE_H = 4       # radar ignores prices older than this (no trades = no real move)
 BOT_SILENT_MIN = 12       # warn if the trading bot hasn't reported for this long during market hours
+CHART_SYMS = ['QQQ', 'AAPL', 'NVDA', 'AMZN', 'GOOGL', 'TSLA', 'MSFT']   # the bot's stocks get full chart history
+CHART_COINS = {'BTC': 'BTC/USD', 'ETH': 'ETH/USD'}
 
 GOOD = [('FDA', r'\bfda\b|approv|clearance|breakthrough designation|orphan drug'), ('TRIAL', r'phase [123i]|trial|topline|data readout'),
         ('DEAL', r'merger|acquisi|acquire|buyout|takeover|definitive agreement'), ('CONTRACT', r'contract|award|order|purchase order|government'),
@@ -99,6 +101,64 @@ def news(hours=36, pages=18):
         tok = d.get('next_page_token')
         if not tok: break
     return items
+
+def stock_bars(syms, tf, start):
+    """Bars for several stocks: full-market SIP (ends 16 min ago, free plan rule), else live IEX."""
+    for feed, end in (('sip', datetime.now(timezone.utc) - timedelta(minutes=16)), ('iex', datetime.now(timezone.utc))):
+        out, tok, ok = {}, None, False
+        while True:
+            p = dict(symbols=','.join(syms), timeframe=tf, start=start.isoformat(), end=end.isoformat(), limit=10000, adjustment='split', feed=feed)
+            if tok: p['page_token'] = tok
+            r = req('GET', f'{DATA}/v2/stocks/bars', params=p)
+            if not r.ok: break
+            ok = True; d = r.json()
+            for k, v in (d.get('bars') or {}).items(): out.setdefault(k, []).extend(v)
+            tok = d.get('next_page_token')
+            if not tok: break
+        if ok: return out
+    return {}
+
+def crypto_bars(tf, start):
+    out, tok = {}, None
+    while True:
+        p = dict(symbols=','.join(CHART_COINS.values()), timeframe=tf, start=start.isoformat(), limit=10000)
+        if tok: p['page_token'] = tok
+        r = req('GET', f'{DATA}/v1beta3/crypto/us/bars', params=p)
+        if not r.ok: break
+        d = r.json()
+        for k, v in (d.get('bars') or {}).items(): out.setdefault(k, []).extend(v)
+        tok = d.get('next_page_token')
+        if not tok: break
+    return out
+
+def charts():
+    """Price history for the bot's stocks and coins: 1D (5-min), 5D (15-min), 3M (daily). Times are unix seconds."""
+    utc = datetime.now(timezone.utc); out = {}
+    def pts(bars, regular=True):
+        L = []
+        for b in bars:
+            t = epoch(b['t'])
+            if t is None: continue
+            if regular:
+                et = datetime.fromtimestamp(t, ET); m = et.hour * 60 + et.minute
+                if not (570 <= m < 960): continue                      # regular session only
+            L.append([t, round(float(b['c']), 4 if b['c'] < 1 else 2)])
+        return L
+    def by_day(L):
+        days = {}
+        for t, v in L: days.setdefault(datetime.fromtimestamp(t, ET).date(), []).append([t, v])
+        return [days[d] for d in sorted(days)]
+    m5 = stock_bars(CHART_SYMS, '5Min', utc - timedelta(days=5))
+    m15 = stock_bars(CHART_SYMS, '15Min', utc - timedelta(days=10))
+    d1 = stock_bars(CHART_SYMS, '1Day', utc - timedelta(days=100))
+    for s in CHART_SYMS:
+        D1 = by_day(pts(m5.get(s, [])))
+        D5 = by_day(pts(m15.get(s, [])))
+        out[s] = {'1D': D1[-1] if D1 else [], '5D': [p for d in D5[-5:] for p in d], '3M': pts(d1.get(s, []), regular=False)[-66:]}
+    c15 = crypto_bars('15Min', utc - timedelta(hours=24)); c1h = crypto_bars('1Hour', utc - timedelta(days=5)); cd = crypto_bars('1Day', utc - timedelta(days=100))
+    for k, pair in CHART_COINS.items():
+        out[k] = {'1D': pts(c15.get(pair, []), False), '5D': pts(c1h.get(pair, []), False), '3M': pts(cd.get(pair, []), False)[-92:]}
+    return out
 
 def tags_for(text):
     t = text.lower()
@@ -199,6 +259,8 @@ def main():
     dump('assets.json', dict(updated=stamp, assets=[list(a) for a in A]))
     dump('market.json', dict(updated=stamp, feed=feed, session=session(t0), rows=rows))
     dump('news.json', dict(updated=stamp, items=items[:900]))
+    try: dump('charts.json', dict(updated=stamp, syms=charts()))
+    except Exception as e: print('charts failed', str(e)[:200], flush=True)   # charts are extra: never stop the scan
     dump('radar.json', dict(updated=stamp, day=str(t0.date()), session=session(t0), feed=feed, alerted=sorted(alerted), bot_warned=bot_warned, stocks=rad))
     print(json.dumps(dict(event='scan', stocks=len(rows), feed=feed, news=len(items), radar=len(rad), top=[x['sym'] for x in rad[:8]], alerts=new_alerts)), flush=True)
     push()
