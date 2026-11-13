@@ -25,7 +25,8 @@ STALE_MINUTES = 10          # skip a signal if the latest price bar is older tha
 # "on"    = trade normally
 # "pause" = no new positions; exits that reduce risk are still allowed; positions are kept
 # "stop"  = no new orders and close every position now
-_CTRL = {'t': 0, 'mode': 'on'}
+# "profit_target": 500 = once the account is up $500 today, close stocks and stop until tomorrow (0 or missing = off)
+_CTRL = {'t': 0, 'mode': 'on', 'target': 0.0}
 def control():
     if time.time() - _CTRL['t'] < 60: return _CTRL['mode']
     tok, repo = os.environ.get('GH_TOKEN'), os.environ.get('GITHUB_REPOSITORY')
@@ -34,13 +35,32 @@ def control():
         if tok and repo:
             r = requests.get(f'https://api.github.com/repos/{repo}/contents/control.json?ref=main',
                              headers={'Authorization': f'Bearer {tok}', 'Accept': 'application/vnd.github.raw'}, timeout=15)
-            if r.status_code == 200: mode = str(json.loads(r.text).get('trading', 'on')).strip().lower()
-            elif r.status_code == 404: mode = 'on'
+            if r.status_code == 200:
+                cfg = json.loads(r.text); mode = str(cfg.get('trading', 'on')).strip().lower()
+                try: _CTRL['target'] = max(0.0, float(cfg.get('profit_target') or 0))
+                except (TypeError, ValueError): _CTRL['target'] = 0.0             # a typo turns the target off, never adds risk
+            elif r.status_code == 404: mode = 'on'; _CTRL['target'] = 0.0
     except Exception as e:
         print('control check failed, keeping', mode, str(e)[:120], flush=True)   # network blip: keep the last known setting
     if mode not in ('on', 'pause', 'stop'): mode = 'pause'                      # a typo in control.json fails safe
     _CTRL.update(t=time.time(), mode=mode)
     return mode
+
+def profit_target():
+    control(); return _CTRL['target']
+
+def stopped_today():
+    """A new run checks whether an earlier run already hit the profit target or loss limit today."""
+    try:
+        repo = os.environ.get('GITHUB_REPOSITORY')
+        if not repo: return set()
+        r = requests.get(f'https://raw.githubusercontent.com/{repo}/live/state.json?t={int(time.time())}', timeout=15)
+        today = datetime.now(ET).date().isoformat(); hit = set()
+        for e in (r.json().get('events') or []) if r.ok else []:
+            if str(e.get('ts', '')).startswith(today) and e.get('event') in ('profit_target', 'loss_limit', 'day_done'): hit.add(e['event'])
+        return hit
+    except Exception as e:
+        print('stopped_today check failed', str(e)[:120], flush=True); return set()
 
 def notify(title, msg, tags=''):
     """Push a phone alert through ntfy.sh. Never raises: alerts must not break trading."""
@@ -183,7 +203,7 @@ def orb_step(now, orders, eq):
 ALL_SYMS = list(dict.fromkeys(NA_SYMS + ORB_SYMS))
 EVENTS = []
 def remember(k):
-    if k.get('event') in ('order', 'orb_signal', 'flatten', 'error', 'loss_limit', 'order_blocked', 'stale_skip', 'kill_switch') or (k.get('event') == 'na_check' and k.get('have') != k.get('want')):
+    if k.get('event') in ('order', 'orb_signal', 'flatten', 'error', 'loss_limit', 'profit_target', 'day_done', 'order_blocked', 'stale_skip', 'kill_switch') or (k.get('event') == 'na_check' and k.get('have') != k.get('want')):
         EVENTS.append(k); del EVENTS[:-60]
 
 def snapshot(market_open=True):
@@ -222,7 +242,7 @@ def snapshot(market_open=True):
                     for o in flat if o['symbol'] in ALL_SYMS and float(o.get('filled_qty') or 0) > 0 and o.get('filled_at')], key=lambda x: x['ts'])
     state = dict(updated=now.isoformat(timespec='seconds'), market_open=market_open, equity=float(acct['equity']), fills=fills[-80:],
                  day_pl=round(float(acct['equity']) - float(acct['last_equity']), 2), symbols=out, events=EVENTS[-40:],
-                 control=control(), limits=dict(max_order=MAX_ORDER_DOLLARS, max_orders=MAX_ORDERS_PER_DAY, stale_min=STALE_MINUTES))
+                 control=control(), limits=dict(max_order=MAX_ORDER_DOLLARS, max_orders=MAX_ORDERS_PER_DAY, stale_min=STALE_MINUTES, profit_target=_CTRL['target']))
     alert_fills(fills, out)
     if not market_open:
         notify('Vantex day recap', f"Day P/L {state['day_pl']:+,.2f} · {len(fills)} fills · equity ${state['equity']:,.2f}", 'bar_chart')
@@ -314,6 +334,9 @@ def flatten():
 
 def loop(max_minutes=None):
     done = set(); t0 = time.time(); last_snap = 0; last_scan = 0; last_hist = 0; last_mode = 'on'
+    if stopped_today():                           # an earlier run already locked in the day: stay out until tomorrow
+        log(event='day_done', why='profit target or loss limit already hit today')
+        done.update({'limit', 'orb', 'flat'} | {f'na{k}' for k in range(30, 390, 30)})
     while True:
         if max_minutes and time.time() - t0 > max_minutes * 60:
             log(event='handoff', why='runtime limit'); sys.exit(3)
@@ -335,6 +358,11 @@ def loop(max_minutes=None):
             flatten(); done.add('killed')
         if mode == 'on': done.discard('killed')
         a = req('GET', f'{TRADE}/v2/account').json(); eq = float(a['equity']); start_eq = float(a['last_equity'])
+        tgt = profit_target()
+        if tgt and eq - start_eq >= tgt and 'limit' not in done:
+            log(event='profit_target', pl=round(eq - start_eq, 2), target=tgt)
+            notify('Vantex profit target hit', f'Up {eq - start_eq:+,.2f} today (target ${tgt:,.0f}). Stocks closed to lock it in. Trading resumes tomorrow.', 'moneybag')
+            flatten(); done.update({'limit', 'orb', 'flat'} | {f'na{k}' for k in range(30, 390, 30)})
         if eq - start_eq <= -DAILY_LOSS_LIMIT * start_eq and 'limit' not in done:
             log(event='loss_limit', pl=round(eq - start_eq, 2)); notify('Vantex loss limit hit', f'Down {eq - start_eq:,.2f} today. Stocks closed, trading stopped until tomorrow.', 'warning'); flatten(); done.update({'limit', 'orb', 'flat'} | {f'na{k}' for k in range(30, 390, 30)})
         if 5 <= m < 15 and 'orb' not in done and mode == 'on':
