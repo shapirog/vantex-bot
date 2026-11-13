@@ -163,6 +163,18 @@ button{font:600 11px var(--mono);color:var(--ink);background:rgba(30,24,80,.8);b
 .nws .src{display:block;font-size:10.5px;color:var(--dim);margin-top:2px}
 .ext{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}.ext a{font:600 10.5px var(--mono);color:var(--ema);border:1px solid var(--line);border-radius:6px;padding:4px 8px;text-decoration:none}
 .rk{font:700 11px var(--mono);color:var(--dim);margin-right:6px}
+.stg{display:flex;align-items:baseline;gap:8px;margin:14px 0 6px;font:700 12px var(--display);letter-spacing:.14em;text-transform:uppercase}
+.stg small{font:500 11px var(--mono);letter-spacing:0;text-transform:none;color:var(--dim)}
+.stg.early{color:#ffc94d}.stg.building{color:var(--ema)}.stg.running{color:var(--call)}
+.qt{font-size:10.5px;color:var(--dim);margin-top:4px}
+.ks{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;border:1px solid var(--line);margin-bottom:8px}
+.ks b{font:700 15px var(--display);letter-spacing:.1em}.ks.on b{color:var(--call)}.ks.pause b{color:var(--vwap)}.ks.stop b{color:var(--put)}
+.ks .dot{width:10px;height:10px;border-radius:50%;background:currentColor;box-shadow:0 0 8px currentColor}
+.ks.on{color:var(--call)}.ks.pause{color:var(--vwap)}.ks.stop{color:var(--put)}
+.ksrow{display:flex;flex-direction:column;gap:2px;padding:6px 0;border-top:1px solid rgba(120,110,255,.14);font-size:12px}.ksrow code{font:600 12px var(--mono);color:var(--ink)}.ksrow span{color:var(--dim)}
+.kscode{font:600 12px var(--mono);background:var(--night);border:1px solid var(--line);border-radius:8px;padding:8px 10px;display:block;margin:6px 0;color:var(--ink);white-space:pre}
+.badge.paused{color:var(--vwap)}.badge.stopped{color:var(--put)}
+.pmbanner{border:1px dashed var(--vwap);color:var(--vwap);border-radius:10px;padding:8px 10px;font-size:12px;line-height:1.45;margin-bottom:10px}
 .wait{position:fixed;z-index:6;left:50%;top:50%;transform:translate(-50%,-50%);background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px 16px;max-width:320px;text-align:center;line-height:1.5}
 </style></head><body>
 <div id="bg" aria-hidden="true"></div>
@@ -202,7 +214,7 @@ button{font:600 11px var(--mono);color:var(--ink);background:rgba(30,24,80,.8);b
   <div class="srch"><input id="q" type="search" placeholder="Search any stock: symbol or company" autocomplete="off" autocorrect="off" spellcheck="false" aria-label="Search stocks"><div class="sugg" id="sugg" hidden></div></div>
   <div class="seg wrap" id="scanSeg"><button aria-pressed="true" data-l="radar">🚀 Radar</button><button aria-pressed="false" data-l="bot">Bot stocks</button><button aria-pressed="false" data-l="gain">Gainers</button><button aria-pressed="false" data-l="lose">Losers</button><button aria-pressed="false" data-l="active">Most active</button><button aria-pressed="false" data-l="unusual">Unusual volume</button><button aria-pressed="false" data-l="watch">★ Watchlist</button></div>
   <p class="note" id="scanNote"></p><div id="scanTop"></div><div id="scanList"></div></section>
-<section class="pane" id="p-trade" hidden><h2>PRACTICE TICKET</h2><p class="note">Practice orders fill at the bot's latest price and are saved on this phone only. They never touch the bot's account or real money.</p>
+<section class="pane" id="p-trade" hidden><h2>PRACTICE TICKET</h2><div class="pmbanner"><b>Your practice money · $500 start · this phone only.</b><br>Separate from the bot's $100K Alpaca paper account. Practice trades never reach Alpaca and never use real money.</div>
   <div class="card"><div class="f2"><label>Stock<select id="ptSym"></select></label><label>Shares<input id="ptQty" type="number" min="1" step="1" value="1" inputmode="numeric"></label></div>
   <div class="note" id="ptEst" style="margin:8px 0 0"></div><div class="bb"><button class="buy" id="ptBuy">BUY</button><button class="sell" id="ptSell">SELL</button></div><div id="ptMsg" style="min-height:18px;margin-top:8px;font-size:12px"></div></div>
   <div class="card"><h3>Practice account</h3><div id="ptCash" class="r"></div><div id="ptPos"></div></div>
@@ -216,6 +228,12 @@ button{font:600 11px var(--mono);color:var(--ink);background:rgba(30,24,80,.8);b
   <div class="card"><h3>Crypto district</h3><div id="pfCry"></div></div></section>
 <section class="pane" id="p-activity" hidden><h2>ACTIVITY</h2><div class="seg" id="actSeg"><button aria-pressed="true" data-a="fills">Fills</button><button aria-pressed="false" data-a="events">Bot decisions</button></div><div class="card"><ul class="log" id="actList"></ul></div></section>
 <section class="pane" id="p-risk" hidden><h2>RISK</h2>
+  <div class="card"><h3>Kill switch</h3><div class="ks" id="ksState"><span class="dot"></span><b>–</b><span class="tm" id="ksWho" style="margin-left:auto;font-size:11px"></span></div>
+    <p class="note" style="margin:0 0 6px">To change it, edit <b>control.json</b> in your repo and commit. Both bots check it every minute.</p>
+    <div class="ksrow"><code>{"trading": "on"}</code><span>Trade normally</span></div>
+    <div class="ksrow"><code>{"trading": "pause"}</code><span>No new positions. Exits still allowed.</span></div>
+    <div class="ksrow"><code>{"trading": "stop"}</code><span>Close everything now. No new orders.</span></div>
+    <a class="nbtn" style="display:inline-block;text-decoration:none;color:var(--ink)" href="https://github.com/shapirog/vantex-bot/edit/main/control.json" target="_blank" rel="noopener">Open control.json on GitHub ↗</a></div>
   <div class="card"><div class="r"><span>Daily loss limit</span><b id="rkLim"></b></div><div class="mbar"><div id="rkBar"></div></div><p class="note" id="rkTxt" style="margin:0"></p></div>
   <div class="card" id="rkRules"></div>
   <div class="card"><h3>Real money: locked</h3><p class="note">This page is public, so it never holds brokerage keys or places real orders. Going live means swapping the bot's own key, after the paper record earns it.</p><div id="rkGate"></div></div></section>
@@ -396,7 +414,8 @@ function info(sym){
 function apply(){
   const t=$('total');t.textContent=money(S.day_pl);t.className='pnl '+(S.day_pl>=0?'up':'dn');
   const age=(Date.now()-new Date(S.updated))/60000,fresh=S.market_open&&age<6,b=$('badge');
-  const off=!fresh&&marketHours();b.textContent=fresh?'LIVE':off?'OFFLINE':'CLOSED';b.className='badge '+(fresh?'live':off?'off':'stale');
+  const off=!fresh&&marketHours(),km=ctlMode();b.textContent=km==='stop'?'⛔ STOPPED':km==='pause'?'⏸ PAUSED':fresh?'LIVE':off?'OFFLINE':'CLOSED';
+  b.className='badge '+(km==='stop'?'stopped':km==='pause'?'paused':fresh?'live':off?'off':'stale');
   $('clock').textContent='Updated '+hhmm(S.updated)+' ET';
   const rows=SYMS.map(s=>({s,v:(S.symbols[s]||{}).pl_day||0})).sort((a,c)=>c.v-a.v);
   $('boardSum').textContent=money(S.day_pl);$('boardSum').className=S.day_pl>=0?'up':'dn';
@@ -522,7 +541,8 @@ function renderActivity(){const why={NA:'noise-area',ORB:'opening breakout',exit
 function renderRisk(){const start=S.equity-S.day_pl,lim=start*.01,used=Math.max(0,-S.day_pl);
   $('rkLim').textContent=`$${used.toFixed(2)} of $${lim.toFixed(2)}`;$('rkBar').style.width=Math.min(100,used/lim*100)+'%';
   $('rkTxt').textContent=used>=lim?'Limit reached: the bot closed everything and stopped for the day.':`If the account drops $${lim.toFixed(0)} (1%) in one day, the bot closes everything and stops until tomorrow.`;
-  $('rkRules').innerHTML='<h3>Bot rules</h3>'+[['Mode','Paper only'],['Size per sleeve','$'+Math.round(S.equity/11).toLocaleString()],['Strategies','Noise-area + opening breakout'],['End of day','All closed 3:55 PM ET'],['Stocks',SYMS.join(', ')]].map(([a,b])=>`<div class="r"><span class="tm">${a}</span><span style="text-align:right">${b}</span></div>`).join('');
+  $('rkRules').innerHTML='<h3>Bot rules</h3>'+[['Mode','Paper only'],['Size per sleeve','$'+Math.round(S.equity/11).toLocaleString()],['Strategies','Noise-area + opening breakout'],['Max position','$'+((S.limits&&S.limits.max_order)||12000).toLocaleString()+' (enforced by the bot)'],['Max orders per day',String((S.limits&&S.limits.max_orders)||40)],['Stale data','Skips signals if prices are over '+((S.limits&&S.limits.stale_min)||10)+' min old'],['Rejected orders','Phone alert, no retry'],['End of day','All closed 3:55 PM ET'],['Stocks',SYMS.join(', ')]].map(([a,b])=>`<div class="r"><span class="tm">${a}</span><span style="text-align:right">${b}</span></div>`).join('');
+  renderKill();
   const T=trackStats();
   const gate=[[T&&T.n>=20,`20+ trading days of paper results${T?` (${T.n} so far)`:''}`],[T&&T.n>=20&&T.total>0,`Profitable over that stretch${T?` (${m2(T.total)})`:''}`],[T&&T.n>=20&&T.worst>-(S.equity*.01),`Worst day inside the 1% loss limit${T?` (worst ${m2(T.worst)})`:''}`],[false,'Bot reports live every market day (you confirm)'],[false,'Live key added with a small starting size (you decide)']];
   $('rkGate').innerHTML=gate.map(([ok,t])=>`<div class="ck${ok?' ok':''}"><span>${ok?'✓':''}</span><span>${t}</span></div>`).join('')}
@@ -536,6 +556,12 @@ const LEG0=document.getElementById('legend').innerHTML;
 let watch=store.get('vx_watch',[]);
 async function getJSON(u){try{const r=await fetch(u+'?t='+Date.now(),{cache:'no-store'});return r.ok?await r.json():null}catch(e){return null}}
 let RD=null,NW=new Map(),NWup=null;
+let CTL=null;
+async function loadControl(){const c=await getJSON(RAWB('main/control.json'));CTL=c&&c.trading?String(c.trading).toLowerCase():'on';S&&apply()}
+loadControl();setInterval(loadControl,60000);
+function ctlMode(){/* what the bot itself reports wins; control.json is the fallback */return (S&&S.control)||CTL||'on'}
+function renderKill(){const m=ctlMode(),el=$('ksState');if(!el)return;el.className='ks '+m;el.querySelector('b').textContent={on:'ON · TRADING',pause:'PAUSED',stop:'STOPPED'}[m]||m.toUpperCase();
+  $('ksWho').textContent=S&&S.control?'confirmed by the bot':'from control.json'}
 async function loadMarket(){const[ms,ml,rd,nw]=await Promise.all([getJSON(RAWB('live-scan/market.json')),getJSON(RAWB('live/market.json')),getJSON(RAWB('live-scan/radar.json')),getJSON(RAWB('live-scan/news.json'))]);lastMK=Date.now();
   const m=[ms,ml].filter(x=>x&&x.rows).sort((a,b)=>new Date(b.updated)-new Date(a.updated))[0];if(m){MK=m;MKM=new Map(m.rows.map(r=>[r[0],r]))}
   if(rd&&rd.stocks)RD=rd;
@@ -580,15 +606,21 @@ const tagTxt=t=>t==='EARLY'?'⚡ EARLY':t==='RUNNER'?'🔥 RUNNER':t.startsWith(
 function newsList(s,max){const L=(NW.get(s)||[]).slice(0,max);
   return (L.length?`<ul class="nws">${L.map(n=>`<li><a href="${escH(n.u)}" target="_blank" rel="noopener">${escH(n.h)}</a><span class="src">${escH(n.s)} · ${ago(n.t)}</span></li>`).join('')}</ul>`:`<p class="note" style="margin:8px 0 0">No news for ${s} in the last 36 hours.</p>`)
    +`<div class="ext"><a href="https://finance.yahoo.com/quote/${s}/news" target="_blank" rel="noopener">Yahoo news ↗</a><a href="https://www.google.com/search?q=${s}+stock&tbm=nws" target="_blank" rel="noopener">Google News ↗</a><a href="https://finviz.com/quote.ashx?t=${s}" target="_blank" rel="noopener">Finviz ↗</a></div>`}
-function renderRadar(){const note=$('scanNote');
-  if(!RD){note.textContent='Vantex Radar starts once scanner.py and its workflow are uploaded. It scans every US stock and the news every 15 minutes, 4 AM to 8 PM ET.';$('scanList').innerHTML='';return}
-  note.textContent=`Penny and small stocks with a news catalyst, unusual volume or momentum. ${RD.session[0].toUpperCase()+RD.session.slice(1)} scan at ${hhmm(RD.updated)} ET · every 15 min, 4 AM–8 PM. ⚡ EARLY = fresh good news, move just starting. Signals, not predictions: these move fast both ways.`;
-  $('scanList').innerHTML=RD.stocks.map((x,i)=>{const on=watch.includes(x.sym),open=openNews.has(x.sym),h=x.news[0];
-    return`<div class="card"><div class="r" style="border:0;padding:0"><span><span class="rk">#${i+1}</span><span class="sym">${x.sym}</span> <span class="nm">${escH(x.name)}</span></span><button class="star${on?' on':''}" data-star="${x.sym}" aria-label="${on?'Remove':'Add'} ${x.sym} ${on?'from':'to'} watchlist">${on?'★':'☆'}</button></div>
+const feedTxt=f=>f==='delayed_sip'?'all US exchanges · 15-min delayed':f==='iex'?'live · IEX exchange only (partial volume)':'source unknown';
+function rcard(x,i){const on=watch.includes(x.sym),open=openNews.has(x.sym),h=x.news[0],qAge=x.qt?Math.round((Date.now()/1000-x.qt)/60):null;
+  return`<div class="card"><div class="r" style="border:0;padding:0"><span><span class="rk">#${i+1}</span><span class="sym">${x.sym}</span> <span class="nm">${escH(x.name)}</span></span><button class="star${on?' on':''}" data-star="${x.sym}" aria-label="${on?'Remove':'Add'} ${x.sym} ${on?'from':'to'} watchlist">${on?'★':'☆'}</button></div>
     <div class="r" style="border:0;padding:3px 0 0"><span style="font:700 15px var(--display)">$${fmtp(x.p)}</span><b class="${cl(x.chg)}" style="font-size:15px">${x.chg>=0?'+':''}${x.chg.toFixed(1)}%</b><span class="tm" style="font-size:11px">Vol ${fmtv(x.v)}${x.rv?` · ${rvx(x.rv)}`:''}</span></div>
+    <div class="qt">Last trade ${x.qt?hhmm(x.qt*1000)+' ET':'unknown'}${qAge!=null&&qAge>30?` · <span style="color:var(--vwap)">${qAge>=90?Math.round(qAge/60)+'h':qAge+'m'} old</span>`:''} · ${feedTxt(RD.feed)}</div>
     <div class="tags">${x.tags.map(t=>`<span class="tg ${tagCls(t)}">${tagTxt(t)}</span>`).join('')}</div>
     ${h?`<div class="hl1"><a href="${escH(h.u)}" target="_blank" rel="noopener">${escH(h.h)}</a> <span class="tm" style="font-size:10.5px">${escH(h.s)} · ${ago(h.t)}</span></div>`:''}
-    <button class="nbtn" data-news="${x.sym}" aria-expanded="${open}">${open?'Hide news':'All news'}${(NW.get(x.sym)||[]).length?` (${NW.get(x.sym).length})`:''}</button>${open?newsList(x.sym,8):''}</div>`}).join('')||'<p class="note">Nothing on the radar right now. It fills in as stocks start moving.</p>'}
+    <button class="nbtn" data-news="${x.sym}" aria-expanded="${open}">${open?'Hide news':'All news'}${(NW.get(x.sym)||[]).length?` (${NW.get(x.sym).length})`:''}</button>${open?newsList(x.sym,8):''}</div>`}
+function renderRadar(){const note=$('scanNote');
+  if(!RD){note.textContent='Vantex Radar starts once scanner.py and its workflow are uploaded. It scans every US stock and the news every 15 minutes, 4 AM to 8 PM ET.';$('scanList').innerHTML='';return}
+  note.textContent=`${RD.session[0].toUpperCase()+RD.session.slice(1)} scan at ${hhmm(RD.updated)} ET · prices: ${feedTxt(RD.feed)} · every 15 min, 4 AM–8 PM. Signals, not predictions: these stocks move fast both ways.`;
+  const stage=x=>x.stage||(x.tags.includes('EARLY')?'early':x.chg>=20?'running':'building');
+  const G=[['early','⚡ Early','fresh good news, move just starting'],['building','📈 Building','volume or news picking up, under +20%'],['running','🔥 Already running','up 20%+ already: higher risk of a pullback']];
+  let n=0;$('scanList').innerHTML=G.map(([k,t,sub])=>{const L=RD.stocks.filter(x=>stage(x)===k);if(!L.length)return k==='early'?`<div class="stg early">${t} <small>none right now: ${sub}</small></div>`:'';
+    return`<div class="stg ${k}">${t} <small>${L.length} · ${sub}</small></div>`+L.map(x=>rcard(x,n++)).join('')}).join('')||'<p class="note">Nothing on the radar right now. It fills in as stocks start moving.</p>'}
 document.addEventListener('click',e=>{const b=e.target.closest('[data-news]');if(!b)return;e.stopPropagation();const s=b.dataset.news;openNews.has(s)?openNews.delete(s):openNews.add(s);renderScanner()},true);
 function mrow(r,hl,full){const[s,p,c,v,rv]=r,on=watch.includes(s),bot=SYMS.includes(s);
   return`<div class="card mrow${hl?' hl':''}" ${bot?`data-open="${s}"`:''} style="${bot?'cursor:pointer':''}"><div class="r" style="border:0;padding:0"><span><span class="sym">${s}</span> <span class="nm">${escH(NAMES.get(s)||'')}</span>${bot?' <span class="chip" style="color:var(--ema)">BOT</span>':''}</span><button class="star${on?' on':''}" data-star="${s}" aria-label="${on?'Remove':'Add'} ${s} ${on?'from':'to'} watchlist">${on?'★':'☆'}</button></div>
