@@ -236,9 +236,11 @@ def journal_row(f, s, q, before, after, realized, na, orb, cry):
 def blocked_rows(E, since):
     R = []
     for e in E:
-        if e['_t'] < since: continue
+        if e['_t'] < since or e['_t'].astimezone(ET).date().isoformat() < START: continue
         if e['event'] == 'order_blocked':
             R.append(dict(t=e['_t'].isoformat(), bot='CRYPTO' if e.get('coin') else 'STOCKS', sym=e.get('sym') or e.get('coin'), act='BLOCKED', why=e.get('why', '')))
+        elif e['event'] == 'na_skip' or (e['event'] == 'orb_skip' and 'position size' in str(e.get('why', ''))):
+            R.append(dict(t=e['_t'].isoformat(), bot='NA' if e['event'] == 'na_skip' else 'ORB', sym=e.get('sym'), act='SKIPPED', why=e.get('why', '')))
         elif e['event'] == 'stale_skip':
             R.append(dict(t=e['_t'].isoformat(), bot='ORB' if e.get('where') == 'orb' else 'NA', sym=e.get('sym'), act='SKIPPED', why='Price data was stale (over 10 min old)'))
         elif e['event'] == 'order' and str(e.get('status')) not in ('200', '201'):
@@ -314,8 +316,20 @@ def score(T, rows):
                 expectancy=r2(sum(pn) / len(T)), slip_bps=round(sum(slips) / len(slips), 1) if slips else None, slip_n=len(slips),
                 days=len({t['day'] for t in T}))
 
+def account_start():
+    """The record starts on the day this paper account was opened (a new $2,500 account starts a fresh record)."""
+    global START
+    try:
+        r = req('GET', f'{TRADE}/v2/account')
+        made = (r.json() or {}).get('created_at') if r.ok else None
+        if made:
+            d = ts(made).astimezone(ET).date().isoformat()
+            if d > START: START = d
+    except Exception as e: print('account start check failed', str(e)[:120], flush=True)
+
 def main():
     t0 = datetime.now(ET); os.makedirs(OUT, exist_ok=True)
+    account_start()
     orders = all_orders(); F = fills_from(orders); E = events()
     trades, rows, open_pos = build(F, E)
     since = datetime.now(timezone.utc) - timedelta(days=21)
@@ -339,11 +353,14 @@ def main():
                     max_dd_pct=round(mdd, 2), worst_day=r2(worst[1]), worst_day_date=str(worst[0]) if worst[0] else None,
                     worst_day_pct=round(worst[1] / eq[0][1] * 100, 2), qqq_ret_pct=qqq_return(eq[0][0]))
 
+    # a $2,500-style account is already the real test: no replay needed
+    if acct.get('start_equity') and acct['start_equity'] < 25_000: out_small = None
+    else: out_small = small_account(trades)
     # did the stock bot show up, and run all 12 half-hourly checks, every market day?
-    bot_days = sorted({e['_t'].astimezone(ET).date() for e in E if e['event'] in ('na_check', 'orb_signal', 'orb_skip', 'order', 'stale_skip') and not e.get('coin')})
+    bot_days = sorted({e['_t'].astimezone(ET).date() for e in E if e['_t'].astimezone(ET).date().isoformat() >= START and e['event'] in ('na_check', 'orb_signal', 'orb_skip', 'order', 'stale_skip') and not e.get('coin')})
     slots = {}
     for e in E:
-        if e['event'] == 'na_check': slots.setdefault(e['_t'].astimezone(ET).date(), set()).add(e.get('slot'))
+        if e['event'] == 'na_check' and e['_t'].astimezone(ET).date().isoformat() >= START: slots.setdefault(e['_t'].astimezone(ET).date(), set()).add(e.get('slot'))
     coverage, recent_missed, missed = [], [], []
     if bot_days:
         today = t0.date(); end = today - timedelta(days=1)          # judge finished days only
@@ -368,7 +385,7 @@ def main():
     items = [dict(state='pass' if good and enough else 'track' if good else 'fail', t=t, v=v) for good, t, v in G]
     gate = dict(ready=all(i['state'] == 'pass' for i in items), items=items)
 
-    out = dict(updated=t0.isoformat(timespec='seconds'), start=START, account=acct, small=small_account(trades), bots=bots, all=combined, gate=gate,
+    out = dict(updated=t0.isoformat(timespec='seconds'), start=START, account=acct, small=out_small, bots=bots, all=combined, gate=gate,
                bot_days=len(bot_days), missed=missed[-30:], coverage=coverage[-30:], open=[dict(bot=k[0], sym=k[1], qty=r2(v['q'], 6), avg=r2(v['avg'])) for k, v in open_pos.items()],
                trades=trades[-80:][::-1], journal=journal,
                costs_note='Paper fills are free. Costs are estimated as real money would pay: SEC + FINRA fees on stock sales, 0.25% per side on crypto.')
