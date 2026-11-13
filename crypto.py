@@ -23,9 +23,30 @@ LIVE_DIR = '/tmp/vantex-crypto'
 NTFY = os.environ.get('NTFY_TOPIC')
 EVENTS = []
 
+# ---------- kill switch: control.json in the repo's main branch ----------
+# "on"    = trade normally
+# "pause" = no new positions; exits that reduce risk are still allowed; positions are kept
+# "stop"  = no new orders and close every position now
+_CTRL = {'t': 0, 'mode': 'on'}
+def control():
+    if time.time() - _CTRL['t'] < 60: return _CTRL['mode']
+    tok, repo = os.environ.get('GH_TOKEN'), os.environ.get('GITHUB_REPOSITORY')
+    mode = _CTRL['mode']
+    try:
+        if tok and repo:
+            r = requests.get(f'https://api.github.com/repos/{repo}/contents/control.json?ref=main',
+                             headers={'Authorization': f'Bearer {tok}', 'Accept': 'application/vnd.github.raw'}, timeout=15)
+            if r.status_code == 200: mode = str(json.loads(r.text).get('trading', 'on')).strip().lower()
+            elif r.status_code == 404: mode = 'on'
+    except Exception as e:
+        print('control check failed, keeping', mode, str(e)[:120], flush=True)   # network blip: keep the last known setting
+    if mode not in ('on', 'pause', 'stop'): mode = 'pause'                      # a typo in control.json fails safe
+    _CTRL.update(t=time.time(), mode=mode)
+    return mode
+
 def log(**k):
     k['ts'] = datetime.now(ET).isoformat(timespec='seconds'); print(json.dumps(k), flush=True)
-    if k.get('event') in ('order', 'exit', 'error') or (k.get('event') == 'crypto_check' and k.get('have') != k.get('want')):
+    if k.get('event') in ('order', 'exit', 'error', 'order_blocked') or (k.get('event') == 'crypto_check' and k.get('have') != k.get('want')):
         EVENTS.append(k); del EVENTS[:-40]
     os.makedirs(os.path.dirname(LOG) or '.', exist_ok=True)
     open(LOG, 'a').write(json.dumps(k) + '\n')
@@ -81,10 +102,16 @@ def step():
             want, e20, e50 = signal([c for _, c in b], p, have)
             CACHE[coin] = dict(series=b[-96:], ema20=e20, ema50=e50)
             log(event='crypto_check', coin=coin, price=round(p, 2), ema20=round(e20, 2), ema50=round(e50, 2), have=have, want=want)
+            mode = control()
+            if mode == 'stop' and have:
+                r = req('DELETE', f'{TRADE}/v2/positions/{coin}USD'); log(event='exit', coin=coin, why='kill switch stop', status=r.status_code); continue
+            if want and not have and mode != 'on':
+                log(event='order_blocked', coin=coin, why=f'kill switch is {mode}'); continue
             if want and not have:
                 r = req('POST', f'{TRADE}/v2/orders', json=dict(symbol=pair, notional=str(SLEEVE), side='buy', type='market', time_in_force='gtc',
                                                              client_order_id=f'CRY-{coin}-{int(time.time())}'))
                 log(event='order', coin=coin, side='buy', notional=SLEEVE, status=r.status_code, resp=(r.json().get('status') if r.ok else r.text[:200]))
+                if not r.ok: notify(f'Vantex crypto order rejected: {coin}', f'BUY ${SLEEVE:,.0f} {coin} rejected ({r.status_code}): {r.text[:160]}')
             elif have and not want:
                 r = req('DELETE', f'{TRADE}/v2/positions/{coin}USD')
                 log(event='exit', coin=coin, status=r.status_code)
@@ -117,7 +144,7 @@ def publish():
                 notify(f"Vantex crypto {f['side'].upper()} {f['coin']}", f"{f['side'].upper()} {f['qty']:g} {f['coin']} @ ${f['price']:,.2f}",
                        'green_circle' if f['side'] == 'buy' else 'red_circle')
         _SEEN |= ids
-    state = dict(updated=datetime.now(ET).isoformat(timespec='seconds'), equity=float(acct['equity']), coins=coins, fills=fills[-60:], events=EVENTS[-30:])
+    state = dict(updated=datetime.now(ET).isoformat(timespec='seconds'), equity=float(acct['equity']), coins=coins, fills=fills[-60:], events=EVENTS[-30:], control=control())
     push(state)
 
 def push(state):
