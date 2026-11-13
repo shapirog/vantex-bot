@@ -152,6 +152,13 @@ button{font:600 11px var(--mono);color:var(--ink);background:rgba(30,24,80,.8);b
 .mrow .r{gap:10px}.mrow .r>span:first-child{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .hl{border-color:var(--ema)!important;box-shadow:0 0 14px rgba(77,216,255,.25)}
 .board li.w{border-style:dashed}.board li.c{border-color:rgba(255,201,77,.6)}
+.sc{border:1px solid var(--line);border-radius:9px;padding:9px;margin-top:8px}.sc h4{margin:0;font:700 12px var(--display);letter-spacing:.08em;display:flex;justify-content:space-between;gap:8px}
+.sc .kpi{margin-top:6px}.sc .kpi b{font-size:13px}.scx{font-size:10.5px;color:var(--dim);margin-top:6px;line-height:1.5}
+.rdy{display:flex;flex-direction:column;align-items:flex-start;gap:3px;padding:9px 10px;border-radius:9px;border:1px solid var(--put);color:var(--put);font:700 12px var(--display);letter-spacing:.08em}.rdy.go{border-color:var(--call);color:var(--call)}.rdy small{font:500 11px var(--mono);letter-spacing:0;color:var(--dim)}
+.ck.track span:first-child{border-color:var(--vwap);color:var(--vwap);display:grid;place-items:center;font-size:10px}.ck.fail span:first-child{border-color:var(--put);color:var(--put);display:grid;place-items:center;font-size:10px}.ck i{font-style:normal;color:var(--dim);margin-left:auto;white-space:nowrap;padding-left:8px}
+.jr{padding:8px 0;border-bottom:1px solid rgba(120,110,255,.14);font-size:11.5px}.jr:last-child{border-bottom:0}.jr .l1{display:flex;gap:7px;align-items:center;flex-wrap:wrap}.jr .why{color:var(--ink);opacity:.85;margin-top:3px;line-height:1.4}.jr .l3{color:var(--dim);font-size:10.5px;margin-top:2px}
+.jday{font:700 10px var(--mono);letter-spacing:.1em;color:var(--dim);text-transform:uppercase;padding:10px 0 2px}.jact{font-weight:700}.jact.warn{color:var(--vwap)}
+.cov{display:flex;gap:3px;margin-top:6px}.cov i{flex:1;height:16px;border-radius:3px;background:rgba(255,255,255,.08);position:relative}.cov i b{position:absolute;inset:auto 0 0 0;border-radius:3px;background:var(--call)}.cov i.part b{background:var(--vwap)}
 .kpi{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px}.kpi div{display:flex;flex-direction:column;gap:2px}.kpi span{font-size:10px;color:var(--dim);text-transform:uppercase}.kpi b{font:700 14px var(--display);font-variant-numeric:tabular-nums}
 .ck.ok span:first-child{border-color:var(--call);color:var(--call);display:grid;place-items:center;font-size:11px}
 .tags{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}
@@ -237,11 +244,14 @@ canvas.vc{width:100%;display:block;touch-action:pan-y;cursor:crosshair}
   <button id="ptReset" style="width:100%">Reset practice account to $500</button></section>
 <section class="pane" id="p-portfolio" hidden><h2>PORTFOLIO</h2><p class="note">The bot's Alpaca paper account.</p>
   <div class="card"><div class="r"><span>Equity</span><b id="pfEq"></b></div><div class="r"><span>Today</span><b id="pfPl"></b></div></div>
+  <div class="card"><h3>Scorecard</h3><div id="scBox"><p class="note" style="margin:6px 0 0">Loading the scorecard…</p></div></div>
   <div class="card"><h3>Open positions</h3><div id="pfPos"></div></div>
   <div class="card"><h3>Completed trades today</h3><div id="pfTrips"></div></div>
   <div class="card"><h3>Track record</h3><div class="rng" data-eq="eqc"><button data-r="1W" aria-pressed="false">1W</button><button data-r="1M" aria-pressed="false">1M</button><button data-r="3M" aria-pressed="false">3M</button><button data-r="ALL" aria-pressed="true">All</button></div><canvas id="eqc" class="vc" style="height:170px"></canvas><div id="trk"></div></div>
   <div class="card"><h3>Crypto district</h3><div id="pfCry"></div></div></section>
-<section class="pane" id="p-activity" hidden><h2>ACTIVITY</h2><div class="seg" id="actSeg"><button aria-pressed="true" data-a="fills">Fills</button><button aria-pressed="false" data-a="events">Bot decisions</button></div><div class="card"><ul class="log" id="actList"></ul></div></section>
+<section class="pane" id="p-activity" hidden><h2>ACTIVITY</h2><div class="seg" id="actSeg"><button aria-pressed="true" data-a="fills">Fills</button><button aria-pressed="false" data-a="events">Bot decisions</button><button aria-pressed="false" data-a="journal">Journal</button></div>
+  <div class="seg wrap" id="jSeg" style="display:none"><button aria-pressed="true" data-j="all">All</button><button aria-pressed="false" data-j="NA">Noise-area</button><button aria-pressed="false" data-j="ORB">Breakout</button><button aria-pressed="false" data-j="CRYPTO">Crypto</button><button aria-pressed="false" data-j="issues">Issues</button></div>
+  <div class="card"><ul class="log" id="actList"></ul><div id="jList" style="display:none"></div></div></section>
 <section class="pane" id="p-risk" hidden><h2>RISK</h2>
   <div class="card"><h3>Kill switch</h3><div class="ks" id="ksState"><span class="dot"></span><b>–</b><span class="tm" id="ksWho" style="margin-left:auto;font-size:11px"></span></div>
     <p class="note" style="margin:0 0 6px">To change it, edit <b>control.json</b> in your repo and commit. Both bots check it every minute.</p>
@@ -251,7 +261,7 @@ canvas.vc{width:100%;display:block;touch-action:pan-y;cursor:crosshair}
     <a class="nbtn" style="display:inline-block;text-decoration:none;color:var(--ink)" href="https://github.com/shapirog/vantex-bot/edit/main/control.json" target="_blank" rel="noopener">Open control.json on GitHub ↗</a></div>
   <div class="card"><div class="r"><span>Daily loss limit</span><b id="rkLim"></b></div><div class="mbar"><div id="rkBar"></div></div><p class="note" id="rkTxt" style="margin:0"></p></div>
   <div class="card" id="rkRules"></div>
-  <div class="card"><h3>Real money: locked</h3><p class="note">This page is public, so it never holds brokerage keys or places real orders. Going live means swapping the bot's own key, after the paper record earns it.</p><div id="rkGate"></div></div></section>
+  <div class="card"><h3>Real money: locked</h3><div id="rkReady"></div><p class="note" style="margin-top:8px">This page is public, so it never holds brokerage keys or places real orders. Going live means swapping the bot's own key, after the paper record earns it.</p><div id="rkGate"></div></div></section>
 
 <section class="sheet" id="sheet" role="dialog" aria-labelledby="sName">
   <header><h2 id="sName">QQQ</h2><span class="chip" id="sChip">Scanning</span><button id="sClose">← Back to city</button></header>
@@ -636,13 +646,14 @@ $('ptBuy').onclick=()=>ptOrder('BUY');$('ptSell').onclick=()=>ptOrder('SELL');$(
 let arm=false;$('ptReset').onclick=()=>{const b=$('ptReset');if(!arm){arm=true;b.textContent='Tap again to confirm reset';b.style.color='var(--put)';setTimeout(()=>{arm=false;b.textContent='Reset practice account to $500';b.style.color=''},3500);return}
   PT=JSON.parse(JSON.stringify(PT0));store.set('vx_pt',PT);arm=false;b.textContent='Reset practice account to $500';b.style.color='';$('ptMsg').textContent='Practice account reset to $500.';renderTrade()};
 
-function renderPortfolio(){renderTrack();renderCryptoCard();$('pfEq').textContent='$'+S.equity.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});$('pfPl').textContent=m2(S.day_pl);$('pfPl').className=cl(S.day_pl);
+function renderPortfolio(){renderTrack();renderCryptoCard();renderScore();$('pfEq').textContent='$'+S.equity.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});$('pfPl').textContent=m2(S.day_pl);$('pfPl').className=cl(S.day_pl);
   const open=S.market_open?SYMS.filter(s=>S.symbols[s]&&S.symbols[s].qty):[];
   $('pfPos').innerHTML=open.map(s=>{const d=S.symbols[s];return`<div class="r tap" data-open="${s}"><span class="sym">${s}</span><span>${d.qty>0?'Long':'Short'} ${Math.abs(d.qty)}</span><span>$${d.price.toFixed(2)}</span></div>`}).join('')||'<p class="note" style="margin:6px 0 0">No open positions. The bot closes everything at 3:55 PM.</p>';
   const T=trips(S.fills||[]);$('pfTrips').innerHTML=T.reverse().map(t=>`<div class="r tap" data-open="${t.sym}"><span class="sym">${t.sym}</span><span style="font-size:11px">${t.dir>0?'Long':'Short'} ${t.qty} · ${t.entry.toFixed(2)}→${t.exit.toFixed(2)}</span><b class="${cl(t.pnl)}">${m2(t.pnl)}</b></div>`).join('')||'<p class="note" style="margin:6px 0 0">No completed trades yet today.</p>'}
 
 let act='fills';$('actSeg').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;act=b.dataset.a;b.parentNode.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b));renderActivity()});
-function renderActivity(){const why={NA:'noise-area',ORB:'opening breakout',exit:'exit'};
+function renderActivity(){const isJ=act==='journal';$('jSeg').style.display=isJ?'':'none';$('jList').style.display=isJ?'':'none';$('actList').style.display=isJ?'none':'';if(isJ){renderJournal();return}
+  const why={NA:'noise-area',ORB:'opening breakout',exit:'exit'};
   why.crypto='crypto trend';const allF=[...(S.fills||[]),...((CR&&CR.fills)||[]).map(f=>({...f,sym:f.coin,strat:'crypto'}))].sort((a,b)=>new Date(a.ts)-new Date(b.ts));
   if(act==='fills'){$('actList').innerHTML=allF.slice().reverse().map(f=>`<li class="tap" data-open="${f.sym}" style="cursor:pointer"><span class="tm">${hhmm(f.ts)}</span><span><b>${f.sym}</b> <span class="${f.side==='buy'?'up':'dn'}">${f.side.toUpperCase()} ${+f.qty.toFixed(6)} @ ${f.price.toFixed(2)}</span> <span class="tm">${why[f.strat]||f.strat}</span></span></li>`).join('')||'<li><span></span><span class="tm">No fills yet today</span></li>';return}
   const N={order:'Order sent',orb_signal:'Breakout signal',na_check:'Signal change',flatten:'Closed all positions',error:'Error',loss_limit:'Daily loss limit hit'};
@@ -654,6 +665,7 @@ function renderRisk(){const start=S.equity-S.day_pl,lim=start*.01,used=Math.max(
   $('rkTxt').textContent=used>=lim?'Limit reached: the bot closed everything and stopped for the day.':`If the account drops $${lim.toFixed(0)} (1%) in one day, the bot closes everything and stops until tomorrow.`;
   $('rkRules').innerHTML='<h3>Bot rules</h3>'+[['Mode','Paper only'],['Size per sleeve','$'+Math.round(S.equity/11).toLocaleString()],['Strategies','Noise-area + opening breakout'],['Max position','$'+((S.limits&&S.limits.max_order)||12000).toLocaleString()+' (enforced by the bot)'],['Max orders per day',String((S.limits&&S.limits.max_orders)||40)],['Stale data','Skips signals if prices are over '+((S.limits&&S.limits.stale_min)||10)+' min old'],['Rejected orders','Phone alert, no retry'],['End of day','All closed 3:55 PM ET'],['Stocks',SYMS.join(', ')]].map(([a,b])=>`<div class="r"><span class="tm">${a}</span><span style="text-align:right">${b}</span></div>`).join('');
   renderKill();
+  if(JR&&JR.gate){renderGate();return}
   const T=trackStats();
   const gate=[[T&&T.n>=20,`20+ trading days of paper results${T?` (${T.n} so far)`:''}`],[T&&T.n>=20&&T.total>0,`Profitable over that stretch${T?` (${m2(T.total)})`:''}`],[T&&T.n>=20&&T.worst>-(S.equity*.01),`Worst day inside the 1% loss limit${T?` (worst ${m2(T.worst)})`:''}`],[false,'Bot reports live every market day (you confirm)'],[false,'Live key added with a small starting size (you decide)']];
   $('rkGate').innerHTML=gate.map(([ok,t])=>`<div class="ck${ok?' ok':''}"><span>${ok?'✓':''}</span><span>${t}</span></div>`).join('')}
@@ -683,6 +695,39 @@ async function loadMarket(){const[ms,ml,rd,nw,chd]=await Promise.all([getJSON(RA
 async function loadHist(){const h=await getJSON(RAWB('live/history.json'));if(h&&h.days){HI=h;renderPanes();S&&apply()}}
 async function loadCrypto(){const c=await getJSON(RAWB('live-crypto/crypto.json'));if(c&&c.coins){CR=c;applyCrypto();renderPanes();if(openSym&&COINS.includes(openSym))renderCrypto()}}
 loadMarket();loadHist();loadCrypto();
+/* ---------- journal + scorecard (built by journal.py every 30 min) ---------- */
+let JR=null,jf='all';
+async function loadJournal(){const j=await getJSON(RAWB('live-journal/journal.json'));if(j&&j.bots){JR=j;renderPanes()}}
+loadJournal();setInterval(loadJournal,300000);
+$('jSeg').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;jf=b.dataset.j;b.parentNode.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b));renderJournal()});
+const pctS=(n,d=2)=>n==null?'–':(n>0?'+':'')+n.toFixed(d)+'%';
+const dshort=t=>new Date(t).toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric',timeZone:'America/New_York'});
+function gateCount(){const it=JR.gate.items;return{pass:it.filter(i=>i.state==='pass').length,n:it.length}}
+function readyBadge(){const g=gateCount();return`<div class="rdy${JR.gate.ready?' go':''}">${JR.gate.ready?'✓ READY FOR A SMALL LIVE TEST':'⛔ REAL MONEY: NOT READY'}<small>${g.pass} of ${g.n} checks passed</small></div>`}
+function renderScore(){const box=$('scBox');if(!box)return;if(!JR){box.innerHTML='<p class="note" style="margin:6px 0 0">The scorecard appears after the journal workflow runs for the first time.</p>';return}
+  const A=JR.account||{},B=JR.bots||{},X=JR.all||{};
+  const acct=A.start?`<div class="kpi"><div><span>Account</span><b class="${cl(A.ret_pct)}">${pctS(A.ret_pct)}</b></div><div><span>QQQ same days</span><b class="${cl(A.qqq_ret_pct)}">${pctS(A.qqq_ret_pct)}</b></div><div><span>Biggest drop</span><b class="${A.max_dd_pct>0?'dn':''}">${A.max_dd_pct?'-'+A.max_dd_pct.toFixed(2)+'%':'0%'}</b></div></div>`:'';
+  const bot=(k,b)=>{if(!b||!b.trades)return`<div class="sc"><h4><span>${b?b.name:k}</span><span class="tm">no closed trades yet</span></h4></div>`;
+    return`<div class="sc"><h4><span>${b.name}</span><b class="${cl(b.net)}">${m2(b.net)}</b></h4><div class="kpi"><div><span>Trades</span><b>${b.trades}</b></div><div><span>Win rate</span><b>${b.win_rate.toFixed(0)}%</b></div><div><span>Profit factor</span><b class="${b.pf>=1.2?'up':b.pf!=null&&b.pf<1?'dn':''}">${b.pf==null?'–':b.pf.toFixed(2)}</b></div><div><span>Avg win</span><b class="up">${m2(b.avg_win)}</b></div><div><span>Avg loss</span><b class="dn">${m2(b.avg_loss)}</b></div><div><span>Per trade</span><b class="${cl(b.expectancy)}">${m2(b.expectancy)}</b></div></div>
+      <div class="scx">Best ${m2(b.best)} · worst ${m2(b.worst)} · longest losing streak ${b.losing_streak} · est. costs ${m2(-b.costs)}${b.slip_bps!=null?` · avg slippage ${(b.slip_bps/100).toFixed(3)}%`:''} · ${b.days} day${b.days===1?'':'s'}</div></div>`};
+  const cov=(JR.coverage||[]).slice(-20);
+  const covH=cov.length?`<div class="scx" style="margin-top:10px">Stock bot checks per day (12 = full day)</div><div class="cov">${cov.map(c=>`<i class="${c.checks<c.of-1?'part':''}" title="${c.day}: ${c.checks} of ${c.of}"><b style="height:${Math.max(6,c.checks/c.of*100)}%"></b></i>`).join('')}</div><div class="scx">${cov.filter(c=>c.checks>=c.of-1).length} of ${cov.length} market days were full days</div>`:'';
+  box.innerHTML=readyBadge()+acct+(X.trades?`<div class="scx" style="margin-top:8px">All bots: ${X.trades} trades · ${m2(X.net)} after est. costs · profit factor ${X.pf==null?'–':X.pf.toFixed(2)}</div>`:'')+
+    ['NA','ORB','CRYPTO'].map(k=>bot(k,B[k])).join('')+covH+`<p class="note" style="margin:8px 0 0">${escH(JR.costs_note||'')} Updated ${dshort(JR.updated)}, ${hhmm(JR.updated)} ET. Full list in Activity → Journal.</p>`}
+function renderGate(){$('rkReady').innerHTML=readyBadge();
+  const ic={pass:'✓',track:'…',fail:'✕'};
+  $('rkGate').innerHTML=JR.gate.items.map(i=>`<div class="ck ${i.state==='pass'?'ok':i.state}"><span>${ic[i.state]}</span><span>${escH(i.t)}</span><i>${escH(i.v)}</i></div>`).join('')+
+    `<p class="note" style="margin:8px 0 0">✓ passed · … on track, needs 20 days · ✕ not met. Even when every line passes, the move to real money is yours: a new live key, a small size.</p>`}
+function renderJournal(){const box=$('jList');if(!JR){box.innerHTML='<p class="note" style="margin:6px 0 0">The journal appears after the journal workflow runs for the first time.</p>';return}
+  const ISS=['BLOCKED','SKIPPED','REJECTED','LOSS LIMIT','KILL SWITCH','MANUAL'];
+  const R=(JR.journal||[]).filter(r=>jf==='all'||(jf==='issues'?ISS.includes(r.act):r.bot===jf||(jf!=='CRYPTO'&&r.bot==='STOCKS'&&ISS.includes(r.act)&&false)));
+  if(!R.length){box.innerHTML='<p class="note" style="margin:6px 0 0">Nothing here in the last 3 weeks.</p>';return}
+  const BN={NA:'Noise-area',ORB:'Breakout',CRYPTO:'Crypto',STOCKS:'Stocks',OTHER:'Other'};let day='',h='';
+  for(const r of R.slice(0,250)){const d=dshort(r.t);if(d!==day){day=d;h+=`<div class="jday">${d}</div>`}
+    const warn=ISS.includes(r.act),c=warn?'warn':(r.side==='buy'?'up':'dn');
+    const l3=[r.exp!=null?`expected ${r.exp}`:'',r.slip!=null?`slippage ${(r.slip/100).toFixed(3)}%${r.slip>0?' (paid more)':r.slip<0?' (better)':''}`:''].filter(Boolean).join(' · ');
+    h+=`<div class="jr"><div class="l1"><span class="tm">${hhmm(r.t)}</span><span class="tg">${BN[r.bot]||r.bot}</span><span class="jact ${c}">${r.act}</span><b class="tap" ${r.sym?`data-open="${r.sym}"`:''}>${r.sym||''}</b>${r.qty!=null?`<span>${+r.qty} @ ${r.fill}</span>`:''}${r.pnl!=null?`<b class="${cl(r.pnl)}" style="margin-left:auto">${m2(r.pnl)}</b>`:''}</div><div class="why">${escH(r.why||'')}</div>${l3?`<div class="l3">${l3}</div>`:''}</div>`}
+  box.innerHTML=h}
 setInterval(()=>{if(cur()==='scanner'||watch.length)loadMarket()},90000);setInterval(loadHist,600000);setInterval(loadCrypto,65000);
 
 const fmtp=p=>p==null?'–':p<1?p.toFixed(4):p.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
