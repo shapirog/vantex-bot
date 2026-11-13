@@ -18,6 +18,23 @@ NTFY = os.environ.get('NTFY_TOPIC')
 SCAN_EVERY = 300          # seconds between full-market scans
 HIST_EVERY = 1800         # seconds between track-record refreshes
 MAX_ORDER_DOLLARS = 12_000  # hard cap on any single new order (a normal sleeve is equity / 11, about $9,100)
+# ---------- account size ----------
+# Big account (over $25K): 11 sleeves of equity / 11, whole shares.
+# Small account (like $2,500): at most 4 stock positions at once, each 20% of equity; fractional shares for longs,
+# whole shares for shorts (a short too small for 1 share is skipped). Crypto gets the other 20% (see crypto.py).
+SMALL_ACCOUNT = 25_000
+SMALL_SLOTS, SMALL_PCT = 4, 0.20
+MAX_POSITION_PCT = 0.30      # no single position over 30% of equity
+_EQ = {'v': 0.0}
+def small(): return 0 < _EQ['v'] < SMALL_ACCOUNT
+def position_dollars(eq): return eq * SMALL_PCT if eq < SMALL_ACCOUNT else eq / SLEEVES
+def max_order(): return min(MAX_ORDER_DOLLARS, _EQ['v'] * MAX_POSITION_PCT) if _EQ['v'] else MAX_ORDER_DOLLARS
+def fmt_q(q):
+    q = abs(q)
+    return str(int(round(q))) if abs(q - round(q)) < 1e-6 else f'{q:.6f}'.rstrip('0').rstrip('.')
+def stock_positions():
+    try: return [p for p in req('GET', f'{TRADE}/v2/positions').json() if p.get('asset_class') == 'us_equity']
+    except Exception: return []
 MAX_ORDERS_PER_DAY = 40     # hard cap on new strategy orders per day (a normal day is under 20)
 STALE_MINUTES = 10          # skip a signal if the latest price bar is older than this (halt or data outage)
 
@@ -131,18 +148,18 @@ def order(sym, qty, side, cid, price=None, reduce=False, exposure=None, **extra)
     if mode == 'stop' or (mode == 'pause' and not reduce): why = f'kill switch is {mode}'
     elif not reduce:
         size = exposure if exposure is not None else (qty * price if price else 0)   # the position this order leaves you with
-        if size > MAX_ORDER_DOLLARS: why = f'position ${size:,.0f} would be over the ${MAX_ORDER_DOLLARS:,} cap'
+        if size > max_order() + 1: why = f'position ${size:,.0f} would be over the ${max_order():,.0f} cap'
         else:
             n = sum(1 for o in today_orders() if (o.get('client_order_id') or '').startswith(('NA-', 'ORB-')))
             if n >= MAX_ORDERS_PER_DAY: why = f'{n} orders today, at the {MAX_ORDERS_PER_DAY} daily cap'
     if why:
-        log(event='order_blocked', sym=sym, side=side, qty=int(qty), why=why)
+        log(event='order_blocked', sym=sym, side=side, qty=float(fmt_q(qty)), why=why)
         return None
-    body = dict(symbol=sym, qty=str(int(qty)), side=side, type='market', time_in_force='day', client_order_id=cid[:120], **extra)
+    body = dict(symbol=sym, qty=fmt_q(qty), side=side, type='market', time_in_force='day', client_order_id=cid[:120], **extra)
     r = req('POST', f'{TRADE}/v2/orders', json=body)
-    log(event='order', sym=sym, side=side, qty=int(qty), cid=cid, status=r.status_code, resp=(r.json().get('status') if r.ok else r.text[:200]))
+    log(event='order', sym=sym, side=side, qty=float(fmt_q(qty)), cid=cid, status=r.status_code, resp=(r.json().get('status') if r.ok else r.text[:200]))
     if not r.ok:
-        notify(f'Vantex order rejected: {sym}', f'{side.upper()} {int(qty)} {sym} was rejected ({r.status_code}): {r.text[:160]}', 'warning')
+        notify(f'Vantex order rejected: {sym}', f'{side.upper()} {fmt_q(qty)} {sym} was rejected ({r.status_code}): {r.text[:160]}', 'warning')
     return r
 
 def session_minutes(df):
@@ -171,6 +188,7 @@ def levels(sym, now):
     return sig, pc, op
 
 def na_step(now, slot_k, orders, eq):
+    held = len(stock_positions())
     for sym in NA_SYMS:
         try:
             sig, pc, op = levels(sym, now)
@@ -187,13 +205,32 @@ def na_step(now, slot_k, orders, eq):
             else: want = 1 if p > ub else (0 if p > min(lb, vw) else -1)
             log(event='na_check', sym=sym, slot=slot_k, price=round(p, 2), upper=round(ub, 2), lower=round(lb, 2), vwap=round(vw, 2), have=d, want=want)
             if want == d: continue
-            delta = want * math.floor(eq / SLEEVES / p) - cur
-            if delta: order(sym, abs(delta), 'buy' if delta > 0 else 'sell', f'NA-{sym}-{now:%Y%m%d}-{slot_k}-{int(time.time())}',
-                            price=p, reduce=abs(cur + delta) < abs(cur), exposure=abs(cur + delta) * p)
+            n = position_dollars(eq) / p
+            if want == 1: tq = round(n, 4) if eq < SMALL_ACCOUNT else math.floor(n)       # fractional longs on a small account
+            elif want == -1: tq = math.floor(n)                                          # shorts: whole shares only
+            else: tq = 0
+            if want == -1 and tq < 1:
+                log(event='na_skip', sym=sym, slot=slot_k, why=f'short needs 1 share (${p:,.0f}); position size is ${position_dollars(eq):,.0f}')
+                want = 0
+                if d == 0: continue
+            target = want * tq; cid = f'NA-{sym}-{now:%Y%m%d}-{slot_k}-{int(time.time())}'
+            if d == 0 and target and eq < SMALL_ACCOUNT and held >= SMALL_SLOTS:
+                log(event='order_blocked', sym=sym, side='buy' if target > 0 else 'sell', qty=abs(target), why=f'all {SMALL_SLOTS} position spots are full'); continue
+            if d != 0 and (target == 0 or (target > 0) != (cur > 0)):
+                # close first (fractional amounts close exactly), then open the new side as its own order
+                order(sym, abs(cur), 'sell' if cur > 0 else 'buy', cid, price=p, reduce=True)
+                if not target: held -= 1
+                if target: time.sleep(1); order(sym, abs(target), 'buy' if target > 0 else 'sell', cid + 'b', price=p, exposure=abs(target) * p)
+            else:
+                delta = target - cur
+                if abs(delta) > 1e-6:
+                    order(sym, abs(delta), 'buy' if delta > 0 else 'sell', cid, price=p, reduce=abs(target) < abs(cur), exposure=abs(target) * p)
+                    if d == 0: held += 1
         except Exception as e:
             log(event='error', where='na', sym=sym, err=str(e)[:300])
 
 def orb_step(now, orders, eq):
+    held = len(stock_positions())
     for sym in ORB_SYMS:
         try:
             if any((o.get('client_order_id') or '').startswith(f'ORB-{sym}-{now:%Y%m%d}') for o in orders): continue
@@ -206,7 +243,10 @@ def orb_step(now, orders, eq):
             d = 1 if C > O else -1; p = b.c.iloc[-1]
             stop = Ll if d == 1 else Hh; risk = abs(p - stop)
             if risk < 0.01 or (d == 1 and stop >= p) or (d == -1 and stop <= p): log(event='orb_skip', sym=sym, why='price past stop'); continue
-            tgt = p + d * 10 * risk; qty = math.floor(eq / SLEEVES / p)
+            tgt = p + d * 10 * risk; qty = math.floor(position_dollars(eq) / p)    # bracket orders need whole shares
+            if qty < 1: log(event='orb_skip', sym=sym, why=f'1 share (${p:,.0f}) is bigger than the ${position_dollars(eq):,.0f} position size'); continue
+            if eq < SMALL_ACCOUNT and held >= SMALL_SLOTS: log(event='order_blocked', sym=sym, side='buy' if d == 1 else 'sell', qty=qty, why=f'all {SMALL_SLOTS} position spots are full'); continue
+            held += 1
             log(event='orb_signal', sym=sym, dir=d, price=round(p, 2), stop=round(stop, 2), target=round(tgt, 2), qty=qty)
             order(sym, qty, 'buy' if d == 1 else 'sell', f'ORB-{sym}-{now:%Y%m%d}-{int(time.time())}', price=p,
                   order_class='bracket', take_profit=dict(limit_price=str(round(tgt, 2))), stop_loss=dict(stop_price=str(round(stop, 2))))
@@ -216,7 +256,7 @@ def orb_step(now, orders, eq):
 ALL_SYMS = list(dict.fromkeys(NA_SYMS + ORB_SYMS))
 EVENTS = []
 def remember(k):
-    if k.get('event') in ('order', 'orb_signal', 'flatten', 'error', 'loss_limit', 'profit_target', 'profit_lock_hit', 'lock_armed', 'day_done', 'order_blocked', 'stale_skip', 'kill_switch') or (k.get('event') == 'na_check' and k.get('have') != k.get('want')):
+    if k.get('event') in ('order', 'orb_signal', 'flatten', 'error', 'loss_limit', 'profit_target', 'profit_lock_hit', 'lock_armed', 'day_done', 'order_blocked', 'stale_skip', 'kill_switch', 'na_skip') or (k.get('event') == 'na_check' and k.get('have') != k.get('want')):
         EVENTS.append(k); del EVENTS[:-60]
 
 def snapshot(market_open=True):
@@ -255,7 +295,7 @@ def snapshot(market_open=True):
                     for o in flat if o['symbol'] in ALL_SYMS and float(o.get('filled_qty') or 0) > 0 and o.get('filled_at')], key=lambda x: x['ts'])
     state = dict(updated=now.isoformat(timespec='seconds'), market_open=market_open, equity=float(acct['equity']), fills=fills[-80:],
                  day_pl=round(float(acct['equity']) - float(acct['last_equity']), 2), symbols=out, events=EVENTS[-40:],
-                 control=control(), limits=dict(max_order=MAX_ORDER_DOLLARS, max_orders=MAX_ORDERS_PER_DAY, stale_min=STALE_MINUTES, profit_target=_CTRL['target'], profit_lock=_CTRL['lock']),
+                 control=control(), limits=dict(max_order=round(max_order()), position=round(position_dollars(float(acct['equity'])), 2), slots=SMALL_SLOTS if float(acct['equity']) < SMALL_ACCOUNT else SLEEVES, max_orders=MAX_ORDERS_PER_DAY, stale_min=STALE_MINUTES, profit_target=_CTRL['target'], profit_lock=_CTRL['lock']),
                  day_status=dict(DAY))
     alert_fills(fills, out)
     if not market_open:
@@ -372,7 +412,7 @@ def loop(max_minutes=None):
         if mode == 'stop' and 'killed' not in done:
             flatten(); done.add('killed')
         if mode == 'on': done.discard('killed')
-        a = req('GET', f'{TRADE}/v2/account').json(); eq = float(a['equity']); start_eq = float(a['last_equity'])
+        a = req('GET', f'{TRADE}/v2/account').json(); eq = float(a['equity']); start_eq = float(a['last_equity']); _EQ['v'] = eq
         pl = eq - start_eq; tgt = profit_target(); lock = profit_lock()
         if DAY['date'] != now.date().isoformat(): DAY.update(date=now.date().isoformat(), armed=False, done=None)
         if tgt and pl >= tgt and 'limit' not in done:
