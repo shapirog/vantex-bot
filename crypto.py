@@ -2,7 +2,7 @@
 
 Rule: hold a coin while its 20-bar EMA is above its 50-bar EMA and price is above the 20-bar EMA.
 Exit when the 20-bar EMA drops below the 50-bar EMA or price falls below the 50-bar EMA.
-Each coin trades a fixed dollar sleeve (CRYPTO_SLEEVE, default $2,000).
+Each coin trades a dollar sleeve: $2,000 (CRYPTO_SLEEVE) on a big account; 10% of equity on a small one (under $25K).
 """
 import os, sys, json, time, subprocess, requests
 from datetime import datetime, timedelta, timezone
@@ -15,7 +15,16 @@ H = {'APCA-API-KEY-ID': KEY, 'APCA-API-SECRET-KEY': SECRET}
 TRADE = 'https://paper-api.alpaca.markets'
 DATA = 'https://data.alpaca.markets'
 COINS = {'BTC': 'BTC/USD', 'ETH': 'ETH/USD'}
-SLEEVE = float(os.environ.get('CRYPTO_SLEEVE', '2000'))
+SLEEVE_BIG = float(os.environ.get('CRYPTO_SLEEVE', '2000'))
+SLEEVE = SLEEVE_BIG
+def sleeve():
+    """$2,000 per coin on a big account; 10% of equity per coin under $25K (stocks use the other 80%)."""
+    global SLEEVE
+    try:
+        eq = float(req('GET', f'{TRADE}/v2/account').json()['equity'])
+        SLEEVE = round(eq * 0.10, 2) if eq < 25_000 else SLEEVE_BIG
+    except Exception as e: print('sleeve check failed', str(e)[:120], flush=True)
+    return SLEEVE
 STEP_EVERY = 300           # seconds between trading decisions
 PUBLISH_EVERY = 60         # seconds between live updates for the city
 LOG = os.environ.get('VANTEX_CRYPTO_LOG', 'logs/crypto_log.jsonl')
@@ -108,6 +117,7 @@ def step():
             if want and not have and mode != 'on':
                 log(event='order_blocked', coin=coin, why=f'kill switch is {mode}'); continue
             if want and not have:
+                sleeve()
                 r = req('POST', f'{TRADE}/v2/orders', json=dict(symbol=pair, notional=str(SLEEVE), side='buy', type='market', time_in_force='gtc',
                                                              client_order_id=f'CRY-{coin}-{int(time.time())}'))
                 log(event='order', coin=coin, side='buy', notional=SLEEVE, status=r.status_code, resp=(r.json().get('status') if r.ok else r.text[:200]))
@@ -122,6 +132,8 @@ _SEEN = None
 def publish():
     global _SEEN
     acct = req('GET', f'{TRADE}/v2/account').json()
+    global SLEEVE
+    SLEEVE = round(float(acct['equity']) * 0.10, 2) if float(acct['equity']) < 25_000 else SLEEVE_BIG
     after = (datetime.now(timezone.utc) - timedelta(hours=48)).isoformat()
     orders = req('GET', f'{TRADE}/v2/orders', params=dict(status='all', after=after, limit=500, symbols=','.join(COINS.values()))).json()
     fills = sorted([dict(id=o['id'], coin=o['symbol'].split('/')[0], side=o['side'], qty=float(o['filled_qty']), price=float(o.get('filled_avg_price') or 0), ts=o['filled_at'])
