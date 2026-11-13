@@ -283,6 +283,7 @@ canvas.vc{width:100%;display:block;touch-action:pan-y;cursor:crosshair}
   <button id="ptReset" style="width:100%">Reset practice account to $500</button></div></section>
 <section class="pane" id="p-portfolio" hidden><div class="pin"><h2>PORTFOLIO</h2><p class="note">The bot's Alpaca paper account.</p>
   <div class="card"><div class="r"><span>Equity</span><b id="pfEq"></b></div><div class="r"><span>Today</span><b id="pfPl"></b></div></div>
+  <div class="card"><h3>$2,500 real-money test</h3><div id="smBox"><p class="note" style="margin:6px 0 0">Loading…</p></div><canvas id="smc" class="vc" style="height:150px;display:none"></canvas><div id="smGoal"></div></div>
   <div class="card"><h3>Scorecard</h3><div id="scBox"><p class="note" style="margin:6px 0 0">Loading the scorecard…</p></div></div>
   <div class="card"><h3>Open positions</h3><div id="pfPos"></div></div>
   <div class="card"><h3>Completed trades today</h3><div id="pfTrips"></div></div>
@@ -690,7 +691,7 @@ $('ptBuy').onclick=()=>ptOrder('BUY');$('ptSell').onclick=()=>ptOrder('SELL');$(
 let arm=false;$('ptReset').onclick=()=>{const b=$('ptReset');if(!arm){arm=true;b.textContent='Tap again to confirm reset';b.style.color='var(--put)';setTimeout(()=>{arm=false;b.textContent='Reset practice account to $500';b.style.color=''},3500);return}
   PT=JSON.parse(JSON.stringify(PT0));store.set('vx_pt',PT);arm=false;b.textContent='Reset practice account to $500';b.style.color='';$('ptMsg').textContent='Practice account reset to $500.';renderTrade()};
 
-function renderPortfolio(){renderTrack();renderCryptoCard();renderScore();$('pfEq').textContent='$'+S.equity.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});$('pfPl').textContent=m2(S.day_pl);$('pfPl').className=cl(S.day_pl);
+function renderPortfolio(){renderTrack();renderCryptoCard();renderScore();renderSmall();$('pfEq').textContent='$'+S.equity.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});$('pfPl').textContent=m2(S.day_pl);$('pfPl').className=cl(S.day_pl);
   const open=S.market_open?SYMS.filter(s=>S.symbols[s]&&S.symbols[s].qty):[];
   $('pfPos').innerHTML=open.map(s=>{const d=S.symbols[s];return`<div class="r tap" data-open="${s}"><span class="sym">${s}</span><span>${d.qty>0?'Long':'Short'} ${Math.abs(d.qty)}</span><span>$${d.price.toFixed(2)}</span></div>`}).join('')||'<p class="note" style="margin:6px 0 0">No open positions. The bot closes everything at 3:55 PM.</p>';
   const T=trips(S.fills||[]);$('pfTrips').innerHTML=T.reverse().map(t=>`<div class="r tap" data-open="${t.sym}"><span class="sym">${t.sym}</span><span style="font-size:11px">${t.dir>0?'Long':'Short'} ${t.qty} · ${t.entry.toFixed(2)}→${t.exit.toFixed(2)}</span><b class="${cl(t.pnl)}">${m2(t.pnl)}</b></div>`).join('')||'<p class="note" style="margin:6px 0 0">No completed trades yet today.</p>'}
@@ -783,6 +784,17 @@ function renderTarget(){const L=S.limits||{},t=L.profit_target||0,lk=L.profit_lo
   if(!t){$('ptgLim').textContent='Off';$('ptgBar').style.width='0%';$('ptgTxt').innerHTML='Add <code>"profit_lock": 900</code> to control.json: once the day is up $900 the lock arms, and a slide back below $900 closes stocks for the day.';return}
   $('ptgLim').textContent=`${m2(S.day_pl)} of $${t.toLocaleString()}`;$('ptgBar').style.width=Math.min(100,up/t*100)+'%';
   $('ptgTxt').textContent=D.done==='profit_target'?'Target reached: stocks closed and the profit locked in. Trading resumes tomorrow.':`When the account is up $${t.toLocaleString()} today, the bot closes all stocks and stops until tomorrow. Crypto keeps running.`}
+function renderSmall(){const box=$('smBox'),cv=$('smc');if(!box)return;const M=JR&&JR.small;
+  if(!M){box.innerHTML='<p class="note" style="margin:6px 0 0">Appears after the next journal run (every 30 minutes).</p>';return}
+  const money=v=>'$'+v.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+  box.innerHTML=`<p class="note" style="margin:0 0 6px">Your bots' real paper trades, replayed as if you had started with ${money(M.start)} of real money: at most ${M.slots} positions at once, profits reinvested, real-money fees taken out.</p>
+    <div class="kpi"><div><span>Account now</span><b class="${cl(M.equity-M.start)}">${money(M.equity)}</b></div><div><span>Return</span><b class="${cl(M.ret_pct)}">${pctS(M.ret_pct)}</b></div><div><span>Monthly pace</span><b class="${cl(M.monthly_pct||0)}">${M.monthly_pct!=null?pctS(M.monthly_pct)+'/mo':'–'}</b></div>
+    <div><span>Trades</span><b>${M.trades}</b></div><div><span>Win rate</span><b>${M.win_rate!=null?M.win_rate.toFixed(0)+'%':'–'}</b></div><div><span>Biggest drop</span><b class="${M.max_dd_pct>0?'dn':''}">${M.max_dd_pct?'-'+M.max_dd_pct.toFixed(2)+'%':'0%'}</b></div></div>
+    <div class="scx">Skipped: ${M.skipped_full} signals while all ${M.slots} spots were full · ${M.skipped_short} shorts too small to afford one share.</div>`;
+  if(M.curve&&M.curve.length>1){cv.style.display='block';vchart(cv,{pts:[[M.curve[0][0]*1000-3600e3,M.start],...M.curve.map(c=>[c[0]*1000,c[1]])],mode:'multi',fmtV:v=>'$'+Math.round(v).toLocaleString(),color:'#3dffa8'})}else cv.style.display='none';
+  const G=M.goal_months;
+  $('smGoal').innerHTML=G?`<div class="scx" style="margin-top:6px;line-height:1.6">At this pace (${pctS(M.monthly_pct)} a month, reinvested): <b>$100K</b> in about ${G['100000'] > 120 ? Math.round(G['100000']/12)+' years' : G['100000']+' months'} · <b>$200K</b> in about ${G['200000'] > 120 ? Math.round(G['200000']/12)+' years' : G['200000']+' months'}. Early estimate: it changes as more days come in.</div>`:
+    `<div class="scx" style="margin-top:6px">A goal estimate appears once the test is ahead and has a few days of trades.</div>`}
 function renderGate(){$('rkReady').innerHTML=readyBadge();
   const ic={pass:'✓',track:'…',fail:'✕'};
   $('rkGate').innerHTML=JR.gate.items.map(i=>`<div class="ck ${i.state==='pass'?'ok':i.state}"><span>${ic[i.state]}</span><span>${escH(i.t)}</span><i>${escH(i.v)}</i></div>`).join('')+
