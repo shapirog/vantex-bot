@@ -454,3 +454,29 @@
 {"event": "market_scan", "stocks": 12367, "ts": "2026-11-13T14:54:06-05:00"}
 {"event": "market_scan", "stocks": 12367, "ts": "2026-11-13T14:59:11-05:00"}
 {"event": "handoff", "why": "runtime limit", "ts": "2026-11-13T14:59:23-05:00"}
+{"event": "market_scan", "stocks": 12367, "ts": "2026-11-13T14:59:53-05:00"}
+{"event": "na_check", "sym": "QQQ", "slot": 330, "price": 679.75, "upper": 695.47, "lower": 681.23, "vwap": 677.26, "have": 0, "want": -1, "ts": "2026-11-13T15:00:09-05:00"}
+{"event": "order", "sym": "QQQ", "side": "sell", "qty": 13, "cid": "NA-QQQ-20261113-330-1794600009", "status": 200, "resp": "pending_new", "ts": "2026-11-13T15:00:09-05:00"}
+{"event": "na_check", "sym": "AAPL", "slot": 330, "price": 357.3, "upper": 362.45, "lower": 350.46, "vwap": 358.53, "have": 0, "want": 0, "ts": "2026-11-13T15:00:10-05:00"}
+{"event": "na_check", "sym": "NVDA", "slot": 330, "price": 163.21, "upper": 174.11, "lower": 161.93, "vwap": 161.35, "have": 0, "want": 0, "ts": "2026-11-13T15:00:10-05:00"}
+{"event": "na_check", "sym": "AMZN", "slot": 330, "price": 265.35, "upper": 273.74, "lower": 263.68, "vwap": 266.13, "have": 0, "want": 0, "ts": "2026-11-13T15:00:10-05:00"}
+{"event": "na_check", "sym": "GOOGL", "slot": 330, "price": 295.13, "upper": 306.66, "lower": 295.12, "vwap": 297.35, "have": 0, "want": 0, "ts": "2026-11-13T15:00:10-05:00"}
+{"event": "na_check", "sym": "TSLA", "slot": 330, "price": 391.93, "upper": 411.6, "lower": 388.12, "vwap": 391.63, "have": 0, "want": 0, "ts": "2026-11-13T15:00:10-05:00"}
+{"event": "market_scan", "stocks": 12367, "ts": "2026-11-13T15:05:05-05:00"}
+{"event": "market_scan", "stocks": 12367, "ts": "2026-11-13T15:10:12-05:00"}
+{"event": "market_scan", "stocks": 12367, "ts": "2026-11-13T15:15:16-05:00"}
+{"event": "market_scan", "stocks": 12367, "ts": "2026-11-13T15:20:20-05:00"}
+{"event": "market_scan", "stocks": 12367, "ts": "2026-11-13T15:25:25-05:00"}
+{"event": "na_check", "sym": "QQQ", "slot": 360, "price": 678.84, "upper": 696.17, "lower": 680.54, "vwap": 677.36, "have": -1, "want": 0, "ts": "2026-11-13T15:30:06-05:00"}
+{"event": "order", "sym": "QQQ", "side": "buy", "qty": 13, "cid": "NA-QQQ-20261113-360-1794601806", "status": 200, "resp": "pending_new", "ts": "2026-11-13T15:30:06-05:00"}
+{"event": "na_check", "sym": "AAPL", "slot": 360, "price": 356.67, "upper": 362.62, "lower": 350.3, "vwap": 358.38, "have": 0, "want": 0, "ts": "2026-11-13T15:30:06-05:00"}
+{"event": "na_check", "sym": "NVDA", "slot": 360, "price": 162.16, "upper": 174.17, "lower": 161.87, "vwap": 161.43, "have": 0, "want": 0, "ts": "2026-11-13T15:30:06-05:00"}
+{"event": "na_check", "sym": "AMZN", "slot": 360, "price": 265.66, "upper": 273.84, "lower": 263.58, "vwap": 266.09, "have": 0, "want": 0, "ts": "2026-11-13T15:30:06-05:00"}
+{"event": "na_check", "sym": "GOOGL", "slot": 360, "price": 295.22, "upper": 306.73, "lower": 295.05, "vwap": 297.23, "have": 0, "want": 0, "ts": "2026-11-13T15:30:06-05:00"}
+{"event": "na_check", "sym": "TSLA", "slot": 360, "price": 390.2, "upper": 412.44, "lower": 387.28, "vwap": 391.6, "have": 0, "want": 0, "ts": "2026-11-13T15:30:07-05:00"}
+{"event": "market_scan", "stocks": 12367, "ts": "2026-11-13T15:30:29-05:00"}
+{"event": "market_scan", "stocks": 12367, "ts": "2026-11-13T15:35:34-05:00"}
+{"event": "market_scan", "stocks": 12367, "ts": "2026-11-13T15:40:37-05:00"}
+{"event": "market_scan", "stocks": 12367, "ts": "2026-11-13T15:45:42-05:00"}
+{"event": "market_scan", "stocks": 12367, "ts": "2026-11-13T15:50:48-05:00"}
+{"event": "flatten", "status": [403, 403, 403, 403, 403, 403, 403, 403], "ts": "2026-11-13T15:55:15-05:00"}
