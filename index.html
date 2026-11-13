@@ -152,6 +152,15 @@ button{font:600 11px var(--mono);color:var(--ink);background:rgba(30,24,80,.8);b
 .board li.w{border-style:dashed}.board li.c{border-color:rgba(255,201,77,.6)}
 .kpi{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px}.kpi div{display:flex;flex-direction:column;gap:2px}.kpi span{font-size:10px;color:var(--dim);text-transform:uppercase}.kpi b{font:700 14px var(--display);font-variant-numeric:tabular-nums}
 .ck.ok span:first-child{border-color:var(--call);color:var(--call);display:grid;place-items:center;font-size:11px}
+.tags{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}
+.tg{font:700 9.5px var(--mono);letter-spacing:.06em;padding:2px 6px;border-radius:5px;border:1px solid currentColor;color:var(--dim)}
+.tg.early{color:#ffc94d;box-shadow:0 0 8px rgba(255,201,77,.35)}.tg.news{color:var(--ema)}.tg.vol{color:#b08cff}.tg.run{color:var(--call)}.tg.risk{color:var(--put)}.tg.penny{color:var(--dim)}
+.hl1{font-size:12px;line-height:1.4;margin-top:7px;color:var(--ink)}.hl1 a,.nws a{color:var(--ink);text-decoration:none}.hl1 a:hover,.nws a:hover{text-decoration:underline}
+.nbtn{font:600 10.5px var(--mono);padding:4px 8px;margin-top:7px}
+.nws{list-style:none;margin:8px 0 0;padding:0;display:grid;gap:7px}.nws li{font-size:12px;line-height:1.4;border-top:1px solid rgba(120,110,255,.14);padding-top:7px}
+.nws .src{display:block;font-size:10.5px;color:var(--dim);margin-top:2px}
+.ext{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}.ext a{font:600 10.5px var(--mono);color:var(--ema);border:1px solid var(--line);border-radius:6px;padding:4px 8px;text-decoration:none}
+.rk{font:700 11px var(--mono);color:var(--dim);margin-right:6px}
 .wait{position:fixed;z-index:6;left:50%;top:50%;transform:translate(-50%,-50%);background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px 16px;max-width:320px;text-align:center;line-height:1.5}
 </style></head><body>
 <div id="bg" aria-hidden="true"></div>
@@ -188,7 +197,7 @@ button{font:600 11px var(--mono);color:var(--ink);background:rgba(30,24,80,.8);b
 </nav>
 <section class="pane" id="p-scanner" hidden><h2>SCANNER</h2>
   <div class="srch"><input id="q" type="search" placeholder="Search any stock: symbol or company" autocomplete="off" autocorrect="off" spellcheck="false" aria-label="Search stocks"><div class="sugg" id="sugg" hidden></div></div>
-  <div class="seg wrap" id="scanSeg"><button aria-pressed="true" data-l="bot">Bot stocks</button><button aria-pressed="false" data-l="gain">Gainers</button><button aria-pressed="false" data-l="lose">Losers</button><button aria-pressed="false" data-l="active">Most active</button><button aria-pressed="false" data-l="unusual">Unusual volume</button><button aria-pressed="false" data-l="watch">★ Watchlist</button></div>
+  <div class="seg wrap" id="scanSeg"><button aria-pressed="true" data-l="radar">🚀 Radar</button><button aria-pressed="false" data-l="bot">Bot stocks</button><button aria-pressed="false" data-l="gain">Gainers</button><button aria-pressed="false" data-l="lose">Losers</button><button aria-pressed="false" data-l="active">Most active</button><button aria-pressed="false" data-l="unusual">Unusual volume</button><button aria-pressed="false" data-l="watch">★ Watchlist</button></div>
   <p class="note" id="scanNote"></p><div id="scanTop"></div><div id="scanList"></div></section>
 <section class="pane" id="p-trade" hidden><h2>PRACTICE TICKET</h2><p class="note">Practice orders fill at the bot's latest price and are saved on this phone only. They never touch the bot's account or real money.</p>
   <div class="card"><div class="f2"><label>Stock<select id="ptSym"></select></label><label>Shares<input id="ptQty" type="number" min="1" step="1" value="1" inputmode="numeric"></label></div>
@@ -494,13 +503,17 @@ let MK=null,MKM=new Map(),AS=null,NAMES=new Map(),HI=null,CR=null,lastMK=0;
 const LEG0=document.getElementById('legend').innerHTML;
 let watch=store.get('vx_watch',[]);
 async function getJSON(u){try{const r=await fetch(u+'?t='+Date.now(),{cache:'no-store'});return r.ok?await r.json():null}catch(e){return null}}
-async function loadMarket(){const m=await getJSON(RAWB('live/market.json'));lastMK=Date.now();if(m&&m.rows){MK=m;MKM=new Map(m.rows.map(r=>[r[0],r]))}
-  if(!AS){const a=await getJSON(RAWB('live/assets.json'));if(a&&a.assets){AS=a;NAMES=new Map(a.assets)}}
+let RD=null,NW=new Map(),NWup=null;
+async function loadMarket(){const[ms,ml,rd,nw]=await Promise.all([getJSON(RAWB('live-scan/market.json')),getJSON(RAWB('live/market.json')),getJSON(RAWB('live-scan/radar.json')),getJSON(RAWB('live-scan/news.json'))]);lastMK=Date.now();
+  const m=[ms,ml].filter(x=>x&&x.rows).sort((a,b)=>new Date(b.updated)-new Date(a.updated))[0];if(m){MK=m;MKM=new Map(m.rows.map(r=>[r[0],r]))}
+  if(rd&&rd.stocks)RD=rd;
+  if(nw&&nw.items){NW=new Map();NWup=nw.updated;nw.items.forEach(n=>n.sy.forEach(sy=>{if(!NW.has(sy))NW.set(sy,[]);NW.get(sy).push(n)}))}
+  if(!AS){const a=(await getJSON(RAWB('live-scan/assets.json')))||(await getJSON(RAWB('live/assets.json')));if(a&&a.assets){AS=a;NAMES=new Map(a.assets)}}
   renderPanes();S&&apply()}
 async function loadHist(){const h=await getJSON(RAWB('live/history.json'));if(h&&h.days){HI=h;renderPanes();S&&apply()}}
 async function loadCrypto(){const c=await getJSON(RAWB('live-crypto/crypto.json'));if(c&&c.coins){CR=c;applyCrypto();renderPanes();if(openSym&&COINS.includes(openSym))renderCrypto()}}
 loadMarket();loadHist();loadCrypto();
-setInterval(()=>{if(cur()==='scanner'||watch.length)loadMarket()},120000);setInterval(loadHist,600000);setInterval(loadCrypto,65000);
+setInterval(()=>{if(cur()==='scanner'||watch.length)loadMarket()},90000);setInterval(loadHist,600000);setInterval(loadCrypto,65000);
 
 const fmtp=p=>p==null?'–':p<1?p.toFixed(4):p.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
 const fmtv=v=>v>=1e6?(v/1e6).toFixed(1)+'M':v>=1e3?(v/1e3).toFixed(1)+'K':String(v||0);
@@ -512,12 +525,13 @@ function extraChips(){
 function toggleWatch(s){watch=watch.includes(s)?watch.filter(x=>x!==s):[...watch,s];store.set('vx_watch',watch);renderPanes();S&&apply()}
 
 /* scanner */
-let scanList='bot',picked=null;
+let scanList='radar',picked=null,openNews=new Set();
 function renderScanner(){
   const note=$('scanNote');
   if(MK){const t=hhmm(MK.updated);note.textContent=`Live quotes for ${MK.rows.length.toLocaleString()} stocks · updated ${t} ET · volume is IEX exchange volume, so compare it stock to stock.`}
   else note.textContent=AS?'Market quotes appear after the bot\'s next scan (every 5 minutes while the market is open).':'Full-market data turns on once the new bot.py is uploaded and the bot runs its first scan.';
-  $('scanTop').innerHTML=picked?`<h3 style="margin:2px 0 6px">Search result</h3>${mrow(MKM.get(picked)||[picked,null,null,null,null],true)}`:'';
+  $('scanTop').innerHTML=picked?`<h3 style="margin:2px 0 6px">Search result</h3>${mrow(MKM.get(picked)||(x=>x?[x.sym,x.p,x.chg,x.v,x.rv]:null)(RD&&RD.stocks.find(z=>z.sym===picked))||[picked,null,null,null,null],true,true)}`:'';
+  if(scanList==='radar'){renderRadar();return}
   if(scanList==='bot'){renderBotScan();return}
   let rows=MK?MK.rows:[];
   if(scanList==='gain')rows=rows.filter(r=>r[1]>=1&&r[3]>=2000).sort((a,b)=>b[2]-a[2]);
@@ -527,9 +541,26 @@ function renderScanner(){
   else if(scanList==='watch')rows=watch.map(s=>MKM.get(s)||[s,null,null,null,null]);
   rows=rows.slice(0,40);
   $('scanList').innerHTML=rows.map(r=>mrow(r)).join('')||`<p class="note">${scanList==='watch'?'Tap ☆ on any stock to add it here. Watched stocks also show in the Today strip.':'Nothing to show until the bot\'s first market scan.'}</p>`}
-function mrow(r,hl){const[s,p,c,v,rv]=r,on=watch.includes(s),bot=SYMS.includes(s);
+const ago=ts=>{const m=Math.max(0,(Date.now()-new Date(ts))/60000);return m<60?Math.round(m)+'m ago':m<1440?Math.round(m/60)+'h ago':Math.round(m/1440)+'d ago'};
+const tagCls=t=>t==='EARLY'?'early':t.startsWith('NEWS')?'news':t.startsWith('VOL')?'vol':t==='RUNNER'?'run':t.startsWith('RISK')?'risk':'penny';
+const tagTxt=t=>t==='EARLY'?'⚡ EARLY':t==='RUNNER'?'🔥 RUNNER':t.startsWith('NEWS ')?'📰 '+t.slice(5):t==='NEWS'?'📰 NEWS':t.startsWith('VOL')?'📊 '+t:t.startsWith('RISK')?'⚠ '+t.slice(5):t;
+function newsList(s,max){const L=(NW.get(s)||[]).slice(0,max);
+  return (L.length?`<ul class="nws">${L.map(n=>`<li><a href="${escH(n.u)}" target="_blank" rel="noopener">${escH(n.h)}</a><span class="src">${escH(n.s)} · ${ago(n.t)}</span></li>`).join('')}</ul>`:`<p class="note" style="margin:8px 0 0">No news for ${s} in the last 36 hours.</p>`)
+   +`<div class="ext"><a href="https://finance.yahoo.com/quote/${s}/news" target="_blank" rel="noopener">Yahoo news ↗</a><a href="https://www.google.com/search?q=${s}+stock&tbm=nws" target="_blank" rel="noopener">Google News ↗</a><a href="https://finviz.com/quote.ashx?t=${s}" target="_blank" rel="noopener">Finviz ↗</a></div>`}
+function renderRadar(){const note=$('scanNote');
+  if(!RD){note.textContent='Vantex Radar starts once scanner.py and its workflow are uploaded. It scans every US stock and the news every 15 minutes, 4 AM to 8 PM ET.';$('scanList').innerHTML='';return}
+  note.textContent=`Penny and small stocks with a news catalyst, unusual volume or momentum. ${RD.session[0].toUpperCase()+RD.session.slice(1)} scan at ${hhmm(RD.updated)} ET · every 15 min, 4 AM–8 PM. ⚡ EARLY = fresh good news, move just starting. Signals, not predictions: these move fast both ways.`;
+  $('scanList').innerHTML=RD.stocks.map((x,i)=>{const on=watch.includes(x.sym),open=openNews.has(x.sym),h=x.news[0];
+    return`<div class="card"><div class="r" style="border:0;padding:0"><span><span class="rk">#${i+1}</span><span class="sym">${x.sym}</span> <span class="nm">${escH(x.name)}</span></span><button class="star${on?' on':''}" data-star="${x.sym}" aria-label="${on?'Remove':'Add'} ${x.sym} ${on?'from':'to'} watchlist">${on?'★':'☆'}</button></div>
+    <div class="r" style="border:0;padding:3px 0 0"><span style="font:700 15px var(--display)">$${fmtp(x.p)}</span><b class="${cl(x.chg)}" style="font-size:15px">${x.chg>=0?'+':''}${x.chg.toFixed(1)}%</b><span class="tm" style="font-size:11px">Vol ${fmtv(x.v)}${x.rv?` · ${x.rv.toFixed(1)}×`:''}</span></div>
+    <div class="tags">${x.tags.map(t=>`<span class="tg ${tagCls(t)}">${tagTxt(t)}</span>`).join('')}</div>
+    ${h?`<div class="hl1"><a href="${escH(h.u)}" target="_blank" rel="noopener">${escH(h.h)}</a> <span class="tm" style="font-size:10.5px">${escH(h.s)} · ${ago(h.t)}</span></div>`:''}
+    <button class="nbtn" data-news="${x.sym}" aria-expanded="${open}">${open?'Hide news':'All news'}${(NW.get(x.sym)||[]).length?` (${NW.get(x.sym).length})`:''}</button>${open?newsList(x.sym,8):''}</div>`}).join('')||'<p class="note">Nothing on the radar right now. It fills in as stocks start moving.</p>'}
+document.addEventListener('click',e=>{const b=e.target.closest('[data-news]');if(!b)return;e.stopPropagation();const s=b.dataset.news;openNews.has(s)?openNews.delete(s):openNews.add(s);renderScanner()},true);
+function mrow(r,hl,full){const[s,p,c,v,rv]=r,on=watch.includes(s),bot=SYMS.includes(s);
   return`<div class="card mrow${hl?' hl':''}" ${bot?`data-open="${s}"`:''} style="${bot?'cursor:pointer':''}"><div class="r" style="border:0;padding:0"><span><span class="sym">${s}</span> <span class="nm">${escH(NAMES.get(s)||'')}</span>${bot?' <span class="chip" style="color:var(--ema)">BOT</span>':''}</span><button class="star${on?' on':''}" data-star="${s}" aria-label="${on?'Remove':'Add'} ${s} ${on?'from':'to'} watchlist">${on?'★':'☆'}</button></div>
-  ${p==null?'<div class="tm" style="font-size:11px;padding-top:3px">No live quote yet</div>':`<div class="r" style="border:0;padding:3px 0 0"><span>$${fmtp(p)}</span><b class="${cl(c)}">${c>=0?'+':''}${c.toFixed(2)}%</b><span class="tm" style="font-size:11px">Vol ${fmtv(v)}${rv!=null?` · ${rv.toFixed(1)}× yesterday`:''}</span></div>`}</div>`}
+  ${p==null?'<div class="tm" style="font-size:11px;padding-top:3px">No live quote yet</div>':`<div class="r" style="border:0;padding:3px 0 0"><span>$${fmtp(p)}</span><b class="${cl(c)}">${c>=0?'+':''}${c.toFixed(2)}%</b><span class="tm" style="font-size:11px">Vol ${fmtv(v)}${rv!=null?` · ${rv.toFixed(1)}× yesterday`:''}</span></div>`}
+  ${full?`<h3 style="margin:10px 0 0">News</h3>${newsList(s,10)}`:(NW.get(s)||[]).length?`<button class="nbtn" data-news="${s}">${openNews.has(s)?'Hide news':'News ('+NW.get(s).length+')'}</button>${openNews.has(s)?newsList(s,6):''}`:''}</div>`}
 function suggest(q){q=q.trim().toUpperCase();const box=$('sugg');if(!q){box.hidden=true;return}
   const list=AS?AS.assets:(MK?MK.rows.map(r=>[r[0],'']):SYMS.map(x=>[x,'']));
   const a=list.filter(([sy])=>sy.startsWith(q)).sort((x,y)=>x[0].length-y[0].length).slice(0,8);
