@@ -541,6 +541,7 @@ function renderScanner(){
   else if(scanList==='watch')rows=watch.map(s=>MKM.get(s)||[s,null,null,null,null]);
   rows=rows.slice(0,40);
   $('scanList').innerHTML=rows.map(r=>mrow(r)).join('')||`<p class="note">${scanList==='watch'?'Tap ☆ on any stock to add it here. Watched stocks also show in the Today strip.':'Nothing to show until the bot\'s first market scan.'}</p>`}
+const rvx=v=>v>=999?'999×+':v>=10?Math.round(v)+'×':v.toFixed(1)+'×';
 const ago=ts=>{const m=Math.max(0,(Date.now()-new Date(ts))/60000);return m<60?Math.round(m)+'m ago':m<1440?Math.round(m/60)+'h ago':Math.round(m/1440)+'d ago'};
 const tagCls=t=>t==='EARLY'?'early':t.startsWith('NEWS')?'news':t.startsWith('VOL')?'vol':t==='RUNNER'?'run':t.startsWith('RISK')?'risk':'penny';
 const tagTxt=t=>t==='EARLY'?'⚡ EARLY':t==='RUNNER'?'🔥 RUNNER':t.startsWith('NEWS ')?'📰 '+t.slice(5):t==='NEWS'?'📰 NEWS':t.startsWith('VOL')?'📊 '+t:t.startsWith('RISK')?'⚠ '+t.slice(5):t;
@@ -552,14 +553,14 @@ function renderRadar(){const note=$('scanNote');
   note.textContent=`Penny and small stocks with a news catalyst, unusual volume or momentum. ${RD.session[0].toUpperCase()+RD.session.slice(1)} scan at ${hhmm(RD.updated)} ET · every 15 min, 4 AM–8 PM. ⚡ EARLY = fresh good news, move just starting. Signals, not predictions: these move fast both ways.`;
   $('scanList').innerHTML=RD.stocks.map((x,i)=>{const on=watch.includes(x.sym),open=openNews.has(x.sym),h=x.news[0];
     return`<div class="card"><div class="r" style="border:0;padding:0"><span><span class="rk">#${i+1}</span><span class="sym">${x.sym}</span> <span class="nm">${escH(x.name)}</span></span><button class="star${on?' on':''}" data-star="${x.sym}" aria-label="${on?'Remove':'Add'} ${x.sym} ${on?'from':'to'} watchlist">${on?'★':'☆'}</button></div>
-    <div class="r" style="border:0;padding:3px 0 0"><span style="font:700 15px var(--display)">$${fmtp(x.p)}</span><b class="${cl(x.chg)}" style="font-size:15px">${x.chg>=0?'+':''}${x.chg.toFixed(1)}%</b><span class="tm" style="font-size:11px">Vol ${fmtv(x.v)}${x.rv?` · ${x.rv.toFixed(1)}×`:''}</span></div>
+    <div class="r" style="border:0;padding:3px 0 0"><span style="font:700 15px var(--display)">$${fmtp(x.p)}</span><b class="${cl(x.chg)}" style="font-size:15px">${x.chg>=0?'+':''}${x.chg.toFixed(1)}%</b><span class="tm" style="font-size:11px">Vol ${fmtv(x.v)}${x.rv?` · ${rvx(x.rv)}`:''}</span></div>
     <div class="tags">${x.tags.map(t=>`<span class="tg ${tagCls(t)}">${tagTxt(t)}</span>`).join('')}</div>
     ${h?`<div class="hl1"><a href="${escH(h.u)}" target="_blank" rel="noopener">${escH(h.h)}</a> <span class="tm" style="font-size:10.5px">${escH(h.s)} · ${ago(h.t)}</span></div>`:''}
     <button class="nbtn" data-news="${x.sym}" aria-expanded="${open}">${open?'Hide news':'All news'}${(NW.get(x.sym)||[]).length?` (${NW.get(x.sym).length})`:''}</button>${open?newsList(x.sym,8):''}</div>`}).join('')||'<p class="note">Nothing on the radar right now. It fills in as stocks start moving.</p>'}
 document.addEventListener('click',e=>{const b=e.target.closest('[data-news]');if(!b)return;e.stopPropagation();const s=b.dataset.news;openNews.has(s)?openNews.delete(s):openNews.add(s);renderScanner()},true);
 function mrow(r,hl,full){const[s,p,c,v,rv]=r,on=watch.includes(s),bot=SYMS.includes(s);
   return`<div class="card mrow${hl?' hl':''}" ${bot?`data-open="${s}"`:''} style="${bot?'cursor:pointer':''}"><div class="r" style="border:0;padding:0"><span><span class="sym">${s}</span> <span class="nm">${escH(NAMES.get(s)||'')}</span>${bot?' <span class="chip" style="color:var(--ema)">BOT</span>':''}</span><button class="star${on?' on':''}" data-star="${s}" aria-label="${on?'Remove':'Add'} ${s} ${on?'from':'to'} watchlist">${on?'★':'☆'}</button></div>
-  ${p==null?'<div class="tm" style="font-size:11px;padding-top:3px">No live quote yet</div>':`<div class="r" style="border:0;padding:3px 0 0"><span>$${fmtp(p)}</span><b class="${cl(c)}">${c>=0?'+':''}${c.toFixed(2)}%</b><span class="tm" style="font-size:11px">Vol ${fmtv(v)}${rv!=null?` · ${rv.toFixed(1)}× yesterday`:''}</span></div>`}
+  ${p==null?'<div class="tm" style="font-size:11px;padding-top:3px">No live quote yet</div>':`<div class="r" style="border:0;padding:3px 0 0"><span>$${fmtp(p)}</span><b class="${cl(c)}">${c>=0?'+':''}${c.toFixed(2)}%</b><span class="tm" style="font-size:11px">Vol ${fmtv(v)}${rv!=null?` · ${rvx(rv)} normal`:''}</span></div>`}
   ${full?`<h3 style="margin:10px 0 0">News</h3>${newsList(s,10)}`:(NW.get(s)||[]).length?`<button class="nbtn" data-news="${s}">${openNews.has(s)?'Hide news':'News ('+NW.get(s).length+')'}</button>${openNews.has(s)?newsList(s,6):''}`:''}</div>`}
 function suggest(q){q=q.trim().toUpperCase();const box=$('sugg');if(!q){box.hidden=true;return}
   const list=AS?AS.assets:(MK?MK.rows.map(r=>[r[0],'']):SYMS.map(x=>[x,'']));
