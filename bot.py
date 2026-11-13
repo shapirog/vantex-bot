@@ -17,6 +17,30 @@ LIVE_DIR = '/tmp/vantex-live'
 NTFY = os.environ.get('NTFY_TOPIC')
 SCAN_EVERY = 300          # seconds between full-market scans
 HIST_EVERY = 1800         # seconds between track-record refreshes
+MAX_ORDER_DOLLARS = 12_000  # hard cap on any single new order (a normal sleeve is equity / 11, about $9,100)
+MAX_ORDERS_PER_DAY = 40     # hard cap on new strategy orders per day (a normal day is under 20)
+STALE_MINUTES = 10          # skip a signal if the latest price bar is older than this (halt or data outage)
+
+# ---------- kill switch: control.json in the repo's main branch ----------
+# "on"    = trade normally
+# "pause" = no new positions; exits that reduce risk are still allowed; positions are kept
+# "stop"  = no new orders and close every position now
+_CTRL = {'t': 0, 'mode': 'on'}
+def control():
+    if time.time() - _CTRL['t'] < 60: return _CTRL['mode']
+    tok, repo = os.environ.get('GH_TOKEN'), os.environ.get('GITHUB_REPOSITORY')
+    mode = _CTRL['mode']
+    try:
+        if tok and repo:
+            r = requests.get(f'https://api.github.com/repos/{repo}/contents/control.json?ref=main',
+                             headers={'Authorization': f'Bearer {tok}', 'Accept': 'application/vnd.github.raw'}, timeout=15)
+            if r.status_code == 200: mode = str(json.loads(r.text).get('trading', 'on')).strip().lower()
+            elif r.status_code == 404: mode = 'on'
+    except Exception as e:
+        print('control check failed, keeping', mode, str(e)[:120], flush=True)   # network blip: keep the last known setting
+    if mode not in ('on', 'pause', 'stop'): mode = 'pause'                      # a typo in control.json fails safe
+    _CTRL.update(t=time.time(), mode=mode)
+    return mode
 
 def notify(title, msg, tags=''):
     """Push a phone alert through ntfy.sh. Never raises: alerts must not break trading."""
@@ -24,8 +48,13 @@ def notify(title, msg, tags=''):
     try: requests.post(f'https://ntfy.sh/{NTFY}', data=msg.encode('utf-8'), headers={'Title': title, 'Tags': tags}, timeout=10)
     except Exception as e: print('notify failed', str(e)[:120], flush=True)
 
+_ERR = {}
 def log(**k):
     k['ts'] = datetime.now(ET).isoformat(timespec='seconds'); print(json.dumps(k), flush=True); remember(k)
+    if k.get('event') == 'error':
+        key = k.get('where', '?')
+        if time.time() - _ERR.get(key, 0) > 1800:
+            _ERR[key] = time.time(); notify('Vantex bot error', f"{key} {k.get('sym', '')}: {str(k.get('err', ''))[:160]}", 'warning')
     os.makedirs(os.path.dirname(LOG) or '.', exist_ok=True)
     open(LOG, 'a').write(json.dumps(k) + '\n')
 
@@ -62,10 +91,25 @@ def sleeve_qty(orders, prefix):
             q += float(o.get('filled_qty') or 0) * (1 if o['side'] == 'buy' else -1)
     return q
 
-def order(sym, qty, side, cid, **extra):
+def order(sym, qty, side, cid, price=None, reduce=False, exposure=None, **extra):
+    """Every order passes these checks first. Orders that only shrink a position (reduce=True) skip the caps and pause."""
+    mode = control()
+    why = None
+    if mode == 'stop' or (mode == 'pause' and not reduce): why = f'kill switch is {mode}'
+    elif not reduce:
+        size = exposure if exposure is not None else (qty * price if price else 0)   # the position this order leaves you with
+        if size > MAX_ORDER_DOLLARS: why = f'position ${size:,.0f} would be over the ${MAX_ORDER_DOLLARS:,} cap'
+        else:
+            n = sum(1 for o in today_orders() if (o.get('client_order_id') or '').startswith(('NA-', 'ORB-')))
+            if n >= MAX_ORDERS_PER_DAY: why = f'{n} orders today, at the {MAX_ORDERS_PER_DAY} daily cap'
+    if why:
+        log(event='order_blocked', sym=sym, side=side, qty=int(qty), why=why)
+        return None
     body = dict(symbol=sym, qty=str(int(qty)), side=side, type='market', time_in_force='day', client_order_id=cid[:120], **extra)
     r = req('POST', f'{TRADE}/v2/orders', json=body)
     log(event='order', sym=sym, side=side, qty=int(qty), cid=cid, status=r.status_code, resp=(r.json().get('status') if r.ok else r.text[:200]))
+    if not r.ok:
+        notify(f'Vantex order rejected: {sym}', f'{side.upper()} {int(qty)} {sym} was rejected ({r.status_code}): {r.text[:160]}', 'warning')
     return r
 
 def session_minutes(df):
@@ -98,6 +142,8 @@ def na_step(now, slot_k, orders, eq):
         try:
             sig, pc, op = levels(sym, now)
             live = session_minutes(bars(sym, now.replace(hour=9, minute=30, second=0, microsecond=0), now, 'iex'))
+            if not len(live) or (now - live.index[-1]).total_seconds() > STALE_MINUTES * 60:
+                log(event='stale_skip', sym=sym, slot=slot_k, last_bar=str(live.index[-1]) if len(live) else None); continue
             if op is None: op = live.o.iloc[0]
             live = live[live.k < slot_k]; p = live.c.iloc[-1]
             tp = (live.h + live.l + live.c) / 3; vw = (tp * live.v).sum() / max(live.v.sum(), 1)
@@ -109,7 +155,8 @@ def na_step(now, slot_k, orders, eq):
             log(event='na_check', sym=sym, slot=slot_k, price=round(p, 2), upper=round(ub, 2), lower=round(lb, 2), vwap=round(vw, 2), have=d, want=want)
             if want == d: continue
             delta = want * math.floor(eq / SLEEVES / p) - cur
-            if delta: order(sym, abs(delta), 'buy' if delta > 0 else 'sell', f'NA-{sym}-{now:%Y%m%d}-{slot_k}-{int(time.time())}')
+            if delta: order(sym, abs(delta), 'buy' if delta > 0 else 'sell', f'NA-{sym}-{now:%Y%m%d}-{slot_k}-{int(time.time())}',
+                            price=p, reduce=abs(cur + delta) < abs(cur), exposure=abs(cur + delta) * p)
         except Exception as e:
             log(event='error', where='na', sym=sym, err=str(e)[:300])
 
@@ -120,6 +167,7 @@ def orb_step(now, orders, eq):
             b = session_minutes(bars(sym, now.replace(hour=9, minute=30, second=0, microsecond=0), now, 'iex'))
             f5 = b[b.k < 5]
             if len(f5) < 3: log(event='orb_skip', sym=sym, why='not enough bars'); continue
+            if (now - b.index[-1]).total_seconds() > STALE_MINUTES * 60: log(event='stale_skip', sym=sym, where='orb'); continue
             O, C, Hh, Ll = f5.o.iloc[0], f5.c.iloc[-1], f5.h.max(), f5.l.min()
             if C == O: log(event='orb_skip', sym=sym, why='doji'); continue
             d = 1 if C > O else -1; p = b.c.iloc[-1]
@@ -127,7 +175,7 @@ def orb_step(now, orders, eq):
             if risk < 0.01 or (d == 1 and stop >= p) or (d == -1 and stop <= p): log(event='orb_skip', sym=sym, why='price past stop'); continue
             tgt = p + d * 10 * risk; qty = math.floor(eq / SLEEVES / p)
             log(event='orb_signal', sym=sym, dir=d, price=round(p, 2), stop=round(stop, 2), target=round(tgt, 2), qty=qty)
-            order(sym, qty, 'buy' if d == 1 else 'sell', f'ORB-{sym}-{now:%Y%m%d}-{int(time.time())}',
+            order(sym, qty, 'buy' if d == 1 else 'sell', f'ORB-{sym}-{now:%Y%m%d}-{int(time.time())}', price=p,
                   order_class='bracket', take_profit=dict(limit_price=str(round(tgt, 2))), stop_loss=dict(stop_price=str(round(stop, 2))))
         except Exception as e:
             log(event='error', where='orb', sym=sym, err=str(e)[:300])
@@ -135,7 +183,7 @@ def orb_step(now, orders, eq):
 ALL_SYMS = list(dict.fromkeys(NA_SYMS + ORB_SYMS))
 EVENTS = []
 def remember(k):
-    if k.get('event') in ('order', 'orb_signal', 'flatten', 'error', 'loss_limit') or (k.get('event') == 'na_check' and k.get('have') != k.get('want')):
+    if k.get('event') in ('order', 'orb_signal', 'flatten', 'error', 'loss_limit', 'order_blocked', 'stale_skip', 'kill_switch') or (k.get('event') == 'na_check' and k.get('have') != k.get('want')):
         EVENTS.append(k); del EVENTS[:-60]
 
 def snapshot(market_open=True):
@@ -173,7 +221,8 @@ def snapshot(market_open=True):
                          strat=('ORB' if (o.get('client_order_id') or '').startswith('ORB') else 'NA' if (o.get('client_order_id') or '').startswith('NA') else 'exit'))
                     for o in flat if o['symbol'] in ALL_SYMS and float(o.get('filled_qty') or 0) > 0 and o.get('filled_at')], key=lambda x: x['ts'])
     state = dict(updated=now.isoformat(timespec='seconds'), market_open=market_open, equity=float(acct['equity']), fills=fills[-80:],
-                 day_pl=round(float(acct['equity']) - float(acct['last_equity']), 2), symbols=out, events=EVENTS[-40:])
+                 day_pl=round(float(acct['equity']) - float(acct['last_equity']), 2), symbols=out, events=EVENTS[-40:],
+                 control=control(), limits=dict(max_order=MAX_ORDER_DOLLARS, max_orders=MAX_ORDERS_PER_DAY, stale_min=STALE_MINUTES))
     alert_fills(fills, out)
     if not market_open:
         notify('Vantex day recap', f"Day P/L {state['day_pl']:+,.2f} · {len(fills)} fills · equity ${state['equity']:,.2f}", 'bar_chart')
@@ -264,7 +313,7 @@ def flatten():
     log(event='flatten', status=codes)
 
 def loop(max_minutes=None):
-    done = set(); t0 = time.time(); last_snap = 0; last_scan = 0; last_hist = 0
+    done = set(); t0 = time.time(); last_snap = 0; last_scan = 0; last_hist = 0; last_mode = 'on'
     while True:
         if max_minutes and time.time() - t0 > max_minutes * 60:
             log(event='handoff', why='runtime limit'); sys.exit(3)
@@ -276,10 +325,19 @@ def loop(max_minutes=None):
                 log(event='market_closed', next_open=c['next_open']); return
             time.sleep(min(max(wait, 5), 300)); continue
         now = datetime.now(ET); m = now.hour * 60 + now.minute - 570
+        mode = control()
+        if mode != last_mode:
+            log(event='kill_switch', mode=mode)
+            notify(f'Vantex trading {mode.upper()}', {'on': 'Trading is back on.', 'pause': 'No new positions. Exits that reduce risk still allowed.',
+                                                      'stop': 'Stopping: no new orders, closing all stock positions.'}[mode], 'warning' if mode != 'on' else 'white_check_mark')
+            last_mode = mode
+        if mode == 'stop' and 'killed' not in done:
+            flatten(); done.add('killed')
+        if mode == 'on': done.discard('killed')
         a = req('GET', f'{TRADE}/v2/account').json(); eq = float(a['equity']); start_eq = float(a['last_equity'])
         if eq - start_eq <= -DAILY_LOSS_LIMIT * start_eq and 'limit' not in done:
             log(event='loss_limit', pl=round(eq - start_eq, 2)); notify('Vantex loss limit hit', f'Down {eq - start_eq:,.2f} today. Stocks closed, trading stopped until tomorrow.', 'warning'); flatten(); done.update({'limit', 'orb', 'flat'} | {f'na{k}' for k in range(30, 390, 30)})
-        if 5 <= m < 15 and 'orb' not in done:
+        if 5 <= m < 15 and 'orb' not in done and mode == 'on':
             orb_step(now, today_orders(), eq); done.add('orb')
         for k in range(30, 390, 30):
             if k <= m < k + 10 and f'na{k}' not in done:
