@@ -249,6 +249,55 @@ def blocked_rows(E, since):
                           why=f"Day P/L {e.get('pl')}" if e['event'] == 'loss_limit' else f"Mode set to {e.get('mode')}"))
     return R
 
+# ---------------- $2,500 real-money test ----------------
+SMALL_START = float(os.environ.get('VANTEX_SMALL_START', '2500'))
+SMALL_SLOTS = 4          # a $2,500 account can hold about 4 positions at once (about $625 each)
+GOALS = (100_000, 200_000)
+
+def small_account(trades):
+    """Replays the bots' real trades (same signals, same fill prices) as if the account were $2,500 of real money.
+    Rules a real small margin account lives by: at most SMALL_SLOTS positions at once, each sized to equity / SLOTS,
+    fractional shares for longs and crypto, whole shares only for shorts (a short that can't afford 1 share is skipped),
+    real-money fees on every trade. Profits compound: positions grow as the account grows."""
+    ev = []
+    for i, t in enumerate(trades):
+        if t['bot'] == 'OTHER': continue
+        ev.append((ts(t['open']), 1, i)); ev.append((ts(t['close']), 0, i))
+    ev.sort(key=lambda e: (e[0], e[1]))                 # at the same moment, close before open
+    eq = SMALL_START; held = {}; taken = skip_slot = skip_short = 0; curve = []; peak = eq; mdd = 0.0; wins = losses = 0; gw = gl = 0.0
+    for t0, kind, i in ev:
+        t = trades[i]
+        if kind == 1:
+            if len(held) >= SMALL_SLOTS: skip_slot += 1; continue
+            alloc = eq / SMALL_SLOTS; px = t['entry']; crypto = t['bot'] == 'CRYPTO'
+            if t['dir'] == 'Short':
+                q = math.floor(alloc / px)
+                if q < 1: skip_short += 1; continue
+            else: q = round(alloc / px, 6)
+            held[i] = q; taken += 1
+        elif i in held:
+            q = held.pop(i); d = 1 if t['dir'] == 'Long' else -1; crypto = t['bot'] == 'CRYPTO'
+            pnl = (t['exit'] - t['entry']) * q * d
+            sell_px = t['exit'] if d == 1 else t['entry']
+            fee = (q * (t['entry'] + t['exit']) * CRYPTO_FEE) if crypto else (q * sell_px * SEC_FEE + min(q * TAF_PER_SHARE, TAF_MAX))
+            pnl -= fee; eq += pnl
+            if pnl > 0: wins += 1; gw += pnl
+            else: losses += 1; gl -= pnl
+            peak = max(peak, eq); mdd = max(mdd, (peak - eq) / peak * 100)
+            curve.append([int(t0.timestamp()), round(eq, 2)])
+    out = dict(start=SMALL_START, equity=round(eq, 2), ret_pct=round((eq / SMALL_START - 1) * 100, 2), slots=SMALL_SLOTS,
+               trades=wins + losses, skipped_full=skip_slot, skipped_short=skip_short, max_dd_pct=round(mdd, 2),
+               win_rate=round(wins / (wins + losses) * 100, 1) if wins + losses else None,
+               pf=round(gw / gl, 2) if gl > 0 else None, curve=curve[-400:])
+    if curve:
+        days = max(1.0, (curve[-1][0] - ts(START + 'T09:30:00-05:00').timestamp()) / 86400)
+        out['days'] = round(days, 1)
+        if eq > SMALL_START and days >= 5:
+            monthly = (eq / SMALL_START) ** (30.4 / days) - 1
+            out['monthly_pct'] = round(monthly * 100, 2)
+            out['goal_months'] = {str(g): round(math.log(g / eq) / math.log(1 + monthly), 1) for g in GOALS}
+    return out
+
 # ---------------- scoring ----------------
 def score(T, rows):
     if not T: return dict(trades=0)
@@ -319,7 +368,7 @@ def main():
     items = [dict(state='pass' if good and enough else 'track' if good else 'fail', t=t, v=v) for good, t, v in G]
     gate = dict(ready=all(i['state'] == 'pass' for i in items), items=items)
 
-    out = dict(updated=t0.isoformat(timespec='seconds'), start=START, account=acct, bots=bots, all=combined, gate=gate,
+    out = dict(updated=t0.isoformat(timespec='seconds'), start=START, account=acct, small=small_account(trades), bots=bots, all=combined, gate=gate,
                bot_days=len(bot_days), missed=missed[-30:], coverage=coverage[-30:], open=[dict(bot=k[0], sym=k[1], qty=r2(v['q'], 6), avg=r2(v['avg'])) for k, v in open_pos.items()],
                trades=trades[-80:][::-1], journal=journal,
                costs_note='Paper fills are free. Costs are estimated as real money would pay: SEC + FINRA fees on stock sales, 0.25% per side on crypto.')
