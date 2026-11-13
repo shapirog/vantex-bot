@@ -21,6 +21,8 @@ NTFY = os.environ.get('NTFY_TOPIC')
 MAX_PRICE = 10.0          # radar looks at stocks under $10 (under $5 tagged PENNY)
 MIN_PRICE = 0.05
 MIN_DOLLAR_VOL = 50_000   # skip names too thin to trade
+MAX_QUOTE_AGE_H = 4       # radar ignores prices older than this (no trades = no real move)
+BOT_SILENT_MIN = 12       # warn if the trading bot hasn't reported for this long during market hours
 
 GOOD = [('FDA', r'\bfda\b|approv|clearance|breakthrough designation|orphan drug'), ('TRIAL', r'phase [123i]|trial|topline|data readout'),
         ('DEAL', r'merger|acquisi|acquire|buyout|takeover|definitive agreement'), ('CONTRACT', r'contract|award|order|purchase order|government'),
@@ -39,6 +41,12 @@ def req(method, url, **kw):
     return r
 
 def now(): return datetime.now(ET)
+
+def epoch(t):
+    """Alpaca timestamps carry nanoseconds; trim to microseconds before parsing."""
+    if not t: return None
+    try: return int(datetime.fromisoformat(re.sub(r'(\.\d{6})\d+', r'\1', t.replace('Z', '+00:00'))).timestamp())
+    except Exception: return None
 
 def assets():
     r = req('GET', f'{TRADE}/v2/assets', params=dict(status='active', asset_class='us_equity'))
@@ -67,7 +75,9 @@ def snapshots(syms):
                 if bar_day == today: ref, v, pv = pb.get('c'), int(db.get('v') or 0), int(pb.get('v') or 0)
                 else: ref, v, pv = db.get('c'), 0, int(db.get('v') or 0)      # before today's open: compare with yesterday's close
                 if not ref: continue
-                rows.append([sym, round(px, 4 if px < 1 else 2), round((px / ref - 1) * 100, 2), v, round(v / pv, 2) if pv and v else None])
+                qt = lt.get('t') or db.get('t')
+                qts = epoch(qt)
+                rows.append([sym, round(px, 4 if px < 1 else 2), round((px / ref - 1) * 100, 2), v, round(v / pv, 2) if pv and v else None, qts])
         if okc: return rows, feed
     return [], 'none'
 
@@ -99,8 +109,9 @@ def radar(rows, names, items):
     for n in items:
         for s in n['sy']: by.setdefault(s, []).append(n)
     t_now = datetime.now(timezone.utc); out = []
-    for sym, p, chg, v, rv in rows:
+    for sym, p, chg, v, rv, qt in rows:
         if not (MIN_PRICE <= p <= MAX_PRICE): continue
+        if qt is None or (t_now.timestamp() - qt) > MAX_QUOTE_AGE_H * 3600: continue   # stale price: skip
         if chg < -2: continue                                    # radar hunts for stocks going up
         if chg > 300 and (rv is None or rv < 1): continue        # a giant jump on no volume is a split, not a move
         nl = by.get(sym, [])
@@ -122,21 +133,38 @@ def radar(rows, names, items):
         if chg >= 20: tg.append('RUNNER')
         if p < 5: tg.append('PENNY')
         tg += [f'RISK {b}' for b in bad[:1]]
-        out.append(dict(sym=sym, name=names.get(sym, ''), p=p, chg=chg, v=v, rv=rv, score=round(score, 2), tags=tg,
+        stage = 'early' if 'EARLY' in tg else 'running' if chg >= 20 else 'building'
+        out.append(dict(sym=sym, name=names.get(sym, ''), p=p, chg=chg, v=v, rv=rv, qt=qt, stage=stage, score=round(score, 2), tags=tg,
                         news=[dict(t=n['t'], h=n['h'], s=n['s'], u=n['u']) for n in (fresh + [n for n in recent if n.get('ru')])[:3]]))
     out.sort(key=lambda x: -x['score'])
     return out[:40]
 
-def previous_alerts():
+def previous_radar():
     try:
-        r = requests.get(f'https://raw.githubusercontent.com/{REPO}/live-scan/radar.json', timeout=15)
+        r = requests.get(f'https://raw.githubusercontent.com/{REPO}/live-scan/radar.json?t={int(time.time())}', timeout=15)
         d = r.json() if r.ok else {}
-        return set(d.get('alerted') or []) if d.get('day') == str(now().date()) else set()
-    except Exception: return set()
+        return d if d.get('day') == str(now().date()) else {}
+    except Exception: return {}
 
-def notify(title, msg):
+def watchdog(prev):
+    """During market hours, warn once a day if the trading bot has stopped reporting."""
+    if prev.get('bot_warned'): return True
+    try:
+        if not req('GET', f'{TRADE}/v2/clock').json().get('is_open'): return False
+        t = now(); m = t.hour * 60 + t.minute
+        if m < 575 or m > 950: return False                      # 9:35 AM to 3:50 PM ET
+        r = requests.get(f'https://raw.githubusercontent.com/{REPO}/live/state.json?t={int(time.time())}', timeout=15)
+        upd = datetime.fromisoformat(r.json()['updated']) if r.ok else None
+        age = (t - upd).total_seconds() / 60 if upd else 9999
+        if age > BOT_SILENT_MIN:
+            notify('Vantex bot is not reporting', f"No update from the trading bot for {age:.0f} minutes. Check Actions > Vantex paper trading.", 'warning')
+            return True
+    except Exception as e: print('watchdog failed', str(e)[:160], flush=True)
+    return False
+
+def notify(title, msg, tags='rocket'):
     if not NTFY: return
-    try: requests.post(f'https://ntfy.sh/{NTFY}', data=msg.encode('utf-8'), headers={'Title': title, 'Tags': 'rocket'}, timeout=10)
+    try: requests.post(f'https://ntfy.sh/{NTFY}', data=msg.encode('utf-8'), headers={'Title': title, 'Tags': tags}, timeout=10)
     except Exception as e: print('notify failed', str(e)[:120], flush=True)
 
 def push():
@@ -160,8 +188,9 @@ def main():
     items = news()
     rad = radar(rows, names, items)
     stamp = t0.isoformat(timespec='seconds')
-    alerted = previous_alerts(); new_alerts = []
-    for x in rad[:5]:
+    prev = previous_radar(); alerted = set(prev.get('alerted') or []); new_alerts = []
+    bot_warned = watchdog(prev)
+    for x in [y for y in rad if y['stage'] != 'running'][:5]:       # alert on early and building setups, not stocks already up 20%+
         good_news = any(t.startswith('NEWS ') for t in x['tags']) and not any(t.startswith('RISK') for t in x['tags'])
         if x['sym'] not in alerted and good_news and len(new_alerts) < 3:
             new_alerts.append(x['sym']); alerted.add(x['sym'])
@@ -170,7 +199,7 @@ def main():
     dump('assets.json', dict(updated=stamp, assets=[list(a) for a in A]))
     dump('market.json', dict(updated=stamp, feed=feed, session=session(t0), rows=rows))
     dump('news.json', dict(updated=stamp, items=items[:900]))
-    dump('radar.json', dict(updated=stamp, day=str(t0.date()), session=session(t0), feed=feed, alerted=sorted(alerted), stocks=rad))
+    dump('radar.json', dict(updated=stamp, day=str(t0.date()), session=session(t0), feed=feed, alerted=sorted(alerted), bot_warned=bot_warned, stocks=rad))
     print(json.dumps(dict(event='scan', stocks=len(rows), feed=feed, news=len(items), radar=len(rad), top=[x['sym'] for x in rad[:8]], alerts=new_alerts)), flush=True)
     push()
 
