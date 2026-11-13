@@ -9,7 +9,9 @@
 *{box-sizing:border-box}html,body{height:100%;margin:0;overflow:hidden}
 body{background:var(--night);color:var(--ink);font:13px var(--mono);-webkit-tap-highlight-color:transparent}
 #bg{position:fixed;inset:-40px;background-size:cover;background-position:center;filter:blur(28px) brightness(.45) saturate(1.2);z-index:0}
-#stage{position:fixed;z-index:1;overflow:hidden;border-radius:14px;box-shadow:0 0 0 1px rgba(120,110,255,.25),0 10px 40px rgba(0,0,0,.5);touch-action:manipulation}
+#stage{position:fixed;z-index:1;overflow:hidden;border-radius:14px;box-shadow:0 0 0 1px rgba(120,110,255,.25),0 10px 40px rgba(0,0,0,.5);touch-action:none;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+#resetView{position:absolute;z-index:3;top:10px;right:max(10px,env(safe-area-inset-right));width:38px;height:38px;border-radius:50%;padding:0;font-size:17px;background:rgba(9,9,26,.85);border:1px solid rgba(77,216,255,.6);color:#e9e7ff;box-shadow:0 0 12px rgba(77,216,255,.35)}
+#resetView[hidden]{display:none}
 #stage.full{border-radius:0;box-shadow:none}
 #stage.full::after{content:'';position:absolute;left:0;right:0;bottom:0;height:18%;background:linear-gradient(transparent,rgba(6,5,26,.85));pointer-events:none}
 #world{position:absolute;left:0;top:0;container-type:inline-size;transform-origin:0 0;transition:transform .75s cubic-bezier(.65,0,.3,1)}
@@ -17,7 +19,7 @@ body{background:var(--night);color:var(--ink);font:13px var(--mono);-webkit-tap-
 #fx{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
 .tw{animation:tw var(--d) ease-in-out infinite var(--o)}@keyframes tw{0%,100%{opacity:.05}50%{opacity:1}}
 .sp{animation:sp var(--d) ease-in-out infinite var(--o)}@keyframes sp{0%,100%{opacity:0;transform:scaleX(.4)}50%{opacity:.9;transform:scaleX(1)}}
-.lbl{position:absolute;box-sizing:border-box;translate:var(--nx,0) 0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.08em;text-align:center;cursor:pointer;
+.lbl{position:absolute;box-sizing:border-box;translate:var(--nx,0) 0;scale:var(--ls,1);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.08em;text-align:center;cursor:pointer;
   background:#09091a;border:.32cqw solid var(--b,#8b7bff);border-radius:.9cqw;font-size:calc(var(--w) * .145cqw);line-height:1.1;color:#e9e7ff;
   box-shadow:0 0 1.4cqw color-mix(in srgb,var(--b,#8b7bff) 55%,transparent);font-family:"Chakra Petch",system-ui,sans-serif;font-weight:700;transition:box-shadow .3s,transform .3s}
 .lbl span{display:block;white-space:nowrap}
@@ -170,13 +172,14 @@ button{font:600 11px var(--mono);color:var(--ink);background:rgba(30,24,80,.8);b
     <svg id="fx" viewBox="0 0 850 1064" preserveAspectRatio="none" aria-hidden="true"></svg>
     <div id="labels"></div>
   </div>
+  <button id="resetView" hidden aria-label="Reset the city view" title="Reset view">⤢</button>
 </div>
 <div class="hud top">
   <div class="brand">Vantex City <span id="badge" class="badge stale">CONNECTING</span></div>
   <div class="clock"><span class="t" id="clock">–</span><span class="pnl" id="total">$0</span></div>
 </div>
 <div class="board" id="boardBox"><h3><button class="bt" id="boardBtn" aria-expanded="true">TODAY <b id="boardSum"></b> <span id="boardArrow">▴</span></button></h3><ol id="board"></ol></div>
-<div class="hud bottom"><div class="hint">Tap any building or label to go inside</div><div class="tape" id="tape"></div></div>
+<div class="hud bottom"><div class="hint">Drag to explore · pinch to zoom · tap to go inside</div><div class="tape" id="tape"></div></div>
 <div class="wait" id="wait" hidden></div>
 <div class="door" id="door" hidden><div class="wheel"></div></div>
 <section class="vaultv" id="vaultv" hidden role="dialog" aria-labelledby="vTitle">
@@ -327,25 +330,54 @@ function burst(sym,side,qty){const T=towers[sym];if(!T)return;const el=T.label.e
   const[x,y,w]=SPOTS[sym].l,p=document.createElement('div');p.className='pop';p.style.color=fc;p.style.left=pct(x+w/2,IW);p.style.top=pct(y-8,IH);p.textContent=`${side.toUpperCase()} ${qty}`;$('labels').appendChild(p);setTimeout(()=>p.remove(),2500)}
 
 /* layout: fit the picture between the TODAY strip and the trade ticker */
-let VW={ox:0,oy:0,iw:1,ih:1};
+/* ---------- view: the picture can be dragged, pinched and zoomed to explore it ---------- */
+let VW={iw:1,ih:1,W:1,H:1},V={x:0,y:0,s:1},HOME={x:0,y:0,s:1},touched=false;
+const MAXS=2.5;
+function clampV(v){const{iw,ih,W,H}=VW,s=Math.min(MAXS,Math.max(1,v.s)),w=iw*s,h=ih*s;
+  return{s,x:w>=W?Math.min(0,Math.max(W-w,v.x)):(W-w)/2,y:h>=H?Math.min(0,Math.max(H-h,v.y)):(H-h)/2}}
+function setV(v,anim){V=clampV(v);const w=$('world');w.style.transition=anim?'transform .75s cubic-bezier(.65,0,.3,1)':'none';
+  w.style.transform=`translate(${V.x}px,${V.y}px) scale(${V.s})`;
+  /* labels shrink a little as you zoom in so they don't cover the city, and stay on screen at the edges */
+  const ls=1/Math.sqrt(V.s);w.style.setProperty('--ls',ls.toFixed(3));
+  document.querySelectorAll('#labels .lbl').forEach(el=>{const[x,,lw]=SPOTS[el.dataset.go].l,cx=V.x+(x+lw/2)/IW*VW.iw*V.s,half=lw/IW*VW.iw*ls/2;let nx=0;
+    if(cx-half<4)nx=4-(cx-half);else if(cx+half>VW.W-4)nx=(VW.W-4)-(cx+half);el.style.setProperty('--nx',(nx/V.s).toFixed(1)+'px')});
+  $('resetView').hidden=Math.abs(V.s-HOME.s)<.02&&Math.abs(V.x-HOME.x)<2&&Math.abs(V.y-HOME.y)<2}
 function layout(){const st=$('stage'),top=$('boardBox').getBoundingClientRect().bottom+6,tabsTop=$('tabs').getBoundingClientRect().top;
   const W=innerWidth,H=Math.max(240,tabsTop-top);
   /* phones: fill the whole area (cover). wide screens: fit the height and center */
   let k=Math.max(W/IW,H/IH);if(W>760)k=H/IH;
-  const iw=IW*k,ih=IH*k,ox=(W-iw)/2,oy=0,full=iw>=W-1;
+  const iw=IW*k,ih=IH*k,full=iw>=W-1;
   st.classList.toggle('full',full);Object.assign(st.style,{width:W+'px',height:H+'px',left:'0px',top:top+'px',borderRadius:full?'0':'14px'});
-  const w=$('world');Object.assign(w.style,{width:iw+'px',height:ih+'px',left:ox+'px',top:oy+'px'});VW={ox,oy,iw,ih};
-  /* keep every label fully on screen when the sides are trimmed */
-  document.querySelectorAll('#labels .lbl').forEach(el=>{const[x,,lw]=SPOTS[el.dataset.go].l,L=ox+x/IW*iw,R=L+lw/IW*iw;let nx=0;
-    if(L<4)nx=4-L;else if(R>W-4)nx=(W-4)-R;el.style.setProperty('--nx',nx.toFixed(1)+'px')})}
+  const w=$('world');Object.assign(w.style,{width:iw+'px',height:ih+'px',left:'0px',top:'0px'});
+  VW={iw,ih,W,H};HOME={x:(W-iw)/2,y:0,s:1};setV(touched?V:HOME,false)}
 $('bg').style.backgroundImage=`url(${$('cityImg').src})`;
 
-/* zoom into a building, then open its inside view */
-let zoomed=false;
-function zoomTo(id,done){const[cx,cy]=SPOTS[id].c,st=$('stage'),W=st.clientWidth,H=st.clientHeight,k=2.4,{ox,oy,iw,ih}=VW,px=cx/IW*iw,py=cy/IH*ih;
-  const tx=W/2-ox-px*k,ty=H/2-oy-py*k;zoomed=true;
-  const w=$('world');w.style.transform=`translate(${tx}px,${ty}px) scale(${k})`;let fired=false;const fin=()=>{if(fired)return;fired=true;done&&done()};w.addEventListener('transitionend',fin,{once:true});setTimeout(fin,850)}
-function zoomOut(){zoomed=false;$('world').style.transform=''}
+/* gestures: one finger drags, two fingers pinch, mouse wheel zooms, double-tap zooms in or resets */
+{const st=$('stage'),P=new Map();let g=null,moved=false,lastTap=0,vel={x:0,y:0},lastT=0,inert=0;
+ const mid=()=>{const a=[...P.values()];return a.length>1?{x:(a[0].x+a[1].x)/2,y:(a[0].y+a[1].y)/2,d:Math.hypot(a[0].x-a[1].x,a[0].y-a[1].y)}:{x:a[0].x,y:a[0].y,d:0}};
+ const start=()=>{const m=mid();g={m0:m,v0:{...V}}};
+ st.addEventListener('pointerdown',e=>{if(zoomed||e.button>0)return;cancelAnimationFrame(inert);const r=st.getBoundingClientRect();P.set(e.pointerId,{x:e.clientX-r.left,y:e.clientY-r.top});if(P.size===1)moved=false;start();lastT=performance.now();vel={x:0,y:0}});
+ addEventListener('pointermove',e=>{if(!P.has(e.pointerId)||!g)return;const r=st.getBoundingClientRect();P.set(e.pointerId,{x:e.clientX-r.left,y:e.clientY-r.top});const m=mid(),{m0,v0}=g;
+   if(Math.hypot(m.x-m0.x,m.y-m0.y)>6||P.size>1)moved=true;if(!moved)return;touched=true;
+   const s=P.size>1&&m0.d?Math.min(MAXS,Math.max(1,v0.s*m.d/m0.d)):v0.s,wx=(m0.x-v0.x)/v0.s,wy=(m0.y-v0.y)/v0.s;
+   const nx=m.x-wx*s,ny=m.y-wy*s,t=performance.now(),dt=Math.max(1,t-lastT);vel={x:(nx-V.x)/dt,y:(ny-V.y)/dt};lastT=t;setV({x:nx,y:ny,s},false)});
+ const end=e=>{if(!P.has(e.pointerId))return;P.delete(e.pointerId);
+   if(P.size){start();return}g=null;
+   if(moved){/* glide to a stop */let vx=vel.x*16,vy=vel.y*16;const step=()=>{vx*=.92;vy*=.92;if(Math.hypot(vx,vy)<.4)return;setV({x:V.x+vx,y:V.y+vy,s:V.s},false);inert=requestAnimationFrame(step)};inert=requestAnimationFrame(step);return}
+   const t=performance.now(),onGo=e.target.closest&&e.target.closest('[data-go]');
+   if(!onGo&&t-lastTap<320){const r=st.getBoundingClientRect(),px=e.clientX-r.left,py=e.clientY-r.top;touched=true;
+     if(V.s>1.3)setV(HOME,true);else{const s=2.2,wx=(px-V.x)/V.s,wy=(py-V.y)/V.s;setV({x:px-wx*s,y:py-wy*s,s},true)}lastTap=0}else lastTap=t};
+ addEventListener('pointerup',end);addEventListener('pointercancel',end);
+ /* a drag must not also count as a tap on a building */
+ st.addEventListener('click',e=>{if(moved){e.stopPropagation();e.preventDefault();moved=false}},true);
+ st.addEventListener('wheel',e=>{if(zoomed)return;e.preventDefault();touched=true;const r=st.getBoundingClientRect(),px=e.clientX-r.left,py=e.clientY-r.top,s=Math.min(MAXS,Math.max(1,V.s*Math.exp(-e.deltaY*.0015))),wx=(px-V.x)/V.s,wy=(py-V.y)/V.s;setV({x:px-wx*s,y:py-wy*s,s},false)},{passive:false});
+ $('resetView').addEventListener('click',e=>{e.stopPropagation();setV(HOME,true)})}
+
+/* zoom into a building, then open its inside view; coming back restores the view you had */
+let zoomed=false,beforeZoom=null;
+function zoomTo(id,done){const[cx,cy]=SPOTS[id].c,k=2.4,px=cx/IW*VW.iw,py=cy/IH*VW.ih;beforeZoom={...V};zoomed=true;
+  setV({x:VW.W/2-px*k,y:VW.H/2-py*k,s:k},true);const w=$('world');let fired=false;const fin=()=>{if(fired)return;fired=true;done&&done()};w.addEventListener('transitionend',fin,{once:true});setTimeout(fin,850)}
+function zoomOut(){zoomed=false;setV(beforeZoom||HOME,true);beforeZoom=null}
 $('labels').addEventListener('click',e=>{const t=e.target.closest('[data-go]');if(t)open(t.dataset.go)});
 $('labels').addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&e.target.dataset.go){e.preventDefault();open(e.target.dataset.go)}});
 
