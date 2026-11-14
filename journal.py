@@ -18,9 +18,9 @@ H = {'APCA-API-KEY-ID': KEY, 'APCA-API-SECRET-KEY': SECRET}
 TRADE, DATA = 'https://paper-api.alpaca.markets', 'https://data.alpaca.markets'
 REPO = os.environ.get('GITHUB_REPOSITORY', 'shapirog/vantex-bot')
 OUT = os.environ.get('VANTEX_JOURNAL_DIR', '/tmp/vantex-journal')
-LOGS = [os.environ.get('VANTEX_LOG', 'logs/live_log.jsonl'), os.environ.get('VANTEX_CRYPTO_LOG', 'logs/crypto_log.jsonl')]
+LOGS = [os.environ.get('VANTEX_LOG', 'logs/live_log.jsonl'), os.environ.get('VANTEX_CRYPTO_LOG', 'logs/crypto_log.jsonl'), os.environ.get('VANTEX_MOM_LOG', 'logs/momentum_log.jsonl')]
 START = os.environ.get('VANTEX_JOURNAL_START', '2026-11-01')   # first day of the paper record
-NAMES = {'NA': 'Noise-area stocks', 'ORB': 'Opening breakout', 'CRYPTO': 'Crypto trend'}
+NAMES = {'NA': 'Noise-area stocks', 'ORB': 'Opening breakout', 'MOM': 'Momentum movers', 'CRYPTO': 'Crypto trend'}
 
 # Estimated real-money costs (paper fills are free). Stocks: SEC fee on sells + FINRA TAF per share sold.
 # Crypto: Alpaca's taker fee for small accounts, both sides.
@@ -70,6 +70,7 @@ def strat_of(cid, sym):
     cid = cid or ''
     if cid.startswith('NA-'): return 'NA'
     if cid.startswith('ORB-'): return 'ORB'
+    if cid.startswith('MOM-'): return 'MOM'
     if cid.startswith('CRY-') or '/' in sym: return 'CRYPTO'
     return None
 
@@ -107,7 +108,7 @@ def events():
                     try: add(json.loads(line))
                     except Exception: pass
         except FileNotFoundError: pass
-    for path in ('live/state.json', 'live-crypto/crypto.json'):
+    for path in ('live/state.json', 'live-crypto/crypto.json', 'live-mom/momentum.json'):
         d = raw(path) or {}
         for e in d.get('events') or []: add(e)
     for e in E: e['_t'] = ts(e['ts'])
@@ -164,6 +165,7 @@ def cost_of(f):
 
 def build(F, E):
     na, orb, cry = context(E)
+    mom = {e['sym']: e for e in E if e['event'] == 'mom_entry'}
     pos = {}       # (strat, sym) -> open trade
     trades, rows = [], []
     for f in F:
@@ -172,7 +174,7 @@ def build(F, E):
         owners = [(f['strat'], f['qty'])] if f['strat'] else []
         if not owners:
             left = f['qty']
-            for s in ('ORB', 'NA', 'CRYPTO'):
+            for s in ('ORB', 'NA', 'MOM', 'CRYPTO'):
                 p = pos.get((s, f['sym']))
                 if p and p['q'] * sg < 0 and left > 1e-9:
                     take = min(left, abs(p['q'])); owners.append((s, take)); left -= take
@@ -198,10 +200,11 @@ def build(F, E):
                 p['n0'] += abs(qq) * f['price']; p['q0'] += abs(qq); p['avg0'] = p['n0'] / p['q0']
                 p['mx'] = max(p['mx'], abs(p['q'])); p['cost'] += fee_rate * abs(qq)
             after = pos[key]['q'] if key in pos else 0.0
-            rows.append(journal_row(f, s, q, before, after, realized, na, orb, cry))
+            rows.append(journal_row(f, s, q, before, after, realized, na, orb, cry, mom))
     return trades, rows, pos
 
-def journal_row(f, s, q, before, after, realized, na, orb, cry):
+def journal_row(f, s, q, before, after, realized, na, orb, cry, mom=None):
+    mom = mom or {}
     t = f['t'].astimezone(ET); d = t.date(); exp = None; why = ''
     act = action(f['side'], before, after)
     if s == 'OTHER': act, why = 'MANUAL', 'Fill not made by a Vantex bot'
@@ -219,6 +222,12 @@ def journal_row(f, s, q, before, after, realized, na, orb, cry):
         elif c:
             exp = c['price']; why = f"First 5 minutes closed {'up' if c['dir'] > 0 else 'down'}: stop {c['stop']}, target {c['target']}"
         else: why = 'Opening-range breakout'
+    elif s == 'MOM':
+        tag = (f['cid'].split('-') + ['', ''])[2]
+        c = mom.get(f['sym'])
+        if tag == 'e' and c: exp = c.get('price'); why = f"Broke {'above' if c.get('dir') == 1 else 'below'} its opening range ({c.get('level')}) and held 3 minutes on heavy volume"
+        else: act, why = {'s': ('STOP HIT', 'Stop-loss filled'), 't': ('TRAIL STOP', 'Trailing stop filled after the +20% half'), 'h': ('HALF OFF', 'Took half at +20%'),
+                          'x': ('CLOSED', 'Closed by the bot: failed break, end of day or kill switch')}.get(tag, (act, 'Momentum trade'))
     elif s == 'CRYPTO':
         prior = [e for e in cry.get(f['sym'], []) if e['_t'] <= f['t'] and (f['t'] - e['_t']).total_seconds() < 900]
         c = prior[-1] if prior else None
@@ -246,6 +255,8 @@ def blocked_rows(E, since):
         elif e['event'] == 'order' and str(e.get('status')) not in ('200', '201'):
             R.append(dict(t=e['_t'].isoformat(), bot='CRYPTO' if e.get('coin') else ('ORB' if str(e.get('cid', '')).startswith('ORB') else 'NA'),
                           sym=e.get('sym') or e.get('coin'), act='REJECTED', why=str(e.get('resp', ''))[:140]))
+        elif e['event'] == 'mom_reject':
+            R.append(dict(t=e['_t'].isoformat(), bot='MOM', sym=e.get('sym'), act='REJECTED', why=str(e.get('err', ''))[:140]))
         elif e['event'] in ('loss_limit', 'kill_switch'):
             R.append(dict(t=e['_t'].isoformat(), bot='STOCKS', sym='', act='LOSS LIMIT' if e['event'] == 'loss_limit' else 'KILL SWITCH',
                           why=f"Day P/L {e.get('pl')}" if e['event'] == 'loss_limit' else f"Mode set to {e.get('mode')}"))
@@ -337,7 +348,7 @@ def main():
     journal = sorted([r for r in journal if ts(r['t']) >= since], key=lambda r: r['t'], reverse=True)[:400]
 
     bots = {}
-    for s in ('NA', 'ORB', 'CRYPTO'):
+    for s in ('NA', 'ORB', 'MOM', 'CRYPTO'):
         bots[s] = dict(name=NAMES[s], **score([t for t in trades if t['bot'] == s], [r for r in rows if r['bot'] == s]))
     combined = score([t for t in trades if t['bot'] != 'OTHER'], [r for r in rows if r['bot'] != 'OTHER'])
 
