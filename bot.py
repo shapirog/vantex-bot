@@ -33,7 +33,8 @@ def fmt_q(q):
     q = abs(q)
     return str(int(round(q))) if abs(q - round(q)) < 1e-6 else f'{q:.6f}'.rstrip('0').rstrip('.')
 def stock_positions():
-    try: return [p for p in req('GET', f'{TRADE}/v2/positions').json() if p.get('asset_class') == 'us_equity']
+    """This bot's own stock positions (the momentum bot's trades don't use its 4 spots)."""
+    try: return [p for p in req('GET', f'{TRADE}/v2/positions').json() if p.get('asset_class') == 'us_equity' and p['symbol'] in NA_SYMS + ORB_SYMS]
     except Exception: return []
 MAX_ORDERS_PER_DAY = 40     # hard cap on new strategy orders per day (a normal day is under 20)
 STALE_MINUTES = 10          # skip a signal if the latest price bar is older than this (halt or data outage)
