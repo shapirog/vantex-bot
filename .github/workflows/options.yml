@@ -1,0 +1,50 @@
+name: Vantex options bot
+on:
+  schedule:
+    # weekdays, staggered starts before and during the session (UTC), so a late or skipped GitHub start can't keep it offline
+    - cron: '13 14 * * 1-5'
+    - cron: '47 14 * * 1-5'
+    - cron: '23 15 * * 1-5'
+    - cron: '23 16 * * 1-5'
+    - cron: '23 17 * * 1-5'
+    - cron: '23 18 * * 1-5'
+  workflow_dispatch:
+permissions:
+  contents: write
+  actions: write
+concurrency:
+  group: vantex-options
+  cancel-in-progress: false
+jobs:
+  options:
+    runs-on: ubuntu-latest
+    timeout-minutes: 350
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install requests
+      - name: Run options bot (paper account only)
+        id: bot
+        env:
+          APCA_API_KEY_ID: ${{ secrets.APCA_API_KEY_ID }}
+          APCA_API_SECRET_KEY: ${{ secrets.APCA_API_SECRET_KEY }}
+          NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set +e
+          python options.py 330
+          echo "code=$?" >> "$GITHUB_OUTPUT"
+      - name: Save options log
+        if: always()
+        run: |
+          git config user.name "vantex-bot"
+          git config user.email "vantex-bot@users.noreply.github.com"
+          git add logs || true
+          git commit -m "Options log $(date -u +%F)" && git pull --rebase && git push || true
+      - name: Hand off to a fresh run if the market is still open
+        if: steps.bot.outputs.code == '3'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run options.yml --ref main
