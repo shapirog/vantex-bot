@@ -18,15 +18,18 @@ H = {'APCA-API-KEY-ID': KEY, 'APCA-API-SECRET-KEY': SECRET}
 TRADE, DATA = 'https://paper-api.alpaca.markets', 'https://data.alpaca.markets'
 REPO = os.environ.get('GITHUB_REPOSITORY', 'shapirog/vantex-bot')
 OUT = os.environ.get('VANTEX_JOURNAL_DIR', '/tmp/vantex-journal')
-LOGS = [os.environ.get('VANTEX_LOG', 'logs/live_log.jsonl'), os.environ.get('VANTEX_CRYPTO_LOG', 'logs/crypto_log.jsonl'), os.environ.get('VANTEX_MOM_LOG', 'logs/momentum_log.jsonl')]
+LOGS = [os.environ.get('VANTEX_LOG', 'logs/live_log.jsonl'), os.environ.get('VANTEX_CRYPTO_LOG', 'logs/crypto_log.jsonl'), os.environ.get('VANTEX_MOM_LOG', 'logs/momentum_log.jsonl'),
+        os.environ.get('VANTEX_OPT_LOG', 'logs/options_log.jsonl')]
 START = os.environ.get('VANTEX_JOURNAL_START', '2026-11-01')   # first day of the paper record
-NAMES = {'NA': 'Noise-area stocks', 'ORB': 'Opening breakout', 'MOM': 'Momentum movers', 'CRYPTO': 'Crypto trend'}
+NAMES = {'NA': 'Noise-area stocks', 'ORB': 'Opening breakout', 'MOM': 'Momentum movers', 'OPT': 'Options (QQQ/SPY)', 'CRYPTO': 'Crypto trend'}
 
 # Estimated real-money costs (paper fills are free). Stocks: SEC fee on sells + FINRA TAF per share sold.
 # Crypto: Alpaca's taker fee for small accounts, both sides.
 SEC_FEE = 27.80 / 1_000_000
 TAF_PER_SHARE, TAF_MAX = 0.000166, 8.30
 CRYPTO_FEE = 0.0025
+OPT_FEE = 0.05          # options: regulatory + clearing fees, about 5 cents per contract per side
+OPT_MULT = 100          # one option contract = 100 shares
 
 # Readiness gate: every line must pass before real money is even considered.
 GATE_DAYS = 20
@@ -71,6 +74,7 @@ def strat_of(cid, sym):
     if cid.startswith('NA-'): return 'NA'
     if cid.startswith('ORB-'): return 'ORB'
     if cid.startswith('MOM-'): return 'MOM'
+    if cid.startswith('OPT-'): return 'OPT'
     if cid.startswith('CRY-') or '/' in sym: return 'CRYPTO'
     return None
 
@@ -84,7 +88,8 @@ def fills_from(orders):
             cr = '/' in x['symbol'] or (x.get('asset_class') or o.get('asset_class')) == 'crypto'
             sym = x['symbol'].replace('/', '')[:-3] if cr and x['symbol'].replace('/', '').endswith('USD') else x['symbol']
             F.append(dict(id=x['id'], cid=o.get('client_order_id') or '', sym=sym, side=x['side'], qty=q, price=float(x['filled_avg_price']),
-                          t=ts(x['filled_at']), strat=parent or ('CRYPTO' if cr else None), leg=leg, type=x.get('type'), crypto=cr))
+                          t=ts(x['filled_at']), strat=parent or ('CRYPTO' if cr else None), leg=leg, type=x.get('type'), crypto=cr,
+                          mult=OPT_MULT if (x.get('asset_class') or o.get('asset_class')) == 'us_option' or parent == 'OPT' else 1))
     return sorted(F, key=lambda f: f['t'])
 
 def raw(path):
@@ -108,7 +113,7 @@ def events():
                     try: add(json.loads(line))
                     except Exception: pass
         except FileNotFoundError: pass
-    for path in ('live/state.json', 'live-crypto/crypto.json', 'live-mom/momentum.json'):
+    for path in ('live/state.json', 'live-crypto/crypto.json', 'live-mom/momentum.json', 'live-opt/options.json'):
         d = raw(path) or {}
         for e in d.get('events') or []: add(e)
     for e in E: e['_t'] = ts(e['ts'])
@@ -160,12 +165,13 @@ def action(side, before, after):
 # ---------------- trades, P/L, costs ----------------
 def cost_of(f):
     n = f['qty'] * f['price']
+    if f.get('mult', 1) > 1: return f['qty'] * OPT_FEE
     if f['crypto']: return n * CRYPTO_FEE
     return (n * SEC_FEE + min(f['qty'] * TAF_PER_SHARE, TAF_MAX)) if f['side'] == 'sell' else 0.0
 
 def build(F, E):
     na, orb, cry = context(E)
-    mom = {e['sym']: e for e in E if e['event'] == 'mom_entry'}
+    mom = {e['sym']: e for e in E if e['event'] in ('mom_entry', 'opt_entry')}
     pos = {}       # (strat, sym) -> open trade
     trades, rows = [], []
     for f in F:
@@ -174,7 +180,7 @@ def build(F, E):
         owners = [(f['strat'], f['qty'])] if f['strat'] else []
         if not owners:
             left = f['qty']
-            for s in ('ORB', 'NA', 'MOM', 'CRYPTO'):
+            for s in ('ORB', 'NA', 'MOM', 'OPT', 'CRYPTO'):
                 p = pos.get((s, f['sym']))
                 if p and p['q'] * sg < 0 and left > 1e-9:
                     take = min(left, abs(p['q'])); owners.append((s, take)); left -= take
@@ -186,7 +192,7 @@ def build(F, E):
             qq = q * sg; realized = 0.0
             if p and p['q'] * qq < 0:                     # closing (part of) the position
                 c = min(abs(qq), abs(p['q'])); d = 1 if p['q'] > 0 else -1
-                realized = (f['price'] - p['avg']) * c * d
+                realized = (f['price'] - p['avg']) * c * d * f.get('mult', 1)
                 p['pnl'] += realized; p['cost'] += fee_rate * c; p['q'] -= c * d; qq += c * d; p['exit_n'] += c * f['price']; p['exit_q'] += c
                 if abs(p['q']) < 1e-9:
                     trades.append(dict(bot=s, sym=f['sym'], dir='Long' if p['dir'] > 0 else 'Short', qty=r2(p['mx'], 6), entry=r2(p['avg0']),
@@ -228,6 +234,16 @@ def journal_row(f, s, q, before, after, realized, na, orb, cry, mom=None):
         if tag == 'e' and c: exp = c.get('price'); why = f"Broke {'above' if c.get('dir') == 1 else 'below'} its opening range ({c.get('level')}) and held 3 minutes on heavy volume"
         else: act, why = {'s': ('STOP HIT', 'Stop-loss filled'), 't': ('TRAIL STOP', 'Trailing stop filled after the +20% half'), 'h': ('HALF OFF', 'Took half at +20%'),
                           'x': ('CLOSED', 'Closed by the bot: failed break, end of day or kill switch')}.get(tag, (act, 'Momentum trade'))
+    elif s == 'OPT':
+        tag = f['cid'].rsplit('-', 2)[-2] if f['cid'].count('-') >= 3 else ''
+        c = mom.get(f['sym'])
+        if tag == 'e' and c:
+            act = 'BUY ' + ('CALL' if c.get('dir') == 1 else 'PUT')
+            if c.get('setup') == 'news shock': why = f"News shock: {c.get('und')} moved fast {'up' if c.get('dir') == 1 else 'down'} on heavy volume and held"
+            else: why = f"{c.get('und')} broke {'above' if c.get('dir') == 1 else 'below'} its opening range ({c.get('level')}) and held, {'above' if c.get('dir') == 1 else 'below'} VWAP"
+            why += f" · why: {c['headline'][:110]}" if c.get('headline') else (' · no news found' if c.get('news_note') == 'no news found' else '')
+        else: act, why = {'s': ('STOP HIT', 'Backup stop at the broker filled (-45%)'), 'h': ('HALF OFF', 'Took half at +50%'),
+                          'x': ('CLOSED', 'Closed by the bot: stop, trailing stop, failed break, 3 PM close or kill switch')}.get(tag, (act, 'Options trade'))
     elif s == 'CRYPTO':
         prior = [e for e in cry.get(f['sym'], []) if e['_t'] <= f['t'] and (f['t'] - e['_t']).total_seconds() < 900]
         c = prior[-1] if prior else None
@@ -237,7 +253,7 @@ def journal_row(f, s, q, before, after, realized, na, orb, cry, mom=None):
                    else f"Trend ended: 20-bar avg {c['ema20']} vs 50-bar avg {c['ema50']}, price {c['price']}")
         else: why = 'Crypto trend signal'
     slip = None
-    if exp and f['type'] == 'market':
+    if exp and f['type'] == 'market' and s != 'OPT':
         slip = round((f['price'] - exp) / exp * 1e4 * (1 if f['side'] == 'buy' else -1), 1)
     return dict(t=f['t'].isoformat(), bot=s, sym=f['sym'], act=act, side=f['side'], qty=r2(q, 6), fill=r2(f['price'], 4 if f['price'] < 1 else 2),
                 exp=exp, slip=slip, pnl=r2(realized) if realized else None, why=why)
@@ -274,7 +290,7 @@ def small_account(trades):
     real-money fees on every trade. Profits compound: positions grow as the account grows."""
     ev = []
     for i, t in enumerate(trades):
-        if t['bot'] == 'OTHER': continue
+        if t['bot'] in ('OTHER', 'OPT'): continue
         ev.append((ts(t['open']), 1, i)); ev.append((ts(t['close']), 0, i))
     ev.sort(key=lambda e: (e[0], e[1]))                 # at the same moment, close before open
     eq = SMALL_START; held = {}; taken = skip_slot = skip_short = 0; curve = []; peak = eq; mdd = 0.0; wins = losses = 0; gw = gl = 0.0
@@ -348,7 +364,7 @@ def main():
     journal = sorted([r for r in journal if ts(r['t']) >= since], key=lambda r: r['t'], reverse=True)[:400]
 
     bots = {}
-    for s in ('NA', 'ORB', 'MOM', 'CRYPTO'):
+    for s in ('NA', 'ORB', 'MOM', 'OPT', 'CRYPTO'):
         bots[s] = dict(name=NAMES[s], **score([t for t in trades if t['bot'] == s], [r for r in rows if r['bot'] == s]))
     combined = score([t for t in trades if t['bot'] != 'OTHER'], [r for r in rows if r['bot'] != 'OTHER'])
 
@@ -399,7 +415,7 @@ def main():
     out = dict(updated=t0.isoformat(timespec='seconds'), start=START, account=acct, small=out_small, bots=bots, all=combined, gate=gate,
                bot_days=len(bot_days), missed=missed[-30:], coverage=coverage[-30:], open=[dict(bot=k[0], sym=k[1], qty=r2(v['q'], 6), avg=r2(v['avg'])) for k, v in open_pos.items()],
                trades=trades[-80:][::-1], journal=journal,
-               costs_note='Paper fills are free. Costs are estimated as real money would pay: SEC + FINRA fees on stock sales, 0.25% per side on crypto.')
+               costs_note='Paper fills are free. Costs are estimated as real money would pay: SEC + FINRA fees on stock sales, 0.25% per side on crypto, about 5 cents per option contract per side. Option P/L counts 100 shares per contract.')
     json.dump(out, open(f'{OUT}/journal.json', 'w'), separators=(',', ':'))
     print(json.dumps(dict(event='journal', fills=len(F), trades=len(trades), rows=len(journal), net=combined.get('net'), ready=gate['ready'])), flush=True)
     push()
