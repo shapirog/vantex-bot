@@ -53,8 +53,10 @@ def epoch(t):
 def assets():
     r = req('GET', f'{TRADE}/v2/assets', params=dict(status='active', asset_class='us_equity'))
     ok = ('NYSE', 'NASDAQ', 'ARCA', 'AMEX', 'BATS')
-    return sorted((a['symbol'], (a.get('name') or '')[:48]) for a in r.json()
-                  if a.get('tradable') and a.get('exchange') in ok and a['symbol'].isalpha())
+    L = [a for a in r.json() if a.get('tradable') and a.get('exchange') in ok and a['symbol'].isalpha()]
+    ETB.clear(); ETB.update(a['symbol'] for a in L if a.get('shortable') and a.get('easy_to_borrow'))
+    return sorted((a['symbol'], (a.get('name') or '')[:48]) for a in L)
+ETB = set()   # stocks Alpaca can lend for shorting today
 
 def snapshots(syms):
     """Full-market (15-min delayed SIP) when the plan allows it, otherwise the live IEX feed."""
@@ -199,6 +201,28 @@ def radar(rows, names, items):
     out.sort(key=lambda x: -x['score'])
     return out[:40]
 
+def fades(rows, names, items):
+    """Falling stocks the momentum bot may short: real bad news or a heavy-volume breakdown, easy to borrow, $3-$20."""
+    by = {}
+    for n in items:
+        for s in n['sy']: by.setdefault(s, []).append(n)
+    t_now = datetime.now(timezone.utc); out = []
+    for sym, p, chg, v, rv, qt in rows:
+        if not (3 <= p <= 20) or sym not in ETB: continue
+        if qt is None or (t_now.timestamp() - qt) > MAX_QUOTE_AGE_H * 3600: continue
+        if chg > -6 or chg < -60: continue                       # falling, but not already collapsed
+        if v * p < 500_000: continue                             # liquid enough to short and cover
+        fresh = [n for n in by.get(sym, []) if not n.get('ru') and (t_now - datetime.fromisoformat(n['t'].replace('Z', '+00:00'))).total_seconds() < 24 * 3600]
+        good, bad = tags_for(' '.join(n['h'] + ' ' + n['sm'] for n in fresh))
+        if good and not bad: continue                            # good news on a dip: not a short
+        if not bad and not (rv and rv >= 3): continue            # no bad news: needs very heavy selling
+        score = min(-chg, 40) / 8 + (math.log2(rv) * 1.5 if rv and rv > 1 else 0) + 3 * len(bad)
+        out.append(dict(sym=sym, name=names.get(sym, ''), p=p, chg=chg, v=v, rv=rv, qt=qt, score=round(score, 2),
+                        tags=[f'RISK {b}' for b in bad[:2]] + ([f'VOL {rv:.0f}x'] if rv and rv >= 3 else []),
+                        news=[dict(t=n['t'], h=n['h'], s=n['s'], u=n['u']) for n in fresh[:2]]))
+    out.sort(key=lambda x: -x['score'])
+    return out[:20]
+
 def previous_radar():
     try:
         r = requests.get(f'https://raw.githubusercontent.com/{REPO}/live-scan/radar.json?t={int(time.time())}', timeout=15)
@@ -247,6 +271,7 @@ def main():
     rows, feed = snapshots([s for s, _ in A])
     items = news()
     rad = radar(rows, names, items)
+    fd = fades(rows, names, items)
     stamp = t0.isoformat(timespec='seconds')
     prev = previous_radar(); alerted = set(prev.get('alerted') or []); new_alerts = []
     bot_warned = watchdog(prev)
@@ -261,7 +286,7 @@ def main():
     dump('news.json', dict(updated=stamp, items=items[:900]))
     try: dump('charts.json', dict(updated=stamp, syms=charts()))
     except Exception as e: print('charts failed', str(e)[:200], flush=True)   # charts are extra: never stop the scan
-    dump('radar.json', dict(updated=stamp, day=str(t0.date()), session=session(t0), feed=feed, alerted=sorted(alerted), bot_warned=bot_warned, stocks=rad))
+    dump('radar.json', dict(updated=stamp, day=str(t0.date()), session=session(t0), feed=feed, alerted=sorted(alerted), bot_warned=bot_warned, stocks=rad, fades=fd))
     print(json.dumps(dict(event='scan', stocks=len(rows), feed=feed, news=len(items), radar=len(rad), top=[x['sym'] for x in rad[:8]], alerts=new_alerts)), flush=True)
     push()
 
