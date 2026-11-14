@@ -1,0 +1,26 @@
+name: Vantex backtest
+on:
+  schedule:
+    - cron: '13 21 * * 0'   # every Sunday afternoon (UTC), before the new trading week
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: vantex-backtest
+  cancel-in-progress: true
+jobs:
+  backtest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install requests
+      - name: Replay the last 60 trading days with the options bot's rules (places no trades)
+        env:
+          APCA_API_KEY_ID: ${{ secrets.APCA_API_KEY_ID }}
+          APCA_API_SECRET_KEY: ${{ secrets.APCA_API_SECRET_KEY }}
+          GH_TOKEN: ${{ github.token }}
+        run: python backtest.py 60
