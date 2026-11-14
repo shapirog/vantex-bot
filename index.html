@@ -440,17 +440,13 @@ const FXS={};
 
 /* ---------- the options tower: laser into the sky, spinning rings, a hologram card, neon charts and signs ---------- */
 const OT={x:1756,y:500};
-SPOTS.OPT={l:[OT.x-98,292,196,78],b:[[OT.x-22,OT.y,44,140]],c:[OT.x,OT.y+40]};
+SPOTS.OPT={l:[OT.x-11,OT.y-28-78,150,78],b:[[OT.x-22,OT.y,44,140]],c:[OT.x,OT.y+40]};
 {const w=$('world'),NS='http://www.w3.org/2000/svg',svg=$('ofx');
  const lz=document.createElement('div');lz.className='olaser';lz.id='oLaser';Object.assign(lz.style,{left:pct(OT.x,IW),height:pct(OT.y,IH)});
  lz.innerHTML='<div class="oh"></div><div class="oc"></div><div class="op"></div><div class="op b"></div>';w.insertBefore(lz,$('labels'));
- const g=document.createElementNS(NS,'g');g.id='oRings';g.setAttribute('class','idle');
+ const g=document.createElementNS(NS,'g');g.id='oRings';g.setAttribute('class','idle');{const st=document.createElementNS(NS,'line');Object.entries({x1:OT.x,y1:OT.y-28,x2:OT.x,y2:OT.y,class:'stem'}).forEach(([k,v])=>st.setAttribute(k,v));svg.appendChild(st)}
  const ring=(cy,rx,ry,two)=>`<ellipse cx="${OT.x}" cy="${cy}" rx="${rx}" ry="${ry}" class="rh"/><ellipse cx="${OT.x}" cy="${cy}" rx="${rx}" ry="${ry}" class="rg"/><ellipse cx="${OT.x}" cy="${cy}" rx="${rx}" ry="${ry}" class="rs${two?' r2':''}" pathLength="100"/>`;
- g.innerHTML=ring(268,62,13,1)+ring(OT.y+4,38,9)+ring(548,30,7,1)+ring(596,32,7.5);svg.appendChild(g);
- /* neon signs in the sky */
- [['CALLS ▲','#3dffa8',1180,330,-5,6.3],['PUTS ▼','#ff3d71',2205,445,4,7.7],['VWAP','#ffc94d',1062,286,-3,9.1],['0DTE','#4dd8ff',120,330,3,8.4],['BUY THE BREAK','#ff7ae6',1900,430,-2,10.3]]
-   .forEach(([t,c,x,y,r,d],i)=>{const n=document.createElement('div');n.className='neon';n.textContent=t;n.setAttribute('aria-hidden','true');
-     Object.assign(n.style,{left:pct(x,IW),top:pct(y,IH),color:c});n.style.setProperty('--r',r+'deg');n.style.setProperty('--d',d+'s');n.style.setProperty('--o',(-i*1.7)+'s');w.insertBefore(n,$('labels'))});
+ g.innerHTML=ring(OT.y+4,38,9)+ring(548,30,7,1)+ring(596,32,7.5);svg.appendChild(g);
  /* hologram card above the tower: tap it to open the options card */
  const[x,y,cw,ch]=SPOTS.OPT.l,el=document.createElement('div');el.className='lbl ohol';el.tabIndex=0;el.setAttribute('role','button');el.dataset.go='OPT';el.id='oHolo';
  Object.assign(el.style,{left:pct(x,IW),top:pct(y,IH),width:pct(cw,IW),height:pct(ch,IH)});el.style.setProperty('--w',(cw/IW*100).toFixed(2));$('labels').appendChild(el);
@@ -870,7 +866,7 @@ function drawOpt(){const op=optOpen(),lz=$('oLaser'),rg=$('oRings'),el=$('oHolo'
   lz.style.setProperty('--oc',c);lz.classList.toggle('on',!!op);rg.style.setProperty('--oc',c);rg.setAttribute('class',op?'':'idle');
   el.classList.toggle('call',!!op&&op[1].d>0);el.classList.toggle('put',!!op&&op[1].d<0);el.style.setProperty('--b',c);
   let lines;
-  if(op){const[s,t]=op,pl=optPl(t);lines=[['◆ OPTIONS LIVE',22,'#ffc94d'],[`${t.d>0?'▲':'▼'} ${t.kind} ×${t.qty} ${t.und} ${(+t.strike).toFixed(0)}`,30,c],[`${pl>=0?'+':'-'}${usd(pl)} · ${t.gain_pct>=0?'+':''}${(+t.gain_pct||0).toFixed(0)}%`,26,pl>=0?'#3dffa8':'#ff3d71']]}
+  if(op){const[s,t]=op,pl=optPl(t);lines=[['◆ OPTIONS LIVE',20,'#ffc94d'],[`${t.d>0?'▲':'▼'} ${t.kind} ×${t.qty} ${t.und} ${(+t.strike).toFixed(0)}`,25,c],[`${pl>=0?'+':'-'}${usd(pl)} · ${t.gain_pct>=0?'+':''}${(+t.gain_pct||0).toFixed(0)}%`,26,pl>=0?'#3dffa8':'#ff3d71']]}
   else{const L=optLast(),today=new Date().toLocaleDateString('en-CA',{timeZone:'America/New_York'}),done=OPS&&OPS.date===today&&L;
     const pl=done?Object.values(OPS.trades).reduce((a,t)=>a+optPl(t),0):0;
     lines=[['◆ OPTIONS TOWER',22,'#ffc94d'],done?[`today ${pl>=0?'+':'-'}${usd(pl)}`,28,pl>=0?'#3dffa8':'#ff3d71']:['news · calls & puts',24,'#e9e7ff'],
