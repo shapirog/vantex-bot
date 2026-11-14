@@ -29,9 +29,20 @@ Risk (built for a small account; "options_risk" in control.json changes the size
   - options day loss limit: if today's options trades lose 25% of the account, no new options today
   - same-day index options closed by 3:00 PM, stock options by 3:45 PM (it never holds overnight)
   - stops for the day if the main bot's profit lock / target / loss limit fires
+
+Calendar guard (the days that trick traders):
+  - Fed decision days (2:00 PM): no new entries after 1:30 PM, and anything open is closed at 1:55 PM
+  - CPI inflation mornings (8:30 AM report): no entries before 10:30 AM, after the first swings settle
+  - earnings: no options on a stock that reports today (after the close) or in the next 3 days,
+    because option prices are inflated before earnings and collapse right after ("IV crush")
+Market mood (trade with the market, not against it):
+  - no calls while SPY is below VWAP and down 0.4%+; no puts while SPY is above VWAP and up 0.4%+
+    (exception: a news shock whose headline agrees with the move, like NVDA on a China story)
+  - wild day (VIXY, the fear-gauge fund, up 8%+): trade size is cut in half
+Backtest: setups the weekly backtest marks "off" (losing over 15+ past trades) are skipped.
 """
 import os, sys, json, math, re, time, subprocess, requests
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timedelta, timezone, date
 from zoneinfo import ZoneInfo
 
 ET = ZoneInfo('America/New_York')
@@ -64,6 +75,15 @@ STOP_PCT, BROKER_STOP_PCT = 0.30, 0.45
 PARTIAL_PCT, LOCK_PCT, TRAIL_PCT = 0.50, 0.25, 0.25
 STALE_SEC = 180
 NEWS_HOURS = 18                     # headlines since yesterday evening count as "why"
+MOOD_PCT, WILD_VIXY = 0.004, 0.08   # SPY move that sets the market mood; VIXY jump that means a wild day
+FOMC_STOP, FOMC_FLAT, CPI_FROM = 13 * 60 + 30, 13 * 60 + 55, 10 * 60 + 30
+# Fed decision days (federalreserve.gov; 2027 dates are the Fed's tentative schedule)
+FOMC = {'2026-01-28', '2026-03-18', '2026-04-29', '2026-06-17', '2026-07-29', '2026-09-16', '2026-10-28', '2026-12-09',
+        '2027-01-27', '2027-03-17', '2027-04-28', '2027-06-09', '2027-07-28', '2027-09-15', '2027-10-27', '2027-12-08'}
+# CPI release days, 8:30 AM ET (bls.gov schedule)
+CPI = {'2026-01-13', '2026-02-13', '2026-03-11', '2026-04-10', '2026-05-12', '2026-06-10', '2026-07-14', '2026-08-12',
+       '2026-09-11', '2026-10-14', '2026-11-10', '2026-12-10', '2027-01-13', '2027-02-11', '2027-03-10', '2027-04-13',
+       '2027-05-12', '2027-06-10', '2027-07-14', '2027-08-11', '2027-09-14', '2027-10-14', '2027-11-10', '2027-12-10'}
 
 # which way a headline points
 UPW = r'upgrade|beats?\b|tops\b|raises|raised|record|approv|wins?\b|award|contract|partner|deal\b|acquir|buyback|surge|soar|jump|rall(y|ies)|price target (raised|hike)|outperform|strong demand|launch|breakthrough|expands?\b|bullish'
@@ -123,6 +143,63 @@ def day_done():
     done = ds.get('done') if ds.get('date') == today else None
     _DAY.update(t=time.time(), done=done if done in ('profit_target', 'profit_lock_hit', 'loss_limit') else None)
     return _DAY['done']
+
+# ---------------- calendar guard ----------------
+EARN = {'day': None, 'by': {}}
+def nasdaq_earnings(d):
+    """Earnings on one date from Nasdaq's public calendar: {SYM: 'pre' | 'post' | '?'}."""
+    try:
+        r = requests.get('https://api.nasdaq.com/api/calendar/earnings', params=dict(date=d.isoformat()), timeout=20,
+                         headers={'User-Agent': 'Mozilla/5.0 (vantex-bot)', 'Accept': 'application/json'})
+        if not r.ok: return None
+        rows = (r.json().get('data') or {}).get('rows') or []
+        return {x['symbol']: ('pre' if 'pre' in str(x.get('time', '')) else 'post' if 'after' in str(x.get('time', '')) else '?') for x in rows if x.get('symbol')}
+    except Exception as e:
+        print('earnings calendar failed', str(e)[:120], flush=True); return None
+
+def load_earnings(today):
+    if EARN['day'] == today: return
+    by = {}
+    for k in range(0, 4):
+        d = today + timedelta(days=k); e = nasdaq_earnings(d)
+        if e is None: continue
+        for s, when in e.items(): by.setdefault(s, []).append((k, when))
+    EARN.update(day=today, by=by)
+
+def earnings_block(sym, by=None):
+    """Reports after today's close or within the next 3 days -> option prices are inflated; skip."""
+    for k, when in (by if by is not None else EARN['by']).get(sym, []):
+        if k == 0 and when != 'pre': return 'reports earnings today'
+        if 1 <= k <= 3: return f'reports earnings in {k} day{"s" if k > 1 else ""}'
+    return None
+
+def calendar_block(day_iso, m):
+    if day_iso in FOMC and m >= FOMC_STOP: return 'Fed decision day: no new trades after 1:30 PM'
+    if day_iso in CPI and m < CPI_FROM: return 'CPI morning: waiting until 10:30 AM'
+    return None
+
+def mood(L_by):
+    """(spy_chg, spy_above_vwap, wild) from SPY and VIXY bars."""
+    S = L_by.get('SPY'); V = L_by.get('VIXY')
+    spy_chg = above = None; wild = False
+    if S and S['today']:
+        p = S['today'][-1]['c']; spy_chg = p / S['open'] - 1; above = bool(S['vwap']) and p >= S['vwap']
+    if V and V['today']: wild = V['today'][-1]['c'] / V['open'] - 1 >= WILD_VIXY
+    return spy_chg, above, wild
+
+def mood_block(d, setup, note, md):
+    spy_chg, above, _ = md
+    if spy_chg is None or (setup == 'news shock' and note == 'news agrees'): return None
+    if d == 1 and above is False and spy_chg <= -MOOD_PCT: return f'market falling (SPY {spy_chg * 100:+.1f}%, below VWAP): no calls'
+    if d == -1 and above is True and spy_chg >= MOOD_PCT: return f'market rising (SPY {spy_chg * 100:+.1f}%, above VWAP): no puts'
+    return None
+
+BT = {'t': 0, 'off': set()}
+def backtest_off():
+    """Setups the weekly backtest found losing (15+ trades, profit factor under 0.9)."""
+    if time.time() - BT['t'] < 3600: return BT['off']
+    b = raw('live-backtest/backtest.json') or {}
+    BT.update(t=time.time(), off={k for k, v in (b.get('verdict') or {}).items() if v.get('status') == 'off'}); return BT['off']
 
 # ---------------- market data ----------------
 def _bars(params, syms):
@@ -397,9 +474,11 @@ def manage(now, L_by):
 
 def candidates(now, L_by):
     """Every setup that is confirmed right now, best first. Also builds the 'why they're moving' list."""
-    m = now.hour * 60 + now.minute; out = []; movers = []
+    m = now.hour * 60 + now.minute; out = []; movers = []; md = mood(L_by); off = backtest_off(); day_iso = now.date().isoformat()
+    STATE['mood'] = dict(spy_chg=round(md[0] * 100, 2) if md[0] is not None else None, spy_above_vwap=md[1], wild=md[2],
+                         calendar=calendar_block(day_iso, m) or ('Fed day' if day_iso in FOMC else 'CPI day' if day_iso in CPI else None))
     for und, L in L_by.items():
-        if not L or not L['today']: continue
+        if und == 'VIXY' or not L or not L['today']: continue
         idx = und in INDEXES
         p = L['today'][-1]['c']
         if not idx:
@@ -422,6 +501,12 @@ def candidates(now, L_by):
             if note == 'no news found' and max(b['v'] for b in L['today'][-SHOCK_BARS:]) < NONEWS_VOL * L['avg_v']:
                 continue
             info.update(headline=headline, news_note=note)
+            setup_key = 'index break' if idx else info['setup']
+            block = (f'backtest turned off "{setup_key}"' if setup_key in off else None) or calendar_block(day_iso, m) \
+                or (None if idx else earnings_block(und)) or mood_block(d, info['setup'], note, md)
+            if block:
+                if f'blk{key}' not in STATE['tries']: STATE['tries'].append(f'blk{key}'); log(event='opt_skip', und=und, dir=d, why=block)
+                continue
             rank = (2 if info['setup'] == 'news shock' else 1) + (1 if note == 'news agrees' else 0)
             out.append((rank, und, d, info))
     movers.sort(key=lambda x: -abs(x['chg'])); STATE['movers'] = movers[:12]
@@ -444,7 +529,7 @@ def hunt(now, acct, L_by):
     if len(live) >= MAX_OPEN or len(STATE['trades']) >= MAX_ENTRIES: return
     busy = {STATE['trades'][s]['und'] for s in live}
     obp = float(acct.get('options_buying_power') or acct.get('buying_power') or 0)
-    budget = min(eq * _CTRL['risk'], obp)
+    budget = min(eq * _CTRL['risk'] * (0.5 if mood(L_by)[2] else 1), obp)
     for und, d, info in cands:
         if und in busy: continue
         px, pt = last_trade(und)
@@ -482,7 +567,7 @@ def chart_data(L):
 def publish(eq, L_by):
     show = set(INDEXES) | {T['und'] for T in STATE['trades'].values()}
     st = dict(updated=datetime.now(ET).isoformat(timespec='seconds'), date=STATE['date'], equity=eq, trades=STATE['trades'], tries=STATE['tries'],
-              movers=STATE['movers'], charts={u: chart_data(L_by.get(u)) for u in show}, day_done=_DAY['done'], events=EVENTS[-40:],
+              movers=STATE['movers'], mood=STATE.get('mood'), earnings_soon=sorted(s for s in EARN['by'] if s in set(LIQUID) | {T['und'] for T in STATE['trades'].values()} and earnings_block(s)), backtest_off=sorted(BT['off']), charts={u: chart_data(L_by.get(u)) for u in show}, day_done=_DAY['done'], events=EVENTS[-40:],
               rules=dict(risk_pct=_CTRL['risk'], max_open=MAX_OPEN, max_entries=MAX_ENTRIES, stop_pct=STOP_PCT, partial_pct=PARTIAL_PCT, trail_pct=TRAIL_PCT,
                          day_loss_pct=DAY_LOSS_PCT, indexes=INDEXES, liquid=LIQUID))
     os.makedirs(LIVE_DIR, exist_ok=True); json.dump(st, open(f'{LIVE_DIR}/options.json', 'w'), separators=(',', ':'))
@@ -512,16 +597,18 @@ def loop(max_minutes):
         try:
             acct = account(); eq = float(acct['equity'])
             if time.time() - last_uni > 300:
-                universe = list(dict.fromkeys(INDEXES + LIQUID + radar_names() + [T['und'] for T in STATE['trades'].values()])); last_uni = time.time()
+                universe = list(dict.fromkeys(INDEXES + LIQUID + ['VIXY'] + radar_names() + [T['und'] for T in STATE['trades'].values()])); last_uni = time.time()
+                load_earnings(now.date())
             if time.time() - last_bars > 50:
                 B = all_bars(universe, now)
                 L_by = {u: levels(B.get(u, []), now, IDX_OR if u in INDEXES else STK_OR) for u in universe}; last_bars = time.time()
-                load_news([u for u in universe if u not in INDEXES], now)
+                load_news([u for u in universe if u not in INDEXES and u != 'VIXY'], now)
             done = day_done(); ctl = control()
             for sym, T in STATE['trades'].items():
                 if T.get('closed'): continue
-                if ctl == 'stop' or done or m >= flat_time(T):
-                    close_trade(sym, T, 'kill switch stop' if ctl == 'stop' else (f'main bot day ended: {done}' if done else
+                fomc = now.date().isoformat() in FOMC and m >= FOMC_FLAT
+                if ctl == 'stop' or done or m >= flat_time(T) or fomc:
+                    close_trade(sym, T, 'kill switch stop' if ctl == 'stop' else (f'main bot day ended: {done}' if done else 'closed before the 2:00 PM Fed decision' if fomc else
                                 ('3:00 PM close (same-day option)' if T['und'] in INDEXES else '3:45 PM close (no overnight holds)')), now, T.get('now'))
             if m >= STK_FLAT: publish(eq, L_by); return
             if ctl != 'stop' and not done:
