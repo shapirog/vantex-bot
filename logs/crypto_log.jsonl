@@ -481,3 +481,26 @@
 {"event": "crypto_check", "coin": "BTC", "price": 66702.4, "ema20": 67066.92, "ema50": 67340.01, "have": 0, "want": 0, "ts": "2026-11-14T08:28:01-05:00"}
 {"event": "crypto_check", "coin": "ETH", "price": 1888.91, "ema20": 1901.71, "ema50": 1906.94, "have": 0, "want": 0, "ts": "2026-11-14T08:28:02-05:00"}
 {"event": "handoff", "why": "runtime limit", "ts": "2026-11-14T08:32:04-05:00"}
+{"event": "crypto_check", "coin": "BTC", "price": 66637.12, "ema20": 67025.67, "ema50": 67312.28, "have": 0, "want": 0, "ts": "2026-11-14T08:32:20-05:00"}
+{"event": "crypto_check", "coin": "ETH", "price": 1886.3, "ema20": 1900.49, "ema50": 1906.23, "have": 0, "want": 0, "ts": "2026-11-14T08:32:20-05:00"}
+{"event": "crypto_check", "coin": "BTC", "price": 66625.56, "ema20": 67026.98, "ema50": 67312.82, "have": 0, "want": 0, "ts": "2026-11-14T08:37:21-05:00"}
+{"event": "crypto_check", "coin": "ETH", "price": 1888.95, "ema20": 1900.6, "ema50": 1906.28, "have": 0, "want": 0, "ts": "2026-11-14T08:37:21-05:00"}
+{"event": "crypto_check", "coin": "BTC", "price": 66728.71, "ema20": 67032.23, "ema50": 67314.98, "have": 0, "want": 0, "ts": "2026-11-14T08:42:30-05:00"}
+{"event": "crypto_check", "coin": "ETH", "price": 1888.95, "ema20": 1900.65, "ema50": 1906.3, "have": 0, "want": 0, "ts": "2026-11-14T08:42:30-05:00"}
+{"event": "crypto_check", "coin": "BTC", "price": 66883.64, "ema20": 67017.59, "ema50": 67297.87, "have": 0, "want": 0, "ts": "2026-11-14T08:47:39-05:00"}
+{"event": "crypto_check", "coin": "ETH", "price": 1888.95, "ema20": 1899.94, "ema50": 1905.79, "have": 0, "want": 0, "ts": "2026-11-14T08:47:39-05:00"}
+{"event": "crypto_check", "coin": "BTC", "price": 66791.1, "ema20": 67007.93, "ema50": 67293.89, "have": 0, "want": 0, "ts": "2026-11-14T08:52:48-05:00"}
+{"event": "crypto_check", "coin": "ETH", "price": 1888.95, "ema20": 1899.66, "ema50": 1905.67, "have": 0, "want": 0, "ts": "2026-11-14T08:52:49-05:00"}
+{"event": "crypto_check", "coin": "BTC", "price": 66739.4, "ema20": 67004.79, "ema50": 67292.6, "have": 0, "want": 0, "ts": "2026-11-14T08:57:57-05:00"}
+{"event": "crypto_check", "coin": "ETH", "price": 1890.97, "ema20": 1899.61, "ema50": 1905.65, "have": 0, "want": 0, "ts": "2026-11-14T08:57:58-05:00"}
+{"event": "crypto_check", "coin": "BTC", "price": 66295.0, "ema20": 66957.83, "ema50": 67262.07, "have": 0, "want": 0, "ts": "2026-11-14T09:03:07-05:00"}
+{"event": "crypto_check", "coin": "ETH", "price": 1868.2, "ema20": 1897.14, "ema50": 1904.4, "have": 0, "want": 0, "ts": "2026-11-14T09:03:07-05:00"}
+{"event": "crypto_check", "coin": "BTC", "price": 66424.7, "ema20": 66953.96, "ema50": 67260.48, "have": 0, "want": 0, "ts": "2026-11-14T09:08:10-05:00"}
+{"event": "crypto_check", "coin": "ETH", "price": 1868.2, "ema20": 1897.05, "ema50": 1904.36, "have": 0, "want": 0, "ts": "2026-11-14T09:08:10-05:00"}
+{"event": "crypto_check", "coin": "BTC", "price": 66423.0, "ema20": 66949.92, "ema50": 67258.81, "have": 0, "want": 0, "ts": "2026-11-14T09:13:19-05:00"}
+{"event": "crypto_check", "coin": "ETH", "price": 1868.2, "ema20": 1897.11, "ema50": 1904.39, "have": 0, "want": 0, "ts": "2026-11-14T09:13:19-05:00"}
+{"event": "crypto_check", "coin": "BTC", "price": 66542.45, "ema20": 66911.97, "ema50": 67231.11, "have": 0, "want": 0, "ts": "2026-11-14T09:18:22-05:00"}
+{"event": "crypto_check", "coin": "ETH", "price": 1872.82, "ema20": 1895.05, "ema50": 1903.25, "have": 0, "want": 0, "ts": "2026-11-14T09:18:22-05:00"}
+{"event": "crypto_check", "coin": "BTC", "price": 66474.22, "ema20": 66904.64, "ema50": 67228.09, "have": 0, "want": 0, "ts": "2026-11-14T09:23:31-05:00"}
+{"event": "crypto_check", "coin": "ETH", "price": 1872.82, "ema20": 1894.87, "ema50": 1903.18, "have": 0, "want": 0, "ts": "2026-11-14T09:23:32-05:00"}
+{"event": "handoff", "why": "runtime limit", "ts": "2026-11-14T09:27:28-05:00"}
