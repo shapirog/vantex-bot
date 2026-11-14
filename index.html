@@ -269,7 +269,7 @@ canvas.vc{width:100%;display:block;touch-action:pan-y;cursor:crosshair}
 .lbl.ohol.call{animation:glowG 1.8s ease-in-out infinite}.lbl.ohol.put{animation:glowR 1.8s ease-in-out infinite}
 .optv{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom) + 84px);transform:translateX(-50%);width:min(380px,calc(100% - 32px));z-index:13;background:rgba(10,8,34,.94);
   border:1px solid var(--line);border-radius:14px;padding:14px 16px;box-shadow:0 10px 40px rgba(0,0,0,.55),0 0 24px rgba(139,123,255,.25);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
-.optv[hidden]{display:none}
+.optv[hidden]{display:none}.optv{max-height:calc(100dvh - 150px);overflow-y:auto}
 .optv h3{margin:0 0 2px;font:700 12px var(--display);letter-spacing:.14em;color:var(--dim);display:flex;justify-content:space-between;align-items:center}
 .optv .big{font:700 30px var(--display);margin:2px 0 6px}
 .optv .r{display:flex;justify-content:space-between;gap:12px;padding:5px 0;border-top:1px solid var(--line);font-size:13px}
@@ -297,7 +297,7 @@ canvas.vc{width:100%;display:block;touch-action:pan-y;cursor:crosshair}
 <div class="hud bottom"><div class="hint"><span class="thint">Drag to spin · pinch to zoom · tap to go inside</span><span class="dhint">Drag to spin · scroll to zoom · click a tower to go inside · Esc to come back</span></div><div class="tape" id="tape"></div></div>
 <div class="wait" id="wait" hidden></div>
 <div class="door" id="door" hidden><div class="wheel"></div></div>
-<section class="optv" id="optv" hidden role="dialog" aria-labelledby="oTitle"><h3><span id="oTitle">OPTIONS TOWER</span><button id="oClose" aria-label="Close">✕</button></h3><div id="oBody"></div></section>
+<section class="optv" id="optv" hidden role="dialog" aria-labelledby="oTitle"><h3><span id="oTitle">OPTIONS TOWER</span><button id="oClose" aria-label="Close">✕</button></h3><div id="oBody"></div><canvas id="oChart" class="vc" style="height:150px;margin-top:8px"></canvas><div class="legend" id="oLeg" style="margin-top:4px"><span><i style="background:var(--vwap)"></i>VWAP</span><span><i style="background:#fff"></i>Morning range</span><span><i style="background:var(--call)"></i>Entry</span></div></section>
 <section class="vaultv" id="vaultv" hidden role="dialog" aria-labelledby="vTitle">
   <div class="vhead"><h2 id="vTitle">THE VAULT</h2><button id="vClose">← Back to city</button></div>
   <div class="card"><span class="tm" style="font-size:10px;letter-spacing:.14em">TOTAL EQUITY · PAPER ACCOUNT</span><div class="vbig" id="vEq">–</div><div class="r" style="border:0"><span>Today</span><b id="vDay">–</b></div><div class="r" style="border:0"><span>Updated</span><span class="tm" id="vUpd">–</span></div></div>
@@ -366,6 +366,7 @@ canvas.vc{width:100%;display:block;touch-action:pan-y;cursor:crosshair}
   <div class="cst" id="sCst"></div>
   <div class="legend" id="legend"><span><i style="background:var(--vwap)"></i>VWAP</span><span><i style="background:var(--call)"></i>Buy trigger</span><span><i style="background:var(--put)"></i>Sell trigger</span><span><i style="background:#fff"></i>ORB stop/target</span></div>
   <div class="sec"><h3>Signal</h3><div id="sScan">–</div><div class="meter"><div id="sMeter"></div></div></div>
+  <div class="sec"><h3>Options &amp; news · why it's moving</h3><div id="sOpt"></div></div>
   <div class="sec"><h3>Bot activity</h3><ul class="log" id="sLog"></ul></div>
 </section>
 <script>
@@ -446,7 +447,6 @@ SPOTS.OPT={l:[OT.x-98,292,196,78],b:[[OT.x-22,OT.y,44,140]],c:[OT.x,OT.y+40]};
  const g=document.createElementNS(NS,'g');g.id='oRings';g.setAttribute('class','idle');
  const ring=(cy,rx,ry,two)=>`<ellipse cx="${OT.x}" cy="${cy}" rx="${rx}" ry="${ry}" class="rh"/><ellipse cx="${OT.x}" cy="${cy}" rx="${rx}" ry="${ry}" class="rg"/><ellipse cx="${OT.x}" cy="${cy}" rx="${rx}" ry="${ry}" class="rs${two?' r2':''}" pathLength="100"/>`;
  g.innerHTML=ring(268,62,13,1)+ring(OT.y+4,38,9)+ring(548,30,7,1)+ring(596,32,7.5);svg.appendChild(g);
- ['oSkyA','oSkyB'].forEach(id=>{const c=document.createElementNS(NS,'g');c.id=id;c.setAttribute('class','skyc');svg.appendChild(c)});
  /* neon signs in the sky */
  [['CALLS ▲','#3dffa8',1180,330,-5,6.3],['PUTS ▼','#ff3d71',2205,445,4,7.7],['VWAP','#ffc94d',1062,286,-3,9.1],['0DTE','#4dd8ff',120,330,3,8.4],['BUY THE BREAK','#ff7ae6',1900,430,-2,10.3]]
    .forEach(([t,c,x,y,r,d],i)=>{const n=document.createElement('div');n.className='neon';n.textContent=t;n.setAttribute('aria-hidden','true');
@@ -676,7 +676,13 @@ function renderSheet(){if(COINS.includes(openSym))return renderCrypto();$('sNow'
     ...((S&&S.events)||[]).filter(e=>e.sym===s&&e.event!=='order').map(e=>({ts:e.ts,cls:'',txt:e.event==='orb_signal'?`Opening breakout ${e.dir>0?'LONG':'SHORT'} · stop ${e.stop} · target ${e.target}`:e.event==='na_check'?`Signal: ${['go short','go flat','go long'][e.want+1]} (price ${e.price}, VWAP ${e.vwap})`:e.event}))]
     .sort((a,b)=>new Date(b.ts)-new Date(a.ts));
   $('sLog').innerHTML=items.map(e=>`<li><span class="tm">${hhmm(e.ts)}</span><span class="${e.cls}">${e.txt}</span></li>`).join('')||'<li><span></span><span class="tm">Nothing yet today</span></li>';
-  renderSheetChart()}
+  renderSheetOpt(s);renderSheetChart()}
+function renderSheetOpt(s){const box=$('sOpt');if(!box)return;const today=new Date().toLocaleDateString('en-CA',{timeZone:'America/New_York'});
+  const T=OPS&&OPS.date===today?Object.entries(OPS.trades||{}).filter(([k,t])=>t.und===s):[];
+  const tr=T.map(([k,t])=>{const pl=optPl(t);return`<div class="r"><span><b class="${t.d>0?'up':'dn'}">${t.kind}</b> ${t.qty}× ${(+t.strike).toFixed(0)} · exp ${t.exp.slice(5)} · ${t.setup||''}</span><b class="${cl(pl)}">${m2(pl)}</b></div>`+(t.headline?`<p class="note" style="margin:2px 0 6px">Why: ${escH(t.headline)}</p>`:'')}).join('');
+  const mv=OPS&&OPS.date===today&&(OPS.movers||[]).find(x=>x.sym===s);
+  box.innerHTML=(tr||'<p class="note" style="margin:4px 0">No options trade on '+s+' today.</p>')+(mv?`<p class="note" style="margin:4px 0">Moving <b class="${cl(mv.chg)}">${mv.chg>0?'+':''}${mv.chg.toFixed(1)}%</b> today${mv.news?' · '+escH(mv.news):''}</p>`:'')+
+    ((NW&&NW.get&&(NW.get(s)||[]).length)?newsList(s,4):'<p class="note" style="margin:4px 0">No headlines found for '+s+' yet today.</p>')}
 function drawChart(d){const cv=$('chart'),dpr=Math.min(devicePixelRatio,2),W=cv.clientWidth,H=cv.clientHeight;if(!W)return;cv.width=W*dpr;cv.height=H*dpr;const g=cv.getContext('2d');g.scale(dpr,dpr);
   const ser=d.series||[];if(ser.length<2)return;const lv=[d.vwap,d.upper,d.lower,d.orb&&+d.orb.stop,d.orb&&+d.orb.target].filter(x=>x&&isFinite(x)&&Math.abs(x/d.price-1)<.012);
   let lo=Math.min(...ser.map(x=>x[1]),...lv),hi=Math.max(...ser.map(x=>x[1]),...lv);const pad=(hi-lo)*.08||1;lo-=pad;hi+=pad;
@@ -870,8 +876,8 @@ function drawOpt(){const op=optOpen(),lz=$('oLaser'),rg=$('oRings'),el=$('oHolo'
     lines=[['◆ OPTIONS TOWER',22,'#ffc94d'],done?[`today ${pl>=0?'+':'-'}${usd(pl)}`,28,pl>=0?'#3dffa8':'#ff3d71']:['news · calls & puts',24,'#e9e7ff'],
       [mkt?(done?'hunting news movers':'hunting from 10:00 AM'):'market closed',20,'#9a96cf']]}
   drawLabel({el,key:el.dataset.k||''},lines,c);el.dataset.k=JSON.stringify(lines);
-  const tr=op||optLast(),bU=tr&&!['QQQ','SPY'].includes(tr[1].und)&&OPS.date===new Date().toLocaleDateString('en-CA',{timeZone:'America/New_York'})?tr[1].und:'SPY';drawSky('oSkyA','QQQ',[1235,168,335,196]);drawSky('oSkyB',bU,[1925,168,335,196]);
-  if(!$('optv').hidden)renderOptCard()}
+  
+  if(!$('optv').hidden){renderOptCard();drawOptChart()}}
 function renderOptCard(){const b=$('oBody');const op=optOpen(),L=op||optLast(),R=(k,v,c)=>`<div class="r"><span>${k}</span><b class="${c||''}">${v}</b></div>`;
   if(!L){b.innerHTML=`<p class="note" style="margin:6px 0">No options trades yet. From 10:00 AM it hunts stocks moving on news (NVDA, TSLA, AMD… and the scanner's movers) plus QQQ / SPY: a <b class="up">call</b> when a move up holds, a <b class="dn">put</b> when a move down holds. Paper money only.</p>`;return}
   const[s,t]=L,pl=optPl(t),held=Math.round(((t.closed?new Date(t.closed):new Date())-new Date(t.t))/60000);
@@ -880,7 +886,14 @@ function renderOptCard(){const b=$('oBody');const op=optOpen(),L=op||optLast(),R
     R(op?'Now':'Sold',`$${(+(t.closed?(t.exit??t.now):t.now)).toFixed(2)} · ${t.gain_pct>=0?'+':''}${(+t.gain_pct||0).toFixed(1)}%`,pl>=0?'up':'dn')+R('Held',`${held} min`)+
     (op?R('Stop',`$${(+t.stop).toFixed(2)}${t.half?' · trailing':''}`):'')+R('Setup',t.setup==='news shock'?`news shock · ${t.und} ${t.d>0?'up':'down'} fast`:`${t.und} broke ${t.d>0?'above':'below'} ${t.level}`)+(t.headline?`<div class="r" style="display:block"><span>Why it moved</span><div style="margin-top:3px;font-size:12px">${escH(t.headline)}</div></div>`:(t.news_note==='no news found'?R('Why it moved','no news found'):''))+
     `<p class="note" style="margin:8px 0 0">Updated ${hhmm(OPS.updated)} ET · paper money · full rules in Portfolio</p>`}
-function openOpt(){zoomTo('OPT',()=>{$('optv').hidden=false;renderOptCard();$('oClose').focus()})}
+function optPts(u){const today=new Date().toLocaleDateString('en-CA',{timeZone:'America/New_York'}),c=OPS&&OPS.date===today&&OPS.charts&&OPS.charts[u];
+  if(c&&c.c&&c.c.length>1){const[h,m]=(c.t0||'09:30').split(':').map(Number),b=etOpen(Date.now())+((h*60+m)-570)*60000;return{pts:c.c.map((v,i)=>[b+i*60000,v]),c}}
+  const f=(SKYF&&SKYF.syms&&SKYF.syms[u])||(CHD&&CHD.syms&&CHD.syms[u]);return{pts:((f&&f['1D'])||[]).map(([t,v])=>[t*1000,v]),c:null}}
+function drawOptChart(){const cv=$('oChart');if(!cv||$('optv').hidden)return;const op=optOpen(),L=op||optLast(),u=L?L[1].und:'QQQ',{pts,c}=optPts(u);
+  const lines=c?[{v:c.vwap,c:'#ffc94d'},{v:c.hi,c:'#ffffff',dash:1},{v:c.lo,c:'#ffffff',dash:1}]:[];
+  const marks=L&&L[1].und_entry?[{t:Date.parse(L[1].t),v:L[1].und_entry,buy:L[1].d>0}]:[];
+  vchart(cv,{pts,mode:'intraday',fmtV:fmtPx,lines,marks,empty:`${u} chart appears when the market opens`});$('oLeg').style.display=c?'':'none'}
+function openOpt(){zoomTo('OPT',()=>{$('optv').hidden=false;renderOptCard();drawOptChart();$('oClose').focus()})}
 $('oClose').addEventListener('click',()=>{$('optv').hidden=true;goHome()});
 addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('optv').hidden){$('optv').hidden=true;goHome()}});
 function renderGoal(){const box=$('goalBox');if(!box||!S)return;const GOAL=100000,A=(JR&&JR.account)||{};
