@@ -166,11 +166,17 @@ def load_earnings(today):
         for s, when in e.items(): by.setdefault(s, []).append((k, when))
     EARN.update(day=today, by=by)
 
+EARN_RX = re.compile(r"(to report|will report|set to report|reports? (after|before) the (bell|close|open)|earnings preview|ahead of (its |q[1-4] |quarterly )?(earnings|results)|"
+                     r"earnings (are )?(due|scheduled|expected) (on|this|next|tomorrow|today)|earnings on deck|what to expect (from|in) .*(earnings|results)|before earnings)", re.I)
+
 def earnings_block(sym, by=None):
-    """Reports after today's close or within the next 3 days -> option prices are inflated; skip."""
+    """Reports after today's close or within the next 3 days -> option prices are inflated; skip.
+    Uses Nasdaq's calendar when it can be reached, and always also reads the headlines ("NVDA to report Q3 ...")."""
     for k, when in (by if by is not None else EARN['by']).get(sym, []):
         if k == 0 and when != 'pre': return 'reports earnings today'
         if 1 <= k <= 3: return f'reports earnings in {k} day{"s" if k > 1 else ""}'
+    for n in (NEWS['by'].get(sym) or [])[:15]:
+        if EARN_RX.search(n.get('h', '')): return f'earnings coming up (news: {n["h"][:80]})'
     return None
 
 def calendar_block(day_iso, m):
