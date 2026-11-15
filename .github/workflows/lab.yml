@@ -1,0 +1,26 @@
+name: Vantex strategy lab
+on:
+  schedule:
+    - cron: '43 22 * * 0'   # every Sunday evening (UTC), after the backtest
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: vantex-lab
+  cancel-in-progress: true
+jobs:
+  lab:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install requests
+      - name: Test every strategy on about 2 years of market data (places no trades)
+        env:
+          APCA_API_KEY_ID: ${{ secrets.APCA_API_KEY_ID }}
+          APCA_API_SECRET_KEY: ${{ secrets.APCA_API_SECRET_KEY }}
+          GH_TOKEN: ${{ github.token }}
+        run: python lab.py 500
