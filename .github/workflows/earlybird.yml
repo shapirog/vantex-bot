@@ -1,0 +1,35 @@
+name: Vantex Early Bird (tiny-float alerts 3-9:30 AM, no trading)
+on:
+  schedule:
+    # times are UTC: 7:40 = 2:40 AM Eastern (watch list), then every 10 min 3:00-9:50 AM Eastern (winter time)
+    - cron: '40 7 * * 1-5'
+    - cron: '*/10 8-14 * * 1-5'
+  workflow_dispatch:
+    inputs:
+      force:
+        description: 'Scan right now even outside 3-9:30 AM (test run)'
+        default: '1'
+permissions:
+  contents: write
+concurrency:
+  group: vantex-earlybird
+  cancel-in-progress: false
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install requests numpy
+      - name: Early Bird scan (read-only, places no trades)
+        env:
+          APCA_API_KEY_ID: ${{ secrets.APCA_API_KEY_ID }}
+          APCA_API_SECRET_KEY: ${{ secrets.APCA_API_SECRET_KEY }}
+          SEC_UA: ${{ secrets.SEC_UA }}
+          NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
+          GH_TOKEN: ${{ github.token }}
+          EB_FORCE: ${{ github.event.inputs.force }}
+        run: python earlybird.py
