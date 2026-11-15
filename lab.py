@@ -113,9 +113,12 @@ def years_left(idx, day, m):
     return (sum(1 for i in range(1, k + 1) if (day + timedelta(days=i)).weekday() < 5) + left) / 252
 
 def walk(B, i0, d, entry, stop, target):
-    """Follow 5-minute bars after entry. Returns (exit_price, exit_bar_index, why). Stop is checked before target (conservative)."""
+    """Follow 5-minute bars after entry. Returns (exit_price, exit_bar_index, why). Stop is checked before target (conservative).
+    On the entry bar of a breakout, the part of the bar BEFORE the break doesn't count: only its close can stop it out."""
+    mid = abs(entry - B[i0][1]) > 1e-9
     for i in range(i0, len(B)):
         t, o, h, l, c, v = B[i]
+        if i == i0 and mid: l, h = (min(c, entry), max(h, entry)) if d == 1 else (min(l, entry), max(c, entry))
         if d == 1:
             if l <= stop: return min(stop, o) if i > i0 else stop, i, 'stop'
             if target and h >= target: return max(target, o) if i > i0 else target, i, 'target'
@@ -132,9 +135,10 @@ def sim_option(B, i0, d, entry_px, stop, target, idx, day, vol, exit_style):
     K = round(entry_px / step) * step; m0 = mins(B[i0][0])
     prem = bs(entry_px, K, years_left(idx, day, m0), vol, d == 1) * (1 + spr / 2)
     if prem < 0.05: return None
-    flat = 900 if idx else 945
+    flat = 900 if idx else 945; mid = abs(entry_px - B[i0][1]) > 1e-9
     for i in range(i0, len(B)):
         t, o, h, l, c, v = B[i]; m = mins(t) + 5
+        if i == i0 and mid: l, h = (min(c, entry_px), max(h, entry_px)) if d == 1 else (min(l, entry_px), max(c, entry_px))
         tl = years_left(idx, day, min(m, 960))
         worst = l if d == 1 else h
         hit_stop = (l <= stop) if d == 1 else (h >= stop)
