@@ -1,0 +1,25 @@
+name: Vantex lab 8 history (locked tiny-float pullback, exploratory)
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: vantex-lab8
+  cancel-in-progress: true
+jobs:
+  lab:
+    runs-on: ubuntu-latest
+    timeout-minutes: 340
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install requests numpy
+      - name: Replay the locked rule on Sep 2025 - Nov 13 2026 (read-only, places no trades)
+        env:
+          APCA_API_KEY_ID: ${{ secrets.APCA_API_KEY_ID }}
+          APCA_API_SECRET_KEY: ${{ secrets.APCA_API_SECRET_KEY }}
+          SEC_UA: ${{ secrets.SEC_UA }}
+          GH_TOKEN: ${{ github.token }}
+        run: python lab8.py history
