@@ -329,6 +329,7 @@ canvas.vc{width:100%;display:block;touch-action:pan-y;cursor:crosshair}
   <div class="card"><h3>Goal · $2,500 → $100,000</h3><div id="goalBox"><p class="note" style="margin:6px 0 0">Loading…</p></div></div>
   <div class="card"><h3>$2,500 real-money test</h3><div id="smBox"><p class="note" style="margin:6px 0 0">Loading…</p></div><canvas id="smc" class="vc" style="height:150px;display:none"></canvas><div id="smGoal"></div></div>
   <div class="card"><h3>Momentum bot · up and down movers</h3><div id="momBox"><p class="note" style="margin:6px 0 0">Loading…</p></div></div>
+  <div class="card"><h3>Strategy lab · what actually works</h3><div id="labBox"><p class="note" style="margin:6px 0 0">Loading…</p></div></div>
   <div class="card"><h3>Backtest · options rules on past days</h3><div id="btBox"><p class="note" style="margin:6px 0 0">Loading…</p></div></div>
   <div class="card"><h3>Options bot · news movers + QQQ / SPY</h3><div id="optBox"><p class="note" style="margin:6px 0 0">Loading…</p></div></div>
   <div class="card"><h3>Scorecard</h3><div id="scBox"><p class="note" style="margin:6px 0 0">Loading the scorecard…</p></div></div>
@@ -760,7 +761,7 @@ $('ptBuy').onclick=()=>ptOrder('BUY');$('ptSell').onclick=()=>ptOrder('SELL');$(
 let arm=false;$('ptReset').onclick=()=>{const b=$('ptReset');if(!arm){arm=true;b.textContent='Tap again to confirm reset';b.style.color='var(--put)';setTimeout(()=>{arm=false;b.textContent='Reset practice account to $500';b.style.color=''},3500);return}
   PT=JSON.parse(JSON.stringify(PT0));store.set('vx_pt',PT);arm=false;b.textContent='Reset practice account to $500';b.style.color='';$('ptMsg').textContent='Practice account reset to $500.';renderTrade()};
 
-function renderPortfolio(){renderTrack();renderCryptoCard();renderScore();renderSmall();renderMom();renderOptBox();renderGoal();renderBt();$('pfEq').textContent='$'+S.equity.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});$('pfPl').textContent=m2(S.day_pl);$('pfPl').className=cl(S.day_pl);
+function renderPortfolio(){renderTrack();renderCryptoCard();renderScore();renderSmall();renderMom();renderOptBox();renderGoal();renderBt();renderLab();$('pfEq').textContent='$'+S.equity.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});$('pfPl').textContent=m2(S.day_pl);$('pfPl').className=cl(S.day_pl);
   const open=S.market_open?SYMS.filter(s=>S.symbols[s]&&S.symbols[s].qty):[];
   $('pfPos').innerHTML=open.map(s=>{const d=S.symbols[s];return`<div class="r tap" data-open="${s}"><span class="sym">${s}</span><span>${d.qty>0?'Long':'Short'} ${Math.abs(d.qty)}</span><span>$${d.price.toFixed(2)}</span></div>`}).join('')||'<p class="note" style="margin:6px 0 0">No open positions. The bot closes everything at 3:55 PM.</p>';
   const T=trips(S.fills||[]);$('pfTrips').innerHTML=T.reverse().map(t=>`<div class="r tap" data-open="${t.sym}"><span class="sym">${t.sym}</span><span style="font-size:11px">${t.dir>0?'Long':'Short'} ${t.qty} · ${t.entry.toFixed(2)}→${t.exit.toFixed(2)}</span><b class="${cl(t.pnl)}">${m2(t.pnl)}</b></div>`).join('')||'<p class="note" style="margin:6px 0 0">No completed trades yet today.</p>'}
@@ -909,6 +910,22 @@ function renderOptBox(){const box=$('optBox');if(!box)return;const M=OPS;
   const T=Object.entries(M.trades||{}),today=new Date().toLocaleDateString('en-CA',{timeZone:'America/New_York'});
   const tr=M.date===today&&T.length?T.map(([s,t])=>{const pl=optPl(t);return`<div class="r"><span class="sym">${t.und}</span><span style="font-size:11px"><span class="${t.d>0?'up':'dn'}">${t.kind}</span>${t.setup==='news shock'?' ⚡':''} ${t.qty}× ${(+t.strike).toFixed(0)} @ ${(+t.entry).toFixed(2)}${t.closed?' · '+escH(t.exit_why||'closed'):' · stop '+(+t.stop).toFixed(2)}</span><b class="${cl(pl)}">${m2(pl)}</b></div>`}).join(''):'<p class="note" style="margin:4px 0 0">No options trades today.</p>';
   const mv=M.date===today&&(M.movers||[]).length?`<div class="scx" style="margin-top:10px">Why they're moving</div>`+M.movers.slice(0,6).map(x=>`<div class="r" style="align-items:flex-start"><span class="sym">${x.sym}</span><span style="font-size:11px;flex:1;margin:0 8px">${x.news?escH(x.news):'<span class="tm">no news found</span>'}</span><b class="${cl(x.chg)}">${x.chg>0?'+':''}${x.chg.toFixed(1)}%</b></div>`).join(''):'';box.innerHTML=rules+`<div class="scx" style="margin:4px 0 6px">Today</div>${tr}${mv}<p class="note" style="margin:8px 0 0">Updated ${hhmm(M.updated)} ET · tap the Options Tower in the city for the live card</p>`}
+let LAB=null;async function loadLab(){const j=await getJSON(RAWB('live-lab/lab.json'));if(j&&j.results){LAB=j;renderPanes()}}
+loadLab();setInterval(loadLab,1800000);
+function renderLab(){const box=$('labBox');if(!box)return;
+  if(!LAB){box.innerHTML='<p class="note" style="margin:6px 0 0">Run "Vantex strategy lab" in GitHub Actions (or wait for Sunday). It tests the overnight-level idea from the NQ reel, the 5- and 15-minute opening-range breakout on stocks in play, and the QQQ/SPY break, with shares and with options, on about 2 years of data.</p>';return}
+  const C=LAB.claim||{},pc=x=>x&&x.pct!=null?x.pct+'%':'–';
+  const claim=`<div class="scx" style="margin:0 0 4px">The NQ reel's claim, checked on QQQ + SPY (${C.sessions||0} sessions)</div>
+    <div class="r"><span>Open in upper half → overnight HIGH hit</span><b>${pc(C.upper_hits_high)}</b></div>
+    <div class="r"><span>Open in upper half → overnight LOW hit</span><b>${pc(C.upper_hits_low)}</b></div>
+    <div class="r"><span>Open in lower half → overnight LOW hit</span><b>${pc(C.lower_hits_low)}</b></div>
+    <div class="r"><span>Open in lower half → overnight HIGH hit</span><b>${pc(C.lower_hits_high)}</b></div>
+    <p class="note" style="margin:4px 0 8px">The reel says 80.8% and 75.7% on NQ futures. Hitting a level often is not the same as making money on it, which is what the table below tests.</p>`;
+  const f=x=>x&&x.trades?`${x.trades} · ${x.win_rate.toFixed(0)}% · PF ${x.pf==null?'–':x.pf.toFixed(2)} · <span class="${cl(x.ret_pct)}">${x.ret_pct>0?'+':''}${x.ret_pct}%</span>`:'no trades';
+  const NM={OVN:'Overnight level (reel)',ORB5:'5-min ORB, stocks in play',ORB15:'15-min ORB, stocks in play',IDX:'QQQ/SPY range break'};
+  const rows=LAB.results.map(r=>`<div class="r" style="align-items:flex-start"><span style="flex:1;min-width:0"><b>${NM[r.family]||r.family}</b> · ${r.mode}<br><span class="tm" style="font-size:11px">${escH(r.exits)} · stop ${escH(r.stop)}</span><br><span style="font-size:11px">Train: ${f(r.train)}<br>Test: ${f(r.test)}</span></span><b class="${r.passed?'up':'dn'}" style="margin-left:8px">${r.passed?'PASS':'FAIL'}</b></div>`).join('');
+  box.innerHTML=claim+`<div class="scx" style="margin:0 0 4px">Each strategy from $${LAB.start_equity.toLocaleString()} · trades · win rate · profit factor · return</div>`+rows+
+    `<p class="note" style="margin:8px 0 0">${LAB.passed&&LAB.passed.length?'<b class="up">Passed:</b> '+LAB.passed.map(escH).join('; '):'<b class="dn">Nothing passed yet.</b> A strategy has to make money (profit factor 1.2+) on the older days AND on the newer days it never saw.'} Train ${escH(LAB.train)}, test ${escH(LAB.test)}. Data feed: ${escH(LAB.feed)}. Option prices are modeled. Updated ${dshort(LAB.updated)}.</p>`}
 let BTD=null;async function loadBt(){const j=await getJSON(RAWB('live-backtest/backtest.json'));if(j&&j.results){BTD=j;renderPanes()}}
 loadBt();setInterval(loadBt,1800000);
 function renderBt(){const box=$('btBox');if(!box)return;
