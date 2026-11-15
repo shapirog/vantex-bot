@@ -58,6 +58,7 @@ ATR_N, ATR_K, MAX_STOP = 14, 1.5, 0.08
 RISK, CAP, EQUITY = 0.0025, 500.0, 2500.0
 SLIP, FLAT = 0.005, 945
 SIZE_SHARES_FROM = date(2025, 11, 3)             # SIP quote sizes switched from round lots to shares on this date
+LOT_MULT = {'value': 100, 'evidence': 'not calibrated'}
 BOOT = 5000
 STATS = Counter()
 
@@ -72,9 +73,12 @@ def ns_of(d, minute, sec=0.0):
     return int(datetime.combine(d, datetime.min.time(), ET).timestamp() * 1e9) + int((minute * 60 + sec) * 1e9)
 def iso(ns): return datetime.fromtimestamp(ns / 1e9, timezone.utc).strftime('%Y-%m-%dT%H:%M:%S.%f') + 'Z'
 def parse_ns(s):
-    s = s.replace('+00:00', '').rstrip('Z')
+    s = s.strip(); off = '+00:00'
+    if s.endswith('Z'): s = s[:-1]
+    elif len(s) > 6 and s[-6] in '+-' and s[-3] == ':': s, off = s[:-6], s[-6:]
     base, frac = (s.split('.') + ['0'])[:2]
-    return int(datetime.fromisoformat(base).replace(tzinfo=timezone.utc).timestamp()) * 10**9 + int((frac + '000000000')[:9])
+    dt = datetime.fromisoformat(base + off)
+    return int(dt.timestamp()) * 10**9 + int((frac + '000000000')[:9])
 def hm(ns, d):
     return datetime.fromtimestamp(ns / 1e9, timezone.utc).astimezone(ET).strftime('%H:%M:%S.%f')[:-3]
 
@@ -82,7 +86,7 @@ def hm(ns, d):
 def quotes(sym, d, a_ns, b_ns):
     """valid SIP quotes with a_ns < t <= b_ns -> list of (t_ns, bid, bid_size_sh, ask, ask_size_sh)"""
     out, tok = [], None
-    mult = 100 if d < SIZE_SHARES_FROM else 1
+    mult = LOT_MULT['value'] if d < SIZE_SHARES_FROM else 1
     for _ in range(40):
         p = dict(symbols=sym, start=iso(a_ns), end=iso(b_ns + 1000), limit=10000, feed='sip')
         if tok: p['page_token'] = tok
@@ -99,6 +103,18 @@ def quotes(sym, d, a_ns, b_ns):
         if not tok: break
     STATS['quote_requests'] += 1
     return out
+
+def calibrate_lots():
+    """compare SPY displayed sizes before/after 2025-11-03: if older data is already in shares, do not multiply"""
+    def sizes(d):
+        r = get(f'{DATA}/v2/stocks/quotes', dict(symbols='SPY', start=iso(ns_of(d, 600)), end=iso(ns_of(d, 601)), limit=5000, feed='sip'))
+        Q = ((r.json().get('quotes') or {}).get('SPY') or []) if r is not None and r.ok else []
+        return [q.get('as') or 0 for q in Q if (q.get('as') or 0) > 0]
+    a, b = sizes(date(2025, 10, 15)), sizes(date(2025, 11, 12))
+    if len(a) < 50 or len(b) < 50: LOT_MULT.update(value=100, evidence=f'too few SPY quotes to calibrate ({len(a)}/{len(b)}); assumed lots'); return
+    ma, mb = float(np.median(a)), float(np.median(b)); frac100 = float(np.mean([x % 100 == 0 for x in a]))
+    if ma * 20 < mb: LOT_MULT.update(value=100, evidence=f'SPY median ask size {ma} before vs {mb} after -> old data in round lots')
+    else: LOT_MULT.update(value=1, evidence=f'SPY median ask size {ma} before vs {mb} after ({frac100:.0%} multiples of 100) -> old data already in shares')
 
 def minutes_range(sym, d0, d1):
     """{day ordinal: array[min,o,h,l,c,v]} 4:00-20:00 raw SIP 1-minute bars"""
@@ -199,49 +215,48 @@ def entry_quote(sym, d, t_min):
     return dict(t_ns=q[0], age_ms=round((q[0] - T) / 1e6, 1), bid=q[1], bid_sz=q[2], ask=q[3], ask_sz=q[4], spread_pct=round((q[3] - q[1]) / ((q[3] + q[1]) / 2) * 100, 3)), None
 
 def run_exits(sym, d, A, te_ns, entry, stop, trail_n, trail_off):
-    """returns legs [(fraction, raw bid, t_ns, why, flags)], counters"""
+    """walks EVERY quote from entry to 15:45 (15-minute chunks) - no trade-bar pre-filter, so no missed stops.
+    returns legs [(fraction, raw bid, t_ns, why, flags)], counters"""
     risk = entry - stop; target = entry + 2 * risk; S = stop; half = False; legs = []; cnt = Counter()
-    C = five_min(A); rows = A[A[:, 0] >= 0]
-    me = int((te_ns - ns_of(d, 0)) // 60_000_000_000)
-    prev_end = te_ns; prev_bar_end_min = me
-    for r in rows:
-        m = int(r[0])
-        if m < me: continue
-        if m >= FLAT: break
-        if half:
-            done = [b for b in sorted(C) if b + 5 <= m][-trail_n:]
-            if len(done) == trail_n: S = max(S, min(C[b][2] for b in done) - trail_off)
-        _, o, h, l, c, v = r
-        gap = (m - prev_bar_end_min) >= 5
-        end_ns = ns_of(d, m + 1)
-        if l <= S * 1.01 or (not half and h >= target * 0.99):
-            Q = quotes(sym, d, prev_end, end_ns); cnt['exit_quote_windows'] += 1
-            if Q:
-                for t, bp, bs, ap, asz in Q:
-                    if bp <= S:
-                        legs.append((0.5 if half else 1.0, bp, t, 'trail' if half else 'stop', dict(possible_halt=bool(gap), gap_through=bool(bp < S * 0.99))))
-                        return legs, cnt
-                    if not half and bp >= target:
-                        legs.append((0.5, bp, t, '2R half', dict(possible_halt=bool(gap), gap_through=False))); half = True
-            else:
-                cnt['no_quotes_in_trigger_minute'] += 1
+    C = five_min(A); day0 = ns_of(d, 0); flat_ns = ns_of(d, FLAT)
+    last_q = te_ns; cur_min = None; a = te_ns
+    while a < flat_ns:
+        b = min(a + 15 * 60 * 10**9, flat_ns)
+        Q = quotes(sym, d, a, b); cnt['exit_quote_chunks'] += 1
+        for t, bp, bs, ap, asz in Q:
+            m = int((t - day0) // 60_000_000_000)
+            if half and m != cur_min:
+                done = [k for k in sorted(C) if k + 5 <= m][-trail_n:]
+                if len(done) == trail_n: S = max(S, min(C[k][2] for k in done) - trail_off)
+            cur_min = m
+            gap = (t - last_q) >= 5 * 60 * 10**9; last_q = t
+            if bp <= S:
+                legs.append((0.5 if half else 1.0, bp, t, 'trail' if half else 'stop', dict(possible_halt=bool(gap), gap_through=bool(bp < S * 0.99))))
+                return legs, cnt
+            if not half and bp >= target:
+                legs.append((0.5, bp, t, '2R half', dict(possible_halt=bool(gap), gap_through=False))); half = True
+        if not Q:
+            cnt['exit_chunks_without_quotes'] += 1
+            rows = A[(A[:, 0] >= (a - day0) // 60_000_000_000) & (A[:, 0] < (b - day0) // 60_000_000_000)]
+            for r in rows:                                        # bar fallback inside a quote-less chunk (stop first)
+                _, o, h, l, c, v = r
                 if l <= S:
                     if not half and h >= target: cnt['ambiguous_bar_stop_first'] += 1
-                    legs.append((0.5 if half else 1.0, min(S, o) * 0.99, end_ns, 'stop (bar fallback, -1% spread est.)', dict(possible_halt=bool(gap), gap_through=bool(o < S * 0.99))))
+                    legs.append((0.5 if half else 1.0, min(S, o, c) * 0.99, ns_of(d, int(r[0]) + 1), 'stop (bar fallback, -1% spread est.)', dict(possible_halt=False, gap_through=bool(o < S * 0.99))))
                     return legs, cnt
                 if not half and h >= target:
-                    legs.append((0.5, target * 0.99, end_ns, '2R half (bar fallback)', dict(possible_halt=bool(gap), gap_through=False))); half = True
-        prev_end = end_ns; prev_bar_end_min = m + 1
-    T = ns_of(d, FLAT); Q = quotes(sym, d, T, T + 120 * 10**9)
+                    legs.append((0.5, target * 0.99, ns_of(d, int(r[0]) + 1), '2R half (bar fallback)', dict(possible_halt=False, gap_through=False))); half = True
+        a = b
+    Q = quotes(sym, d, flat_ns, flat_ns + 120 * 10**9)
     frac = 0.5 if half else 1.0
     if Q:
-        q = Q[0]; age = (q[0] - T) / 1e6
+        q = Q[0]; age = (q[0] - flat_ns) / 1e6
         if age > 1000: cnt['stale_time_exit_quote'] += 1
         legs.append((frac, q[1], q[0], '15:45 exit', dict(possible_halt=False, gap_through=False, age_ms=round(age))))
     else:
         cnt['no_quote_at_1545'] += 1
-        last = rows[rows[:, 0] < FLAT]
-        legs.append((frac, float(last[-1, 4]) * 0.99 if len(last) else entry * 0.9, T, '15:45 exit (bar fallback)', dict(possible_halt=False, gap_through=False)))
+        last = A[A[:, 0] < FLAT]
+        legs.append((frac, float(last[-1, 4]) * 0.99 if len(last) else entry * 0.9, flat_ns, '15:45 exit (bar fallback)', dict(possible_halt=False, gap_through=False)))
     return legs, cnt
 
 def leg_cash(legs, shares, entry_px, d, slip, halt_stress):
@@ -276,6 +291,7 @@ def build_alerts(days, sessions, U):
     SH = L6.sec_shares(band)
     if not SH: raise SystemExit('SEC share counts unavailable - check SEC_UA secret')
     SP, sp_ok = L6.splits(band, date.fromordinal(first_needed) - timedelta(days=400), date.fromordinal(days[-1]))
+    if not sp_ok: raise SystemExit('split feed unavailable - refusing to run without split adjustment')
     cov['symbols_with_sec_counts'] = len(SH)
     cand = defaultdict(list)                                     # sym -> [(day, prior close, shares)]
     dayset = set(days)
@@ -457,6 +473,7 @@ def report(R, title):
             L.append(f"| {k} | {n.get('trades')} | {n.get('win_rate_pct')} | {n.get('expectancy_R')} | {n.get('ci95_R_day_clustered')} | {n.get('profit_factor')} | ${a['end_equity']} | {a['max_dd_pct']} | {a['worst_day_pct']} |")
         L += ['', f"Gross expectancy (ask/bid, no slippage or fees): {P['gross_expectancy_R']} R", '', '### By month', j(P['by_month']), '### By shares outstanding (proxy)', j(P['by_shares_out']),
               '### Exits', j(P['exits']), '### Skips', j(P['skips']), f"Entry quote age ms: {P['entry_quote_age_ms']}, median spread %: {P['entry_spread_pct_median']}", '']
+    L += ['## Data errors and quote-size calibration', j(R['summary']['data_errors'])]
     L += ['## Alert outcomes (NEW rule)', j(R['summary']['new_rule_alert_outcomes']), '## Counters', j(R['summary']['counters']), '## Coverage', j(R['summary']['coverage']),
           '## Files', '- lab8_alerts.jsonl: every eligible alert', '- lab8_trades.jsonl: every fill with quote time/age/spread/size and exit legs',
           '- lab8_skips.jsonl: every skipped signal and why', '- lab8_equity.json: daily equity curves', '', '## Rerun', f"`python lab8.py {MODE}` (GitHub Actions: lab8.yml / lab8-forward.yml)"]
@@ -466,13 +483,16 @@ CHECKS = [
     'Signals use only bars that have ended (a 1-minute bar is known at its end; 5-minute ATR uses completed bars only; VWAP through the signal bar; premarket high fixed at 9:30).',
     'Shares outstanding: last SEC count filed strictly before the session, split-adjusted; prior close = previous session raw close.',
     'Entry quote: first valid SIP quote with timestamp strictly after the signal bar end; skipped if it arrives > 1 s later. Quotes before the signal are never used.',
-    'Exits: triggered by the first quote whose BID crosses the level, so gaps and halts fill at the real reopening bid; bar fallback (stop first) only when no quotes exist for that minute.',
-    'Quote sizes: SIP reported round lots before 2025-11-03 and shares after (Alpaca changelog); pre-switch sizes are multiplied by 100.',
+    'Exits: every SIP quote from entry to 15:45 is walked in time order; the first BID that crosses the stop/target decides, so gaps and halts fill at the real reopening bid. Bar fallback (stop first, at min(stop, open, close) - 1%) only for 15-minute chunks with no quotes at all.',
+    'Quote sizes: SIP switched from round lots to shares on 2025-11-03 (Alpaca changelog); whether Alpaca history before that date is in lots is calibrated at run time from SPY quotes (see data_errors.quote_size_units).',
     'Fees: SEC Section 31 $27.80/M until 2025-05-13, $0 from 2025-05-14, $20.60/M from 2026-04-04; FINRA TAF $0.000166/sh (max $8.30) in 2025, $0.000195 (max $9.79) in 2026. Labs 5-7 charged $27.80/M throughout (slightly too high).',
-    'Known limitation: candidate exit minutes are found from trade-based 1-minute bars (low within 1% of the stop or high within 1% of the target); a bid that crossed without nearby trades could be missed.',
+    'Known limitation: entry assumes the bar is known at hh:mm:00.000 and fills at the next quote within 1 s (as specified); real data/order latency would be slightly worse.',
+    'Known limitation: VWAP uses (high+low+close)/3 per 1-minute bar, not the exchange VWAP; the 5-minute ATR is a simple mean of true ranges over clock buckets (premarket buckets may be far apart).',
     'Known limitation: no historical halt feed; "possible halt" = a gap of >= 5 minutes with no prints before the exit.',
     'Known limitation: the rule says median baseline; for thin premarket names the 20-session median is often 0, which makes the 3x test pass on any volume. Kept as written (locked); counted in coverage.',
-    'Known limitation: survivorship - Alpaca asset list and SEC current ticker map; delisted/renamed names may be missing.',
+    'Known limitation: survivorship - universe uses each symbol\'s CURRENT exchange (names since moved to OTC or delisted are dropped for all dates) and SEC\'s current ticker map (a reused ticker could map to the wrong company). This can make results look better than reality.',
+    'Half-days: not traded, but kept for prior closes and baselines (so the session after a half-day is not dropped).',
+    'With 1 share, the 2R "half" sells 0 shares (the share keeps trailing); odd counts round the half down.',
     'Earlier labs (flagged): lab 5 filled at the first quote up to 2 minutes after the signal and exited on bars with the entry spread; lab 5 SEC dilution flag silently failed; labs 5-7 used per-trade (not day-clustered) bootstraps; lab 7 E3 assumed premarket stops that Alpaca does not support.']
 
 def publish(files):
@@ -484,26 +504,33 @@ def publish(files):
     subprocess.run(g + ['push', '-q', '-f', f'https://x-access-token:{tok}@github.com/{REPO}.git', BRANCH], check=True, timeout=120, capture_output=True)
 
 def sessions_between(a, b):
+    """(all sessions incl. half days, full days only)"""
     r = get(f'{TRADE}/v2/calendar', dict(start=str(a), end=str(b)))
-    return [date.fromisoformat(c['date']).toordinal() for c in (r.json() if r is not None and r.ok else []) if c['close'].startswith('16')]
+    C = r.json() if r is not None and r.ok else []
+    if not C: raise SystemExit('market calendar unavailable')
+    return [date.fromisoformat(c['date']).toordinal() for c in C], {date.fromisoformat(c['date']).toordinal() for c in C if c['close'].startswith('16')}
 
 def main():
     t0 = time.time(); os.makedirs(OUT, exist_ok=True)
     now = datetime.now(ET)
     if MODE == 'history':
-        sessions = sessions_between(HIST_FIRST - timedelta(days=60), HIST_LAST)
-        days = [d for d in sessions if d >= HIST_FIRST.toordinal()]
+        sessions, full = sessions_between(HIST_FIRST - timedelta(days=60), HIST_LAST)
+        days = [d for d in sessions if d >= HIST_FIRST.toordinal() and d in full]
         note = ('EXPLORATORY ONLY. These dates were used while building labs 5-7, so this is not an independent test. '
                 'Only the forward paper test (sessions after 2026-11-13) can confirm or reject the rule.')
     else:
         last = now.date() if now.hour * 60 + now.minute >= 16 * 60 + 30 else now.date() - timedelta(days=1)
-        sessions = sessions_between(FWD_AFTER - timedelta(days=60), last)
-        days = [d for d in sessions if d > FWD_AFTER.toordinal()]
+        sessions, full = sessions_between(FWD_AFTER - timedelta(days=60), last)
+        days = [d for d in sessions if d > FWD_AFTER.toordinal() and d in full]
         note = 'LOCKED FORWARD PAPER TEST. Rule frozen 2026-11-15; every completed session after 2026-11-13 is replayed with the identical code. No orders are sent.'
         if not days: log('no forward sessions yet'); return
+    calibrate_lots(); log('quote size units:', LOT_MULT)
     alerts, sigs, trades, skips, cnt, cov, sp_ok, dropped = run(days, sessions)
     cov['universe_excluded'] = dict(dropped); cov['splits_feed_ok'] = sp_ok
     summ = summarize(trades, skips, alerts, days, cnt, cov)
+    errs = dict(lab8=dict(STATS), lab5_helpers=dict(L5.STATS), lab6_helpers=dict(L6.STATS))
+    nerr = sum(v for D in errs.values() for k, v in D.items() if 'error' in k or 'failure' in k)
+    summ['data_errors'] = dict(total=nerr, detail=errs, quote_size_units=LOT_MULT)
     nb = summ['per_rule']['NEW']['cases']['base (0.5% slip)']['net']
     if MODE == 'history':
         verdict = (f"Exploratory replay, NEW rule base case: {nb.get('trades', 0)} trades, expectancy {nb.get('expectancy_R')} R, day-clustered 95% CI {nb.get('ci95_R_day_clustered')}. "
@@ -511,6 +538,7 @@ def main():
     else:
         verdict = (f"Forward paper test so far ({len(days)} sessions): {nb.get('trades', 0)} trades, expectancy {nb.get('expectancy_R')} R, CI {nb.get('ci95_R_day_clustered')}. "
                    'A small forward sample cannot show profitability; paper-only.')
+    if nerr: verdict = f'DATA WARNING: {nerr} failed or missing data requests (see data_errors); treat results with extra caution. ' + verdict
     R = dict(updated=now.isoformat(timespec='seconds'), mode=MODE, sessions=len(days), first=date.fromordinal(days[0]).isoformat(), last=date.fromordinal(days[-1]).isoformat(),
              note=note, verdict=verdict, checks=CHECKS, summary=summ, seconds=round(time.time() - t0))
     with open(f'{OUT}/lab8.json', 'w') as f: json.dump({k: v for k, v in R.items()}, f, indent=1, default=str)
