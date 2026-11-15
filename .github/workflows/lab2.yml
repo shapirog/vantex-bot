@@ -1,0 +1,26 @@
+name: Vantex strategy lab 2
+on:
+  schedule:
+    - cron: '13 23 * * 0'   # every Sunday night (UTC)
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: vantex-lab2
+  cancel-in-progress: true
+jobs:
+  lab:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install requests numpy
+      - name: Test every strategy with 1-minute and 5-minute candles (places no trades)
+        env:
+          APCA_API_KEY_ID: ${{ secrets.APCA_API_KEY_ID }}
+          APCA_API_SECRET_KEY: ${{ secrets.APCA_API_SECRET_KEY }}
+          GH_TOKEN: ${{ github.token }}
+        run: python lab2.py 500
