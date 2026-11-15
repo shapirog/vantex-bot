@@ -1,0 +1,25 @@
+name: Vantex strategy lab 7 (trading tiny-float movers)
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: vantex-lab7
+  cancel-in-progress: true
+jobs:
+  lab:
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install requests numpy
+      - name: Test 16 entry/exit combos on tiny-float premarket alerts (read-only, places no trades)
+        env:
+          APCA_API_KEY_ID: ${{ secrets.APCA_API_KEY_ID }}
+          APCA_API_SECRET_KEY: ${{ secrets.APCA_API_SECRET_KEY }}
+          SEC_UA: ${{ secrets.SEC_UA }}
+          GH_TOKEN: ${{ github.token }}
+        run: python lab7.py
