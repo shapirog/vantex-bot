@@ -1,0 +1,339 @@
+{
+ "updated": "2026-11-15T17:37:07",
+ "preregistered": {
+  "population": "lab 5 trades, WATCH before 9:30",
+  "float_max": 10000000,
+  "train": "< 2026-05-01",
+  "test": ">= 2026-05-01",
+  "pass_rules": [
+   "1 train expectancy > 0",
+   "2 test expectancy > 0 and CI low > 0",
+   "3 test profit factor >= 1.2",
+   "4 test trades >= 100",
+   "5 $2,500 at 1% risk ends test above $2,500"
+  ]
+ },
+ "coverage": {
+  "trades": 17980,
+  "premarket_trades": 6298,
+  "primary_trades": 1793,
+  "share_count_missing": {
+   "no SEC count": 1237,
+   "count too old": 1096,
+   "no count filed yet": 173
+  },
+  "splits_feed_ok": true,
+  "symbols_with_sec_count": 1827,
+  "symbols": 2006,
+  "stats": {
+   "requests": 2208,
+   "facts_missing": 10,
+   "no_cik": 6,
+   "splits_found": 973
+  }
+ },
+ "verdict": "FAIL",
+ "checks": {
+  "1 train expectancy > 0": false,
+  "2 test expectancy > 0 and CI low > 0": false,
+  "3 test profit factor >= 1.2": false,
+  "4 test trades >= 100": true,
+  "5 $2,500 at 1% risk ends test above $2,500": false
+ },
+ "train": {
+  "trades": 933,
+  "win_rate_pct": 26.2,
+  "expectancy_R": -0.604,
+  "ci95_R": [
+   -0.708,
+   -0.504
+  ],
+  "profit_factor": 0.37,
+  "median_mfe_pct": 1.87,
+  "hit_plus50_from_entry": 20,
+  "median_R": -1.104
+ },
+ "test": {
+  "trades": 860,
+  "win_rate_pct": 23.4,
+  "expectancy_R": -0.624,
+  "ci95_R": [
+   -0.717,
+   -0.533
+  ],
+  "profit_factor": 0.34,
+  "median_mfe_pct": 2.01,
+  "hit_plus50_from_entry": 19,
+  "median_R": -1.112
+ },
+ "test_account_1pct": {
+  "risk_pct": 1.0,
+  "end_equity": 127.09,
+  "net_pct": -94.9,
+  "max_dd_pct": 94.9
+ },
+ "primary_all_period_accounts": {
+  "0.5%": {
+   "risk_pct": 0.5,
+   "end_equity": 50.06,
+   "net_pct": -98.0,
+   "max_dd_pct": 98.0
+  },
+  "1%": {
+   "risk_pct": 1.0,
+   "end_equity": 11.6,
+   "net_pct": -99.5,
+   "max_dd_pct": 99.5
+  },
+  "2%": {
+   "risk_pct": 2.0,
+   "end_equity": 2.6,
+   "net_pct": -99.9,
+   "max_dd_pct": 99.9
+  },
+  "5%": {
+   "risk_pct": 5.0,
+   "end_equity": 1.27,
+   "net_pct": -99.9,
+   "max_dd_pct": 99.9
+  }
+ },
+ "odds_2_months": {
+  "0.5%": {
+   "sessions": 42,
+   "p_reach_40k": 0.0,
+   "p_double": 0.0,
+   "p_down50": 6.56,
+   "median": 1446,
+   "p5": 1235,
+   "p95": 1693
+  },
+  "1%": {
+   "sessions": 42,
+   "p_reach_40k": 0.0,
+   "p_double": 0.0,
+   "p_down50": 67.78,
+   "median": 1175,
+   "p5": 927,
+   "p95": 1511
+  },
+  "2%": {
+   "sessions": 42,
+   "p_reach_40k": 0.0,
+   "p_double": 0.0,
+   "p_down50": 91.34,
+   "median": 952,
+   "p5": 682,
+   "p95": 1351
+  },
+  "5%": {
+   "sessions": 42,
+   "p_reach_40k": 0.0,
+   "p_double": 0.01,
+   "p_down50": 88.2,
+   "median": 857,
+   "p5": 487,
+   "p95": 1593
+  }
+ },
+ "descriptive_premarket_by_float": {
+  "<5M": {
+   "trades": 1231,
+   "win_rate_pct": 24.5,
+   "expectancy_R": -0.62,
+   "ci95_R": [
+    -0.709,
+    -0.536
+   ],
+   "profit_factor": 0.36,
+   "median_mfe_pct": 2.09,
+   "hit_plus50_from_entry": 27,
+   "median_R": -1.107
+  },
+  "5-10M": {
+   "trades": 559,
+   "win_rate_pct": 25.2,
+   "expectancy_R": -0.605,
+   "ci95_R": [
+    -0.713,
+    -0.499
+   ],
+   "profit_factor": 0.34,
+   "median_mfe_pct": 1.6,
+   "hit_plus50_from_entry": 12,
+   "median_R": -1.107
+  },
+  "10-20M": {
+   "trades": 784,
+   "win_rate_pct": 24.5,
+   "expectancy_R": -0.551,
+   "ci95_R": [
+    -0.64,
+    -0.444
+   ],
+   "profit_factor": 0.4,
+   "median_mfe_pct": 1.34,
+   "hit_plus50_from_entry": 19,
+   "median_R": -1.117
+  },
+  "20-50M": {
+   "trades": 1131,
+   "win_rate_pct": 27.7,
+   "expectancy_R": -0.493,
+   "ci95_R": [
+    -0.576,
+    -0.411
+   ],
+   "profit_factor": 0.43,
+   "median_mfe_pct": 1.7,
+   "hit_plus50_from_entry": 18,
+   "median_R": -1.094
+  },
+  ">50M": {
+   "trades": 1716,
+   "win_rate_pct": 29.7,
+   "expectancy_R": -0.37,
+   "ci95_R": [
+    -0.432,
+    -0.305
+   ],
+   "profit_factor": 0.53,
+   "median_mfe_pct": 1.9,
+   "hit_plus50_from_entry": 11,
+   "median_R": -1.083
+  },
+  "unknown": {
+   "trades": 877,
+   "win_rate_pct": 27.0,
+   "expectancy_R": -0.485,
+   "ci95_R": [
+    -0.574,
+    -0.399
+   ],
+   "profit_factor": 0.44,
+   "median_mfe_pct": 1.89,
+   "hit_plus50_from_entry": 20,
+   "median_R": -1.105
+  }
+ },
+ "descriptive_all_by_float": {
+  "<5M": {
+   "trades": 2338,
+   "win_rate_pct": 23.1,
+   "expectancy_R": -0.824,
+   "ci95_R": [
+    -0.931,
+    -0.727
+   ],
+   "profit_factor": 0.27,
+   "median_mfe_pct": 1.38,
+   "hit_plus50_from_entry": 44,
+   "median_R": -1.135
+  },
+  "5-10M": {
+   "trades": 1388,
+   "win_rate_pct": 22.8,
+   "expectancy_R": -1.238,
+   "ci95_R": [
+    -2.159,
+    -0.724
+   ],
+   "profit_factor": 0.19,
+   "median_mfe_pct": 0.96,
+   "hit_plus50_from_entry": 17,
+   "median_R": -1.153
+  },
+  "10-20M": {
+   "trades": 2068,
+   "win_rate_pct": 23.9,
+   "expectancy_R": -0.868,
+   "ci95_R": [
+    -1.211,
+    -0.669
+   ],
+   "profit_factor": 0.27,
+   "median_mfe_pct": 0.96,
+   "hit_plus50_from_entry": 29,
+   "median_R": -1.153
+  },
+  "20-50M": {
+   "trades": 3471,
+   "win_rate_pct": 25.9,
+   "expectancy_R": -0.613,
+   "ci95_R": [
+    -0.667,
+    -0.56
+   ],
+   "profit_factor": 0.35,
+   "median_mfe_pct": 1.15,
+   "hit_plus50_from_entry": 25,
+   "median_R": -1.106
+  },
+  ">50M": {
+   "trades": 6209,
+   "win_rate_pct": 29.0,
+   "expectancy_R": -0.43,
+   "ci95_R": [
+    -0.462,
+    -0.394
+   ],
+   "profit_factor": 0.45,
+   "median_mfe_pct": 1.29,
+   "hit_plus50_from_entry": 21,
+   "median_R": -1.073
+  },
+  "unknown": {
+   "trades": 2506,
+   "win_rate_pct": 25.3,
+   "expectancy_R": -1.053,
+   "ci95_R": [
+    -1.98,
+    -0.569
+   ],
+   "profit_factor": 0.23,
+   "median_mfe_pct": 1.27,
+   "hit_plus50_from_entry": 34,
+   "median_R": -1.101
+  }
+ },
+ "premarket_alert_quality_by_float": {
+  "<5M": {
+   "premarket_alerts": 3616,
+   "rose_10pct_more_after_alert_pct": 44.5,
+   "day_high_plus50_pct": 26.0
+  },
+  "5-10M": {
+   "premarket_alerts": 1535,
+   "rose_10pct_more_after_alert_pct": 32.5,
+   "day_high_plus50_pct": 12.6
+  },
+  "10-20M": {
+   "premarket_alerts": 1958,
+   "rose_10pct_more_after_alert_pct": 31.3,
+   "day_high_plus50_pct": 14.2
+  },
+  "20-50M": {
+   "premarket_alerts": 2364,
+   "rose_10pct_more_after_alert_pct": 30.7,
+   "day_high_plus50_pct": 10.3
+  },
+  ">50M": {
+   "premarket_alerts": 3054,
+   "rose_10pct_more_after_alert_pct": 30.5,
+   "day_high_plus50_pct": 8.7
+  },
+  "unknown": {
+   "premarket_alerts": 2303,
+   "rose_10pct_more_after_alert_pct": 35.6,
+   "day_high_plus50_pct": 17.1
+  }
+ },
+ "limitations": [
+  "Shares outstanding (SEC cover page) is used for float; true float is smaller (insider/locked shares excluded), so \"<=10M shares out\" is a stricter test than \"<=10M float\".",
+  "Companies missing from today's SEC ticker map (renamed, delisted, some foreign filers) have unknown share counts and are left out of the primary test.",
+  "Share counts update only when a company files (usually quarterly); offerings between filings are not seen until the next filing.",
+  "Entries, exits, fills and fees are lab 5's; lab 5 limitations (no halt feed, one quote snapshot, survivorship) carry over.",
+  "This is trial ~651+; only the pre-registered primary test can count."
+ ],
+ "seconds": 846
+}
