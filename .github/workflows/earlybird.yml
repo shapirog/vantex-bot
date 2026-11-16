@@ -1,10 +1,13 @@
-name: Vantex Early Bird (tiny-float alerts 3-9:30 AM, no trading)
+name: Vantex Early Bird (tiny-float alerts 3 AM-4 PM, no trading)
 on:
   schedule:
-    # times are UTC (winter): 7:30 = 2:30 AM Eastern (watch list, then a scan every minute until 7:55 AM),
-    # 12:50 = 7:50 AM Eastern (takes over at 7:55 and scans every minute until 9:30 AM)
+    # times are UTC (winter). Three hand-offs because a GitHub job can run at most 6 hours:
+    # 7:30 = 2:30 AM Eastern (watch list, then every minute until 7:55 AM)
+    # 12:50 = 7:50 AM Eastern (every minute 7:55 AM - 12:55 PM)
+    # 17:50 = 12:50 PM Eastern (every minute 12:55 - 4:00 PM)
     - cron: '30 7 * * 1-5'
     - cron: '50 12 * * 1-5'
+    - cron: '50 17 * * 1-5'
   workflow_dispatch:
     inputs:
       force:
