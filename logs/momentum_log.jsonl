@@ -2665,3 +2665,7 @@
 {"event": "mom_scan", "sym": "SMMT", "dir": -1, "ok": true, "info": "setup confirmed", "ts": "2026-11-16T14:08:57-05:00"}
 {"event": "mom_entry", "sym": "SMMT", "dir": -1, "qty": 41, "price": 11.91, "stop": 12.86, "level": 12.45, "vwap": 12.3011, "ts": "2026-11-16T14:08:59-05:00"}
 {"event": "handoff", "why": "runtime limit", "ts": "2026-11-16T14:35:13-05:00"}
+{"event": "mom_reject", "sym": "MNTK", "body": {"symbol": "MNTK", "qty": "424", "side": "sell", "type": "market", "time_in_force": "day", "client_order_id": "MOM-MNTK-x-1794862211"}, "err": "{\"available\":\"0\",\"code\":40310000,\"existing_qty\":\"424\",\"held_for_orders\":\"424\",\"message\":\"insufficient qty available for order (requested: 424, available: 0)\",\"related_orders\":[\"90b76918-5799-4da8-8f2e", "ts": "2026-11-16T15:50:11-05:00"}
+{"event": "mom_exit", "sym": "MNTK", "why": "end of day", "ts": "2026-11-16T15:50:11-05:00"}
+{"event": "mom_reject", "sym": "SMMT", "body": {"symbol": "SMMT", "qty": "41", "side": "buy", "type": "market", "time_in_force": "day", "client_order_id": "MOM-SMMT-x-1794862213"}, "err": "{\"available\":\"0\",\"code\":40310000,\"existing_qty\":\"41\",\"held_for_orders\":\"41\",\"message\":\"insufficient qty available for order (requested: 41, available: 0)\",\"related_orders\":[\"53e96517-3642-482f-a864-b0", "ts": "2026-11-16T15:50:13-05:00"}
+{"event": "mom_exit", "sym": "SMMT", "why": "end of day", "ts": "2026-11-16T15:50:13-05:00"}
