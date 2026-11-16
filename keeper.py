@@ -8,6 +8,7 @@ Every minute it checks (Eastern time):
   trade / momentum / options       weekdays 9:00 AM-3:30 PM: if the bot is not running or waiting, start it
                                    (at most 6 starts per bot per day, so a broken bot can't loop forever)
   earlybird.yml                    Sunday 6 PM -> Friday 4 PM: if Early Bird is not running or waiting, start it
+  city.yml                         weekdays 3:55 AM-7:55 PM: if the City engine is not running or waiting, start it
   lab8-forward / lab9-forward      weekdays after 4:47 / 5:17 PM: start once a day if it hasn't run yet
 Every start is logged in the run output.
 """
@@ -78,6 +79,9 @@ def main():
         eb_window = (wd == 6 and m >= 1080) or wd in (0, 1, 2, 3) or (wd == 4 and m < 960)
         if eb_window and m % 5 == 0 and not active('earlybird.yml') and starts.get('earlybird.yml', 0) < MAX_STARTS * 4:
             if start('earlybird.yml', {'force': '0'}): starts['earlybird.yml'] = starts.get('earlybird.yml', 0) + 1
+        # City engine (market-wide scanner + paper trader) runs 4:00 AM - 8:00 PM on weekdays
+        if weekday and 235 <= m < 1195 and m % 5 == 0 and not active('city.yml') and starts.get('city.yml', 0) < MAX_STARTS * 2:
+            if start('city.yml'): starts['city.yml'] = starts.get('city.yml', 0) + 1
         # daily forward tests after the close
         for wf, at in (('lab8-forward.yml', 16 * 60 + 47), ('lab9-forward.yml', 17 * 60 + 17)):
             if weekday and at <= m < 23 * 60 and not starts.get(wf):
