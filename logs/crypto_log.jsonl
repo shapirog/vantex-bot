@@ -1739,3 +1739,28 @@
 {"event": "crypto_check", "coin": "BTC", "price": 64100.0, "ema20": 64436.76, "ema50": 64524.25, "have": 0, "want": 0, "ts": "2026-11-16T10:16:39-05:00"}
 {"event": "crypto_check", "coin": "ETH", "price": 1813.24, "ema20": 1812.81, "ema50": 1811.36, "have": 1, "want": 1, "ts": "2026-11-16T10:16:40-05:00"}
 {"event": "handoff", "why": "runtime limit", "ts": "2026-11-16T10:20:19-05:00"}
+{"event": "crypto_check", "coin": "BTC", "price": 64258.09, "ema20": 64436.27, "ema50": 64524.05, "have": 0, "want": 0, "ts": "2026-11-16T10:20:34-05:00"}
+{"event": "crypto_check", "coin": "ETH", "price": 1808.48, "ema20": 1813.0, "ema50": 1811.44, "have": 1, "want": 0, "ts": "2026-11-16T10:20:35-05:00"}
+{"event": "exit", "coin": "ETH", "status": 200, "ts": "2026-11-16T10:20:35-05:00"}
+{"event": "crypto_check", "coin": "BTC", "price": 64147.6, "ema20": 64426.73, "ema50": 64520.12, "have": 0, "want": 0, "ts": "2026-11-16T10:25:39-05:00"}
+{"event": "crypto_check", "coin": "ETH", "price": 1809.97, "ema20": 1812.54, "ema50": 1811.25, "have": 0, "want": 0, "ts": "2026-11-16T10:25:39-05:00"}
+{"event": "crypto_check", "coin": "BTC", "price": 64310.27, "ema20": 64435.71, "ema50": 64523.83, "have": 0, "want": 0, "ts": "2026-11-16T10:30:45-05:00"}
+{"event": "crypto_check", "coin": "ETH", "price": 1809.97, "ema20": 1812.67, "ema50": 1811.31, "have": 0, "want": 0, "ts": "2026-11-16T10:30:46-05:00"}
+{"event": "crypto_check", "coin": "BTC", "price": 64293.6, "ema20": 64403.38, "ema50": 64507.06, "have": 0, "want": 0, "ts": "2026-11-16T10:35:51-05:00"}
+{"event": "crypto_check", "coin": "ETH", "price": 1806.39, "ema20": 1811.89, "ema50": 1811.04, "have": 0, "want": 0, "ts": "2026-11-16T10:35:51-05:00"}
+{"event": "crypto_check", "coin": "BTC", "price": 64215.0, "ema20": 64410.74, "ema50": 64510.09, "have": 0, "want": 0, "ts": "2026-11-16T10:40:52-05:00"}
+{"event": "crypto_check", "coin": "ETH", "price": 1802.94, "ema20": 1811.96, "ema50": 1811.07, "have": 0, "want": 0, "ts": "2026-11-16T10:40:52-05:00"}
+{"event": "crypto_check", "coin": "BTC", "price": 64300.1, "ema20": 64430.42, "ema50": 64518.19, "have": 0, "want": 0, "ts": "2026-11-16T10:45:55-05:00"}
+{"event": "crypto_check", "coin": "ETH", "price": 1802.94, "ema20": 1812.79, "ema50": 1811.41, "have": 0, "want": 0, "ts": "2026-11-16T10:45:55-05:00"}
+{"event": "crypto_check", "coin": "BTC", "price": 64480.4, "ema20": 64441.94, "ema50": 64519.49, "have": 0, "want": 0, "ts": "2026-11-16T10:51:06-05:00"}
+{"event": "crypto_check", "coin": "ETH", "price": 1821.9, "ema20": 1813.64, "ema50": 1811.81, "have": 0, "want": 1, "ts": "2026-11-16T10:51:06-05:00"}
+{"event": "order", "coin": "ETH", "side": "buy", "notional": 252.06, "status": 200, "resp": "pending_new", "ts": "2026-11-16T10:51:06-05:00"}
+{"event": "crypto_check", "coin": "BTC", "price": 64455.57, "ema20": 64436.7, "ema50": 64517.33, "have": 0, "want": 0, "ts": "2026-11-16T10:56:18-05:00"}
+{"event": "crypto_check", "coin": "ETH", "price": 1819.7, "ema20": 1813.52, "ema50": 1811.77, "have": 1, "want": 1, "ts": "2026-11-16T10:56:18-05:00"}
+{"event": "crypto_check", "coin": "BTC", "price": 64385.64, "ema20": 64422.28, "ema50": 64508.03, "have": 0, "want": 0, "ts": "2026-11-16T11:01:30-05:00"}
+{"event": "crypto_check", "coin": "ETH", "price": 1818.4, "ema20": 1813.7, "ema50": 1811.9, "have": 1, "want": 1, "ts": "2026-11-16T11:01:30-05:00"}
+{"event": "crypto_check", "coin": "BTC", "price": 64328.9, "ema20": 64416.97, "ema50": 64505.84, "have": 0, "want": 0, "ts": "2026-11-16T11:06:41-05:00"}
+{"event": "crypto_check", "coin": "ETH", "price": 1818.4, "ema20": 1813.37, "ema50": 1811.77, "have": 1, "want": 1, "ts": "2026-11-16T11:06:41-05:00"}
+{"event": "crypto_check", "coin": "BTC", "price": 64274.0, "ema20": 64414.5, "ema50": 64504.82, "have": 0, "want": 0, "ts": "2026-11-16T11:11:42-05:00"}
+{"event": "crypto_check", "coin": "ETH", "price": 1818.4, "ema20": 1813.41, "ema50": 1811.78, "have": 1, "want": 1, "ts": "2026-11-16T11:11:42-05:00"}
+{"event": "handoff", "why": "runtime limit", "ts": "2026-11-16T11:15:40-05:00"}
