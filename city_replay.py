@@ -4,6 +4,7 @@ VANTEX City replay + evaluation. Research only: places NO orders.
   python city_replay.py replay 2026-11-13        -> one session, minute by minute, for the City's Replay player
   python city_replay.py eval dev 20              -> 20 sessions sampled from the development period
   python city_replay.py eval test 20             -> 20 sessions from the untouched out-of-sample period (run once, at the end)
+  python city_replay.py compare dev 20           -> original rules vs "strong stocks only" rule sets on the same sessions
 
 No look-ahead: at each minute the engine logic (vantex_core, the same code the live engine runs) only sees
   - daily history up to the prior session, 1-minute bars that had CLOSED before that minute,
@@ -70,6 +71,13 @@ class Replay:
         return uni, daily, curve, dict(cov)
 
     def quote_at(self, sym, ts):
+        qc = getattr(self, '_qcache', None)
+        if qc is not None and (sym, ts) in qc: return qc[(sym, ts)]
+        q = self._quote_at(sym, ts)
+        if qc is not None: qc[(sym, ts)] = q
+        return q
+
+    def _quote_at(self, sym, ts):
         r = self.D.get('/v2/stocks/quotes', dict(symbols=sym, start=datetime.fromtimestamp(ts - 120, timezone.utc).isoformat(),
                                                  end=datetime.fromtimestamp(ts, timezone.utc).isoformat(), limit=1, sort='desc', feed='sip'), 'hist_quote')
         if r is None or not r.ok: return None
@@ -79,7 +87,8 @@ class Replay:
         if not q.get('bp') or not q.get('ap') or q['ap'] < q['bp']: return None
         return dict(bid=q['bp'], ask=q['ap'], t=epoch(q['t']))
 
-    def run_day(self, d, close_m=960, frames=False, state=None):
+    def load_day(self, d, close_m=960):
+        """everything a session replay needs, fetched once (so several rule sets can be compared on identical data)"""
         t0 = time.time()
         uni, daily, curve, cov = self.setup_day(d)
         start = datetime.combine(d, datetime.min.time(), ET) + timedelta(hours=4); end = datetime.combine(d, datetime.min.time(), ET) + timedelta(minutes=close_m)
@@ -90,6 +99,19 @@ class Replay:
                      u=n.get('url') or '', sy=[x for x in (n.get('symbols') or []) if x.isalpha()][:12], sm=(n.get('summary') or '')[:300]) for n in news_raw]
         news.sort(key=lambda x: x['t'] or 0)
         log(d, 'universe', len(uni), 'symbols with bars', len(BARS), 'news', len(news), round(time.time() - t0), 's')
+        self._qcache = {}
+        return dict(uni=uni, daily=daily, curve=curve, cov=cov, BARS=BARS, news=news)
+
+    def run_day(self, d, close_m=960, frames=False, state=None, data=None, cfg=None):
+        t0 = time.time()
+        data = data or self.load_day(d, close_m)
+        uni, daily, curve, cov, BARS, news = data['uni'], data['daily'], data['curve'], data['cov'], data['BARS'], data['news']
+        saved_cfg = self.cfg
+        if cfg is not None: self.cfg = cfg
+        try: return self._run(d, close_m, frames, state, uni, daily, curve, cov, BARS, news, t0)
+        finally: self.cfg = saved_cfg
+
+    def _run(self, d, close_m, frames, state, uni, daily, curve, cov, BARS, news, t0):
         R = self.cfg['risk']; S = self.cfg['signals']
         flat_m = min(V.hhmm(R['flat_at']), close_m - 10); until_m = min(V.hhmm(R['entries_until']), close_m - 30)
         cfg = V.merge(self.cfg, {'risk': {'entries_until': f'{until_m // 60:02d}:{until_m % 60:02d}'}})
@@ -231,6 +253,18 @@ def parse_day(txt):
     if len(p) == 3 and len(p[2]) == 4: return date(int(p[2]), int(p[0]), int(p[1]))
     raise SystemExit(f'Could not read the date {txt!r}: use YYYY-MM-DD, for example 2026-11-13')
 
+VARIANT_NOTES = {
+    'A_original': dict(name='A. Original rules', what='every confirmed breakout or breakdown, any stock in the universe'),
+    'B_strong_news': dict(name='B. Strong stocks with real news', what='longs only on stocks already up 10%+ on the day, 5x normal volume, a fresh verified news catalyst, and no dilution news'),
+    'C_strong_volume': dict(name='C. Strong stocks, news not required', what='longs only on stocks already up 10%+ on the day with 5x normal volume and no dilution news'),
+}
+
+def variant_configs(base):
+    s = dict(strong_only=True, strong_min_day_change_pct=10.0, strong_min_rvol=5.0, block_negative_news=True)
+    return {'A_original': V.merge(base, {'signals': dict(strong_only=False, block_negative_news=False)}),
+            'B_strong_news': V.merge(base, {'signals': dict(s, strong_require_catalyst=True)}),
+            'C_strong_volume': V.merge(base, {'signals': dict(s, strong_require_catalyst=False)})}
+
 def only_spread_pending(e):
     return e['status'] == 'developing' and [c['name'] for c in e['checks'] if c['ok'] is not True] == ['spread acceptable']
 
@@ -253,81 +287,3 @@ def summarize(days, label):
     eq, peak, dd, curve = 0.0, 0.0, 0.0, []
     for day, p in pnl_by_day: eq += p; peak = max(peak, eq); dd = max(dd, peak - eq); curve.append((day, round(eq, 2)))
     R = [t['R'] for t in T if t['R'] is not None]
-    hist = Counter(('<-2R' if r < -2 else '-2..-1R' if r < -1 else '-1..0R' if r < 0 else '0..1R' if r < 1 else '1..2R' if r < 2 else '>2R') for r in R)
-    by = defaultdict(list)
-    for t in T: by[t['setup']].append(t)
-    worst5 = min((sum(p for _, p in pnl_by_day[i:i + 5]), pnl_by_day[i][0]) for i in range(max(1, len(pnl_by_day) - 4))) if pnl_by_day else None
-    sig = Counter(); bl = Counter()
-    for d in days:
-        sig.update(d['signals']); bl.update(d['blocks'])
-    mins = sum(t['m_out'] - t['m_in'] for t in T)
-    return dict(label=label, sessions=len(days), trades=len(T), net_pnl=round(sum(t['pnl'] for t in T), 2), fees=round(sum(t['fees'] for t in T), 2),
-                win_rate_pct=round(100 * sum(t['pnl'] > 0 for t in T) / len(T), 1) if T else None, avg_R=round(sum(R) / len(R), 3) if R else None,
-                max_drawdown=round(dd, 2), worst_day=min(pnl_by_day, key=lambda x: x[1]) if pnl_by_day else None, worst_5_sessions=worst5,
-                losing_days=sum(1 for _, p in pnl_by_day if p < 0), winning_days=sum(1 for _, p in pnl_by_day if p > 0),
-                avg_exposure=round(sum(t['exposure'] for t in T) / len(T), 2) if T else None, minutes_in_market=mins,
-                R_distribution=dict(hist), exits=dict(Counter(t['why'] for t in T)),
-                by_setup={k: dict(trades=len(v), pnl=round(sum(t['pnl'] for t in v), 2), avg_R=round(sum(t['R'] or 0 for t in v) / len(v), 3)) for k, v in sorted(by.items())},
-                signals=dict(sig), rejected_or_blocked=dict(bl.most_common(25)), equity_curve=curve,
-                warning='A backtest is not proof of future results. Sample is small; see the day-by-day list before trusting any number.')
-
-def publish(files, branch='live-replay'):
-    os.makedirs(OUT, exist_ok=True)
-    tok = os.environ.get('GH_TOKEN')
-    # keep earlier replays: start from the current branch content
-    if tok and os.environ.get('GITHUB_REPOSITORY') and not os.path.exists(f'{OUT}/.fetched'):
-        shutil.rmtree(OUT, ignore_errors=True); os.makedirs(OUT, exist_ok=True)
-        r = subprocess.run(['git', 'clone', '-q', '--depth', '1', '-b', branch, f'https://x-access-token:{tok}@github.com/{REPO}.git', OUT], capture_output=True)
-        if r.returncode != 0: os.makedirs(OUT, exist_ok=True)
-        open(f'{OUT}/.fetched', 'w').close()
-    for name, obj in files.items():
-        os.makedirs(os.path.dirname(f'{OUT}/{name}') or OUT, exist_ok=True)
-        if name.endswith('.md'): open(f'{OUT}/{name}', 'w').write(obj)
-        else: json.dump(obj, open(f'{OUT}/{name}', 'w'), separators=(',', ':'), default=str)
-    if not files or not (tok and os.environ.get('GITHUB_REPOSITORY')): return   # nothing new to push
-    g = ['git', '-C', OUT, '-c', 'user.name=vantex-bot', '-c', 'user.email=vantex-bot@users.noreply.github.com']
-    subprocess.run(['rm', '-rf', f'{OUT}/.git']); subprocess.run(['git', 'init', '-q', '-b', branch, OUT], check=True)
-    subprocess.run(g + ['add', '-A', '--', '.', ':!.fetched'], check=True); subprocess.run(g + ['commit', '-q', '-m', 'replay'], check=True)
-    subprocess.run(g + ['push', '-q', '-f', f'https://x-access-token:{tok}@github.com/{REPO}.git', branch], check=True, timeout=180, capture_output=True)
-
-def main():
-    key, sec = os.environ.get('APCA_API_KEY_ID', ''), os.environ.get('APCA_API_SECRET_KEY', '')
-    if not key.startswith('PK'): sys.exit('Refusing to run: paper key (PK...) required')
-    cfg = json.load(open('city_config.json')) if os.path.exists('city_config.json') else {}
-    RP = Replay(Data(key, sec), key, sec, cfg)
-    mode = sys.argv[1] if len(sys.argv) > 1 else 'replay'
-    if mode == 'replay':
-        d = parse_day(sys.argv[2]) if len(sys.argv) > 2 and sys.argv[2].strip() else None
-        ss = RP.sessions(date.today() - timedelta(days=10), date.today() - timedelta(days=1))
-        if d is None: d, cm = ss[-1]
-        else: cm = dict(RP.sessions(d, d)).get(d)
-        if cm is None: sys.exit(f'{d} was not a market session')
-        res = RP.run_day(d, cm, frames=True)
-        publish({})                                                            # fetches the existing branch so older replays are kept
-        try: idx = json.load(open(f'{OUT}/index.json'))
-        except Exception: idx = {}
-        days = sorted(set(idx.get('days', [])) | {d.isoformat()})
-        publish({f'replay/{d.isoformat()}.json': res, 'index.json': dict(days=days, updated=datetime.now(ET).isoformat(timespec='seconds'),
-                 note='Replays assume the real-time SIP plan and use only information available at each minute.')})
-    else:
-        split = sys.argv[2] if len(sys.argv) > 2 else 'dev'; n = int(sys.argv[3]) if len(sys.argv) > 3 else 20
-        a, b = DEV if split == 'dev' else TEST
-        b = b or (date.today() - timedelta(days=1))
-        ss = RP.sessions(a, b)
-        random.Random(11).shuffle(ss); pick = sorted(ss[:n])
-        out = []; st = dict(equity=2500.0, daytrades=[], pdt=False)
-        for d, cm in pick:
-            try: out.append(RP.run_day(d, cm, frames=False, state=st))
-            except Exception as e: log('day failed', d, e)
-        S = summarize(out, f'{split}: {len(out)} sessions sampled from {a} to {b}, every confirmed signal, $2,500 sizing, no day-trade limit')
-        S['days'] = [dict(day=x['day'], pnl=x['pnl'], trades=len(x['trades']), blocks=x['blocks']) for x in out]
-        S['all_trades'] = [dict(t, day=x['day']) for x in out for t in x['trades']]
-        S['note_pdt'] = ('This counts every confirmed signal so the rules can be judged on enough trades. A real $2,500 margin account '
-                         'is limited to 3 day trades per 5 sessions, so it would take only a few of these.')
-        md = [f"# VANTEX City evaluation - {S['label']}", '', '```', json.dumps({k: v for k, v in S.items() if k not in ('days', 'all_trades', 'equity_curve')}, indent=1, default=str), '```',
-              '', '| day | trades | P&L |', '|---|---|---|'] + [f"| {x['day']} | {x['trades']} | {x['pnl']} |" for x in S['days']]
-        publish({})
-        publish({f'eval_{split}.json': S, f'eval_{split}.md': '\n'.join(md) + '\n'})
-
-if __name__ == '__main__':
-    main()
