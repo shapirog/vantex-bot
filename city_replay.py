@@ -287,3 +287,108 @@ def summarize(days, label):
     eq, peak, dd, curve = 0.0, 0.0, 0.0, []
     for day, p in pnl_by_day: eq += p; peak = max(peak, eq); dd = max(dd, peak - eq); curve.append((day, round(eq, 2)))
     R = [t['R'] for t in T if t['R'] is not None]
+    hist = Counter(('<-2R' if r < -2 else '-2..-1R' if r < -1 else '-1..0R' if r < 0 else '0..1R' if r < 1 else '1..2R' if r < 2 else '>2R') for r in R)
+    by = defaultdict(list)
+    for t in T: by[t['setup']].append(t)
+    worst5 = min((sum(p for _, p in pnl_by_day[i:i + 5]), pnl_by_day[i][0]) for i in range(max(1, len(pnl_by_day) - 4))) if pnl_by_day else None
+    sig = Counter(); bl = Counter()
+    for d in days:
+        sig.update(d['signals']); bl.update(d['blocks'])
+    mins = sum(t['m_out'] - t['m_in'] for t in T)
+    return dict(label=label, sessions=len(days), trades=len(T), net_pnl=round(sum(t['pnl'] for t in T), 2), fees=round(sum(t['fees'] for t in T), 2),
+                win_rate_pct=round(100 * sum(t['pnl'] > 0 for t in T) / len(T), 1) if T else None, avg_R=round(sum(R) / len(R), 3) if R else None,
+                max_drawdown=round(dd, 2), worst_day=min(pnl_by_day, key=lambda x: x[1]) if pnl_by_day else None, worst_5_sessions=worst5,
+                losing_days=sum(1 for _, p in pnl_by_day if p < 0), winning_days=sum(1 for _, p in pnl_by_day if p > 0),
+                avg_exposure=round(sum(t['exposure'] for t in T) / len(T), 2) if T else None, minutes_in_market=mins,
+                R_distribution=dict(hist), exits=dict(Counter(t['why'] for t in T)),
+                by_setup={k: dict(trades=len(v), pnl=round(sum(t['pnl'] for t in v), 2), avg_R=round(sum(t['R'] or 0 for t in v) / len(v), 3)) for k, v in sorted(by.items())},
+                signals=dict(sig), rejected_or_blocked=dict(bl.most_common(25)), equity_curve=curve,
+                warning='A backtest is not proof of future results. Sample is small; see the day-by-day list before trusting any number.')
+
+def publish(files, branch='live-replay'):
+    os.makedirs(OUT, exist_ok=True)
+    tok = os.environ.get('GH_TOKEN')
+    # keep earlier replays: start from the current branch content
+    if tok and os.environ.get('GITHUB_REPOSITORY') and not os.path.exists(f'{OUT}/.fetched'):
+        shutil.rmtree(OUT, ignore_errors=True); os.makedirs(OUT, exist_ok=True)
+        r = subprocess.run(['git', 'clone', '-q', '--depth', '1', '-b', branch, f'https://x-access-token:{tok}@github.com/{REPO}.git', OUT], capture_output=True)
+        if r.returncode != 0: os.makedirs(OUT, exist_ok=True)
+        open(f'{OUT}/.fetched', 'w').close()
+    for name, obj in files.items():
+        os.makedirs(os.path.dirname(f'{OUT}/{name}') or OUT, exist_ok=True)
+        if name.endswith('.md'): open(f'{OUT}/{name}', 'w').write(obj)
+        else: json.dump(obj, open(f'{OUT}/{name}', 'w'), separators=(',', ':'), default=str)
+    if not files or not (tok and os.environ.get('GITHUB_REPOSITORY')): return   # nothing new to push
+    g = ['git', '-C', OUT, '-c', 'user.name=vantex-bot', '-c', 'user.email=vantex-bot@users.noreply.github.com']
+    subprocess.run(['rm', '-rf', f'{OUT}/.git']); subprocess.run(['git', 'init', '-q', '-b', branch, OUT], check=True)
+    subprocess.run(g + ['add', '-A', '--', '.', ':!.fetched'], check=True); subprocess.run(g + ['commit', '-q', '-m', 'replay'], check=True)
+    subprocess.run(g + ['push', '-q', '-f', f'https://x-access-token:{tok}@github.com/{REPO}.git', branch], check=True, timeout=180, capture_output=True)
+
+def main():
+    key, sec = os.environ.get('APCA_API_KEY_ID', ''), os.environ.get('APCA_API_SECRET_KEY', '')
+    if not key.startswith('PK'): sys.exit('Refusing to run: paper key (PK...) required')
+    cfg = json.load(open('city_config.json')) if os.path.exists('city_config.json') else {}
+    RP = Replay(Data(key, sec), key, sec, cfg)
+    mode = sys.argv[1] if len(sys.argv) > 1 else 'replay'
+    if mode == 'replay':
+        d = parse_day(sys.argv[2]) if len(sys.argv) > 2 and sys.argv[2].strip() else None
+        ss = RP.sessions(date.today() - timedelta(days=10), date.today() - timedelta(days=1))
+        if d is None: d, cm = ss[-1]
+        else: cm = dict(RP.sessions(d, d)).get(d)
+        if cm is None: sys.exit(f'{d} was not a market session')
+        res = RP.run_day(d, cm, frames=True)
+        publish({})                                                            # fetches the existing branch so older replays are kept
+        try: idx = json.load(open(f'{OUT}/index.json'))
+        except Exception: idx = {}
+        days = sorted(set(idx.get('days', [])) | {d.isoformat()})
+        publish({f'replay/{d.isoformat()}.json': res, 'index.json': dict(days=days, updated=datetime.now(ET).isoformat(timespec='seconds'),
+                 note='Replays assume the real-time SIP plan and use only information available at each minute.')})
+    elif mode == 'compare':
+        split = sys.argv[2] if len(sys.argv) > 2 else 'dev'; n = int(sys.argv[3]) if len(sys.argv) > 3 else 20
+        a, b = DEV if split == 'dev' else TEST
+        b = b or (date.today() - timedelta(days=1))
+        ss = RP.sessions(a, b)
+        random.Random(11).shuffle(ss); pick = sorted(ss[:n])
+        variants = variant_configs(RP.cfg)
+        res = {k: [] for k in variants}; states = {k: dict(equity=2500.0, daytrades=[], pdt=False) for k in variants}
+        for d, cm in pick:
+            try:
+                data = RP.load_day(d, cm)
+                for k, c in variants.items():
+                    res[k].append(RP.run_day(d, cm, frames=False, state=states[k], data=data, cfg=c))
+                del data
+            except Exception as e: log('day failed', d, e)
+        out = dict(split=split, sessions=[d.isoformat() for d, _ in pick], updated=datetime.now(ET).isoformat(timespec='seconds'),
+                   variants={k: dict(VARIANT_NOTES[k], summary={x: y for x, y in summarize(v, k).items() if x != 'equity_curve'},
+                                     days=[dict(day=x['day'], pnl=x['pnl'], trades=len(x['trades'])) for x in v],
+                                     trades=[dict(t, day=x['day']) for x in v for t in x['trades']]) for k, v in res.items()},
+                   note='Same days, same data, same costs and fills for every variant. Every confirmed signal is taken (no day-trade limit) so each rule set is judged on enough trades.')
+        rows = ['| rule set | trades | win rate | net P&L after costs | avg R | worst day | max drawdown |', '|---|---|---|---|---|---|---|']
+        for k, v in out['variants'].items():
+            S = v['summary']; rows.append(f"| {v['name']} | {S['trades']} | {S['win_rate_pct']}% | ${S['net_pnl']} | {S['avg_R']} | {S['worst_day']} | ${S['max_drawdown']} |")
+        md = [f"# VANTEX City rule comparison - {split} - {len(pick)} sessions", '', out['note'], ''] + rows + ['', '## What each rule set is'] + \
+             [f"- **{v['name']}**: {v['what']}" for v in out['variants'].values()]
+        publish({})
+        publish({f'compare_{split}.json': out, f'compare_{split}.md': '\n'.join(md) + '\n'})
+    else:
+        split = sys.argv[2] if len(sys.argv) > 2 else 'dev'; n = int(sys.argv[3]) if len(sys.argv) > 3 else 20
+        a, b = DEV if split == 'dev' else TEST
+        b = b or (date.today() - timedelta(days=1))
+        ss = RP.sessions(a, b)
+        random.Random(11).shuffle(ss); pick = sorted(ss[:n])
+        out = []; st = dict(equity=2500.0, daytrades=[], pdt=False)
+        for d, cm in pick:
+            try: out.append(RP.run_day(d, cm, frames=False, state=st))
+            except Exception as e: log('day failed', d, e)
+        S = summarize(out, f'{split}: {len(out)} sessions sampled from {a} to {b}, every confirmed signal, $2,500 sizing, no day-trade limit')
+        S['days'] = [dict(day=x['day'], pnl=x['pnl'], trades=len(x['trades']), blocks=x['blocks']) for x in out]
+        S['all_trades'] = [dict(t, day=x['day']) for x in out for t in x['trades']]
+        S['note_pdt'] = ('This counts every confirmed signal so the rules can be judged on enough trades. A real $2,500 margin account '
+                         'is limited to 3 day trades per 5 sessions, so it would take only a few of these.')
+        md = [f"# VANTEX City evaluation - {S['label']}", '', '```', json.dumps({k: v for k, v in S.items() if k not in ('days', 'all_trades', 'equity_curve')}, indent=1, default=str), '```',
+              '', '| day | trades | P&L |', '|---|---|---|'] + [f"| {x['day']} | {x['trades']} | {x['pnl']} |" for x in S['days']]
+        publish({})
+        publish({f'eval_{split}.json': S, f'eval_{split}.md': '\n'.join(md) + '\n'})
+
+if __name__ == '__main__':
+    main()
