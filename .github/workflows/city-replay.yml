@@ -3,11 +3,11 @@ on:
   workflow_dispatch:
     inputs:
       mode:
-        description: 'replay = one session for the City player; eval = dev/test evaluation'
+        description: 'replay = one session for the City player; eval = dev/test evaluation; compare = original vs strong-stock rules'
         required: true
         default: 'replay'
         type: choice
-        options: ['replay', 'eval']
+        options: ['replay', 'eval', 'compare']
       day:
         description: 'replay: session date YYYY-MM-DD (blank = last session)'
         required: false
@@ -49,4 +49,5 @@ jobs:
           SESSIONS: ${{ inputs.sessions }}
         run: |
           if [ "$MODE" = "replay" ]; then python city_replay.py replay "$DAY"
+          elif [ "$MODE" = "compare" ]; then python city_replay.py compare "$SPLIT" "$SESSIONS"
           else python city_replay.py eval "$SPLIT" "$SESSIONS"; fi
