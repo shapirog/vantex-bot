@@ -2669,3 +2669,4 @@
 {"event": "mom_exit", "sym": "MNTK", "why": "end of day", "ts": "2026-11-16T15:50:11-05:00"}
 {"event": "mom_reject", "sym": "SMMT", "body": {"symbol": "SMMT", "qty": "41", "side": "buy", "type": "market", "time_in_force": "day", "client_order_id": "MOM-SMMT-x-1794862213"}, "err": "{\"available\":\"0\",\"code\":40310000,\"existing_qty\":\"41\",\"held_for_orders\":\"41\",\"message\":\"insufficient qty available for order (requested: 41, available: 0)\",\"related_orders\":[\"53e96517-3642-482f-a864-b0", "ts": "2026-11-16T15:50:13-05:00"}
 {"event": "mom_exit", "sym": "SMMT", "why": "end of day", "ts": "2026-11-16T15:50:13-05:00"}
+{"event": "market_closed", "ts": "2026-11-16T18:22:35-05:00"}
