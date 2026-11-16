@@ -70,3 +70,25 @@ def test_summary_reports_required_metrics():
     for k in ('trades', 'net_pnl', 'max_drawdown', 'worst_day', 'avg_exposure', 'R_distribution', 'by_setup', 'rejected_or_blocked', 'losing_days', 'warning'):
         assert k in S, k
     assert S['net_pnl'] == 10.0 and S['max_drawdown'] == 10.0 and S['worst_day'] == ('2026-01-02', -10.0)
+
+def test_parse_day_accepts_phone_formats():
+    from datetime import date
+    for x in ('2026-11-13', ' 2026-11-13 ', '2026\u201311\u201313', '2026/11/13', '11/13/2026', '11-13-2026'):
+        assert CR.parse_day(x) == date(2026, 11, 13), x
+
+def test_publish_first_call_without_files_does_not_commit(monkeypatch, tmp_path):
+    calls = []
+    monkeypatch.setattr(CR, 'OUT', str(tmp_path / 'out'))
+    monkeypatch.setenv('GH_TOKEN', 'x'); monkeypatch.setenv('GITHUB_REPOSITORY', 'a/b')
+    class R: returncode = 1
+    monkeypatch.setattr(CR.subprocess, 'run', lambda cmd, **k: (calls.append(cmd), R())[1])
+    CR.publish({})
+    assert not any('commit' in c for c in calls)
+
+def test_compare_variants_share_data(monkeypatch):
+    M = RMarket(); RP = make(monkeypatch, M)
+    data = RP.load_day(TODAY, 16 * 60)
+    out = {k: RP.run_day(TODAY, 16 * 60, state=dict(equity=2500.0, daytrades=[], pdt=False), data=data, cfg=c) for k, c in CR.variant_configs(RP.cfg).items()}
+    assert len(out['A_original']['trades']) >= 1                                # ACME breakout (+2% only)
+    assert len(out['C_strong_volume']['trades']) == 0                          # +2% is not a strong mover
+    assert RP.cfg['signals']['strong_only'] is False                           # the base config is untouched
