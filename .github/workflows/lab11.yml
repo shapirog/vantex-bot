@@ -1,0 +1,25 @@
+name: Vantex lab 11 (Stocks in Play 5-min opening range breakout)
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: vantex-lab11
+  cancel-in-progress: true
+jobs:
+  lab:
+    runs-on: ubuntu-latest
+    timeout-minutes: 240
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install requests numpy
+      - name: Replicate the Stocks in Play ORB on Sep 2025 - Nov 2026 (read-only, places no trades)
+        env:
+          APCA_API_KEY_ID: ${{ secrets.APCA_API_KEY_ID }}
+          APCA_API_SECRET_KEY: ${{ secrets.APCA_API_SECRET_KEY }}
+          SEC_UA: ${{ secrets.SEC_UA }}
+          GH_TOKEN: ${{ github.token }}
+        run: python lab11.py
