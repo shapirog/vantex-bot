@@ -1,16 +1,16 @@
 """
-Vantex Early Bird - tiny-float mover ALERTS from 3:00 to 9:30 AM ET. Read-only: places NO orders (paper keys only).
+Vantex Early Bird - tiny-float mover ALERTS from 3:00 AM to 4:00 PM ET. Read-only: places NO orders (paper keys only).
 
 Each weekday:
   ~2:30 AM  builds today's watch list: active NASDAQ/NYSE/AMEX common stocks, last close $0.50-$20,
             shares outstanding <= 10M (latest SEC filing; split-adjusted), with 20-day average volume.
-  3:00-9:30 EVERY MINUTE (one long-running job, handed over at 7:55 AM because GitHub jobs stop at 6 hours):
+  3:00 AM-4:00 PM EVERY MINUTE (long-running jobs handed over at 7:55 AM and 12:55 PM because GitHub jobs stop at 6 hours):
             before 4:00 AM  -> Alpaca 'overnight' feed: the REAL-TIME indicative quote midpoint (overnight trades are
                                15 min late on the free plan, so they are only used if newer)
-            from 4:00 AM    -> real-time full-market SIP if the paid plan is active; otherwise the freshest of LIVE IEX
+            from 4:00 AM    -> (premarket and regular session) real-time full-market SIP if the paid plan is active; otherwise the freshest of LIVE IEX
                                (one exchange) and 15-min-delayed SIP. Every alert says LIVE or how old its price is.
             ALERT when a watch-list stock is >= +10% vs yesterday's close, has traded in the last 60 min, and has
-            >= $10K (overnight) / $25K (premarket) traded today (volume can lag: overnight and full-market volume are 15 min late on the free plan). Re-alerts only if it climbs another 15 points.
+            >= $10K (overnight) / $25K (premarket) / $100K (regular session) traded today (volume can lag: overnight and full-market volume are 15 min late on the free plan). Re-alerts only if it climbs another 15 points.
             Push to your phone (NTFY_TOPIC) with % change, price, volume, shares outstanding and the latest headline.
 Every alert is logged to the 'live-earlybird' branch (alerts.jsonl) so we can later test which alerts actually ran.
 This is a WATCH tool. It is not a tested strategy and it does not trade.
@@ -33,11 +33,11 @@ TOK = os.environ.get('GH_TOKEN'); NTFY = os.environ.get('NTFY_TOPIC')
 BRANCH = 'live-earlybird'
 PMIN, PMAX, SH_MAX = 0.50, 20.0, 10_000_000
 UP, REALERT, FRESH_MIN = 10.0, 15.0, 60
-MIN_DV = {'overnight': 10_000, 'premarket': 25_000}
-START, END = 3 * 60, 9 * 60 + 30
+MIN_DV = {'overnight': 10_000, 'premarket': 25_000, 'regular': 100_000}
+START, END = 3 * 60, 16 * 60
 LOOP_S = 60                                   # scan every minute
-MAX_RUN_S = 330 * 60                          # GitHub jobs stop at 6 h; two runs cover 3:00-9:30
-HANDOFF = 7 * 60 + 55                         # the 2:30 AM run stops at 7:55 so the 7:50 run takes over
+MAX_RUN_S = 330 * 60                          # GitHub jobs stop at 6 h; three runs cover 3:00 AM-4:00 PM
+HANDOFFS = (7 * 60 + 55, 12 * 60 + 55)        # a run stops at the first hand-over time after it started; the next run takes over
 
 def sh(*a, check=True): return subprocess.run(list(a), check=check, capture_output=True, text=True)
 
@@ -115,6 +115,7 @@ def headline(syms):
                                          limit=50, sort='desc', include_content='false'))
     H = {}
     for n in (r.json().get('news') or []) if r is not None and r.ok else []:
+        if len(n.get('symbols') or []) > 4 or re.search(ROUNDUP, (n.get('headline') or '').lower()): continue   # lists of movers are not news
         for s in n.get('symbols') or []:
             if s in syms and s not in H: H[s] = n.get('headline', '')[:110]
     return H
@@ -128,6 +129,7 @@ def fmt(n):
     return f'{n / 1e6:.1f}M' if n >= 1e6 else f'{n / 1e3:.0f}K' if n >= 1e3 else str(int(n))
 
 PLAN = {'sip_live': None}
+ROUNDUP = r'stocks moving|movers|top gainers|top losers|biggest movers|stocks to watch|stocks trading|mid-day|midday|market update|session\b|shares are trading|here are \d+'
 
 def pick(sn_list, overnight):
     """freshest live-ish price from several snapshots of one stock -> (price, time, source, bid, ask) or None.
@@ -146,7 +148,7 @@ def pick(sn_list, overnight):
 
 def scan_once(W, st, today):
     now = datetime.now(ET); m = now.hour * 60 + now.minute
-    session = 'overnight' if (m < 240 or m >= 20 * 60) else 'premarket'
+    session = 'overnight' if (m < 240 or m >= 20 * 60) else 'premarket' if m < 570 else 'regular'
     syms = sorted(W)
     if session == 'overnight':
         srcs = [('overnight', snapshots(syms, 'overnight'))]
@@ -179,7 +181,7 @@ def scan_once(W, st, today):
             start = datetime.combine(today, datetime.min.time(), ET) + timedelta(hours=4)
             if srcs[0][0] == 'sip live': V1, V2 = volumes(cs, start, 'sip_live'), {}
             else: V1, V2 = volumes(cs, start, 'sip'), volumes(cs, start, 'iex')
-            for c in cands: c['vol'] = max(V1.get(c['sym'], 0.0), V2.get(c['sym'], 0.0)); c['vol_note'] = 'premarket volume'
+            for c in cands: c['vol'] = max(V1.get(c['sym'], 0.0), V2.get(c['sym'], 0.0)); c['vol_note'] = 'volume since 4 AM'
         for c in cands:
             c['dv'] = round(c['px'] * c['vol'])
             if c['dv'] >= MIN_DV[session]: hits.append(c)
@@ -217,7 +219,7 @@ def main():
     t_start = time.time()
     while True:                                                         # one long run: a scan every LOOP_S seconds
         now = datetime.now(ET); m = now.hour * 60 + now.minute
-        if m > END or (time.time() - t_start) > MAX_RUN_S or (HANDOFF and m >= HANDOFF and t_start_m(t_start) < HANDOFF): break
+        if m >= END or (time.time() - t_start) > MAX_RUN_S or any(t_start_m(t_start) < h - 10 and h <= m for h in HANDOFFS): break
         if m >= START:
             try: scan_once(W, st, today)
             except Exception as e: log('scan error', type(e).__name__, str(e)[:200])
