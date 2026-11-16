@@ -46,6 +46,12 @@ DEFAULTS = {
         'ema_fast': 9, 'ema_slow': 20,
         'chart_emas': [9, 20],
         'target_r': 2.0,
+        # "strong stocks only": the traders' stocks-in-play filter. Off = the original rules.
+        'strong_only': False,
+        'strong_min_day_change_pct': 10.0,               # longs: already up this much on the day (bearish: down this much)
+        'strong_min_rvol': 5.0,                           # time-of-day relative volume
+        'strong_require_catalyst': True,                  # a fresh, verified, non-negative news catalyst (bearish: any verified or negative news)
+        'block_negative_news': False,                     # longs: never buy a stock with offering / dilution / compliance news
     },
     'risk': {
         'risk_per_trade_pct': 0.50,                       # $12.50 on $2,500
@@ -207,7 +213,7 @@ def _side_levels(f, side):
     keys = ('or_high', 'pm_high', 'prior_high', 'high20') if side > 0 else ('or_low', 'pm_low', 'prior_low', 'low20')
     return [(k, L[k]) for k in keys if k in L]
 
-def evaluate(f, bars, side, cfg=DEFAULTS, catalyst=None):
+def _evaluate(f, bars, side, cfg=DEFAULTS, catalyst=None):
     """One side of one stock. Returns dict(status, checks, warnings, level, trigger, stop, target, reasons).
     status: confirmed | developing | extended | rejected | watching. Only 'confirmed' may become an order."""
     S = cfg['signals']; R = cfg['risk']
@@ -303,6 +309,36 @@ def evaluate(f, bars, side, cfg=DEFAULTS, catalyst=None):
     out['reasons'] = ([f"failed: {', '.join(failed)}"] if failed else []) + ([f"waiting: {', '.join(pending)}"] if pending else []) + \
                      (['extended: no reasonable entry nearby'] if out['status'] == 'extended' else [])
     if out['status'] == 'confirmed': out['reasons'] = ['all confirmations passed']
+    return out
+
+def strong_checks(f, side, catalyst, S):
+    """the stocks-in-play filter as named checks (name, ok, detail)"""
+    out = []
+    if S.get('strong_only'):
+        x = S['strong_min_day_change_pct']; chg = f['chg_pct']
+        out.append(('strong mover', chg >= x if side > 0 else chg <= -x, f"{chg:+.1f}% on the day (need {'+' if side > 0 else '-'}{x:g}%)"))
+        rv = f['rvol'] or 0
+        out.append(('heavy volume', rv >= S['strong_min_rvol'], f"{rv:.1f}x normal for the time of day (need {S['strong_min_rvol']:g}x)"))
+        if S['strong_require_catalyst']:
+            c = catalyst or {}
+            good = [t for t in (c.get('types') or []) if t not in NEGATIVE] if c.get('verified') else []
+            ok = bool(good) if side > 0 else bool(c.get('verified') or c.get('negative'))
+            out.append(('real news catalyst', ok, (', '.join(good) + ': ' + (c.get('headline') or '')[:80]) if good else 'no verified catalyst found'))
+    if S.get('block_negative_news') and side > 0 and catalyst and catalyst.get('negative'):
+        out.append(('no dilution / negative news', False, ', '.join(catalyst['negative'])))
+    return out
+
+def evaluate(f, bars, side, cfg=DEFAULTS, catalyst=None):
+    """One side of one stock, plus the optional strong-stocks filter. Only 'confirmed' may become an order."""
+    out = _evaluate(f, bars, side, cfg, catalyst)
+    if f is None: return out
+    sc = strong_checks(f, side, catalyst, cfg['signals'])
+    if not sc: return out
+    out['checks'] = [dict(name=n, ok=o, detail=d) for n, o, d in sc] + out['checks']
+    bad = [n for n, o, d in sc if not o]
+    if bad and out['status'] in ('confirmed', 'developing', 'watching'):
+        out['status'] = 'rejected' if out['status'] != 'watching' else 'watching'
+        out['reasons'] = [f"not a strong stock: {', '.join(bad)}"] + [r for r in out['reasons'] if r != 'all confirmations passed']
     return out
 
 def rank_score(f, ev_long, ev_short, cat=None):
