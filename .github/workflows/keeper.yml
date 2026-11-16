@@ -1,0 +1,25 @@
+name: Vantex Keeper (starts the bots, places no trades)
+on:
+  schedule:
+    - cron: '17 * * * *'      # backup only: restarts the Keeper if its own relay ever breaks
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: write
+concurrency:
+  group: vantex-keeper
+  cancel-in-progress: false      # a new run waits for the current one, so there is never more than one
+jobs:
+  keep:
+    runs-on: ubuntu-latest
+    timeout-minutes: 350
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install requests
+      - name: Keep every Vantex bot running (starts workflows only)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python keeper.py
