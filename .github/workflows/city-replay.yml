@@ -1,0 +1,52 @@
+name: Vantex City replay and evaluation
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: 'replay = one session for the City player; eval = dev/test evaluation'
+        required: true
+        default: 'replay'
+        type: choice
+        options: ['replay', 'eval']
+      day:
+        description: 'replay: session date YYYY-MM-DD (blank = last session)'
+        required: false
+        default: ''
+      split:
+        description: 'eval: dev (development period) or test (untouched out-of-sample, run once)'
+        required: false
+        default: 'dev'
+        type: choice
+        options: ['dev', 'test']
+      sessions:
+        description: 'eval: number of sessions to sample'
+        required: false
+        default: '20'
+permissions:
+  contents: write
+concurrency:
+  group: vantex-city-replay
+  cancel-in-progress: false
+jobs:
+  replay:
+    runs-on: ubuntu-latest
+    timeout-minutes: 340
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install requests pytest
+      - run: python -m pytest -q tests
+      - name: Replay (read-only, places no orders)
+        env:
+          APCA_API_KEY_ID: ${{ secrets.APCA_API_KEY_ID }}
+          APCA_API_SECRET_KEY: ${{ secrets.APCA_API_SECRET_KEY }}
+          GH_TOKEN: ${{ github.token }}
+          MODE: ${{ inputs.mode }}
+          DAY: ${{ inputs.day }}
+          SPLIT: ${{ inputs.split }}
+          SESSIONS: ${{ inputs.sessions }}
+        run: |
+          if [ "$MODE" = "replay" ]; then python city_replay.py replay "$DAY"
+          else python city_replay.py eval "$SPLIT" "$SESSIONS"; fi
