@@ -1,0 +1,35 @@
+name: Vantex City engine (market-wide scanner + paper trader)
+on:
+  schedule:
+    # backup starts (UTC) in case a relay or the Keeper misses; extra runs wait in the queue
+    - cron: '53 8 * * 1-5'
+    - cron: '23 13 * * 1-5'
+    - cron: '43 17 * * 1-5'
+  workflow_dispatch:
+permissions:
+  contents: write
+  actions: write
+concurrency:
+  group: vantex-city
+  cancel-in-progress: false
+jobs:
+  city:
+    runs-on: ubuntu-latest
+    timeout-minutes: 350
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install requests pytest
+      - name: Safety tests (the engine does not start if any fail)
+        run: python -m pytest -q tests
+      - name: Run the City engine (paper account only)
+        env:
+          APCA_API_KEY_ID: ${{ secrets.APCA_API_KEY_ID }}
+          APCA_API_SECRET_KEY: ${{ secrets.APCA_API_SECRET_KEY }}
+          VANTEX_PAPER_ACCOUNT: ${{ secrets.VANTEX_PAPER_ACCOUNT }}
+          NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
+          SEC_UA: ${{ secrets.SEC_UA }}
+          GH_TOKEN: ${{ github.token }}
+        run: python city_engine.py
