@@ -1,13 +1,12 @@
 name: Vantex Early Bird (tiny-float alerts 3 AM-4 PM, no trading)
 on:
   schedule:
-    # times are UTC (winter). Three hand-offs because a GitHub job can run at most 6 hours:
-    # 7:30 = 2:30 AM Eastern (watch list, then every minute until 7:55 AM)
-    # 12:50 = 7:50 AM Eastern (every minute 7:55 AM - 12:55 PM)
-    # 17:50 = 12:50 PM Eastern (every minute 12:55 - 4:00 PM)
-    - cron: '30 7 * * 1-5'
-    - cron: '50 12 * * 1-5'
-    - cron: '50 17 * * 1-5'
+    # Each run starts the next one itself (relay), Sunday 6 PM -> Friday 4 PM Eastern.
+    # These schedules are only backups that restart the relay if it ever breaks (times are UTC, winter):
+    - cron: '7 23 * * 0'      # Sunday 6:07 PM Eastern: starts the week
+    - cron: '30 7 * * 1-5'    # 2:30 AM Eastern
+    - cron: '50 12 * * 1-5'   # 7:50 AM Eastern
+    - cron: '50 17 * * 1-5'   # 12:50 PM Eastern
   workflow_dispatch:
     inputs:
       force:
@@ -15,9 +14,10 @@ on:
         default: '1'
 permissions:
   contents: write
+  actions: write
 concurrency:
   group: vantex-earlybird
-  cancel-in-progress: false
+  cancel-in-progress: false      # a new run waits for the current one, so there is never more than one
 jobs:
   scan:
     runs-on: ubuntu-latest
