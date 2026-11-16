@@ -38,6 +38,7 @@ DATA = 'https://data.alpaca.markets'
 FLOAT_MAX = 10_000_000
 SPLIT_DATE = '2026-05-01'
 MIN_TEST_TRADES, MIN_PF = 100, 1.2
+MIN_SANE = 200_000                     # some filings report 1 share or counts in thousands/millions: treat as unknown
 MAX_AGE_DAYS = 400                     # a share count older than this is treated as unknown
 EQUITY, MAX_POS = 2500.0, 500.0
 SEC_FEE, TAF = 27.8e-6, 0.000166
@@ -131,6 +132,7 @@ def shares_on(sym, day, SH, SP):
     prior = [x for x in L if x[0] < day]
     if not prior: return None, 'no count filed yet'
     fl, en, v = prior[-1]
+    if v < MIN_SANE: return None, 'implausible SEC count (< 200k shares reported)'
     if (date.fromisoformat(day) - date.fromisoformat(fl)).days > MAX_AGE_DAYS: return None, 'count too old'
     for ex, fac in SP.get(sym, []):
         if en < ex <= day: v *= fac
