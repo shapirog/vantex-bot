@@ -1596,3 +1596,28 @@
 {"event": "crypto_check", "coin": "BTC", "price": 64536.9, "ema20": 64671.74, "ema50": 64783.74, "have": 0, "want": 0, "ts": "2026-11-16T03:48:57-05:00"}
 {"event": "crypto_check", "coin": "ETH", "price": 1810.6, "ema20": 1813.37, "ema50": 1815.98, "have": 0, "want": 0, "ts": "2026-11-16T03:48:57-05:00"}
 {"event": "handoff", "why": "runtime limit", "ts": "2026-11-16T03:52:56-05:00"}
+{"event": "crypto_check", "coin": "BTC", "price": 64499.71, "ema20": 64666.3, "ema50": 64781.5, "have": 0, "want": 0, "ts": "2026-11-16T03:53:14-05:00"}
+{"event": "crypto_check", "coin": "ETH", "price": 1810.6, "ema20": 1813.02, "ema50": 1815.84, "have": 0, "want": 0, "ts": "2026-11-16T03:53:15-05:00"}
+{"event": "crypto_check", "coin": "BTC", "price": 64426.16, "ema20": 64658.91, "ema50": 64778.46, "have": 0, "want": 0, "ts": "2026-11-16T03:58:25-05:00"}
+{"event": "crypto_check", "coin": "ETH", "price": 1810.6, "ema20": 1812.81, "ema50": 1815.75, "have": 0, "want": 0, "ts": "2026-11-16T03:58:26-05:00"}
+{"event": "crypto_check", "coin": "BTC", "price": 64304.2, "ema20": 64625.21, "ema50": 64759.91, "have": 0, "want": 0, "ts": "2026-11-16T04:03:27-05:00"}
+{"event": "crypto_check", "coin": "ETH", "price": 1798.96, "ema20": 1811.3, "ema50": 1815.01, "have": 0, "want": 0, "ts": "2026-11-16T04:03:27-05:00"}
+{"event": "error", "where": "publish", "err": "HTTPSConnectionPool(host='paper-api.alpaca.markets', port=443): Max retries exceeded with url: /v2/account (Caused by NewConnectionError(\"HTTPSConnection(host='paper-api.alpaca.markets', port=443): Failed to establish a new connection: [Errno 111] Connection refused\"))", "ts": "2026-11-16T04:07:45-05:00"}
+{"event": "error", "where": "step", "coin": "BTC", "err": "HTTPSConnectionPool(host='paper-api.alpaca.markets', port=443): Max retries exceeded with url: /v2/positions/BTCUSD (Caused by ConnectTimeoutError(<HTTPSConnection(host='paper-api.alpaca.markets', port=443) at 0x783d1fb7fd40>, 'Connection to paper-api.alpaca.markets timed out. (connect timeout=30)')", "ts": "2026-11-16T04:09:05-05:00"}
+{"event": "error", "where": "step", "coin": "ETH", "err": "HTTPSConnectionPool(host='paper-api.alpaca.markets', port=443): Max retries exceeded with url: /v2/positions/ETHUSD (Caused by ConnectTimeoutError(<HTTPSConnection(host='paper-api.alpaca.markets', port=443) at 0x783d1fb7eb10>, 'Connection to paper-api.alpaca.markets timed out. (connect timeout=30)')", "ts": "2026-11-16T04:09:35-05:00"}
+{"event": "error", "where": "publish", "err": "HTTPSConnectionPool(host='paper-api.alpaca.markets', port=443): Max retries exceeded with url: /v2/account (Caused by ConnectTimeoutError(<HTTPSConnection(host='paper-api.alpaca.markets', port=443) at 0x783d1fb7f5f0>, 'Connection to paper-api.alpaca.markets timed out. (connect timeout=30)'))", "ts": "2026-11-16T04:10:05-05:00"}
+{"event": "crypto_check", "coin": "BTC", "price": 64200.0, "ema20": 64612.95, "ema50": 64754.87, "have": 0, "want": 0, "ts": "2026-11-16T04:14:43-05:00"}
+{"event": "crypto_check", "coin": "ETH", "price": 1796.14, "ema20": 1811.05, "ema50": 1814.91, "have": 0, "want": 0, "ts": "2026-11-16T04:14:43-05:00"}
+{"event": "crypto_check", "coin": "BTC", "price": 64167.7, "ema20": 64570.22, "ema50": 64731.65, "have": 0, "want": 0, "ts": "2026-11-16T04:19:44-05:00"}
+{"event": "crypto_check", "coin": "ETH", "price": 1796.14, "ema20": 1809.38, "ema50": 1814.07, "have": 0, "want": 0, "ts": "2026-11-16T04:19:44-05:00"}
+{"event": "crypto_check", "coin": "BTC", "price": 64256.1, "ema20": 64578.97, "ema50": 64735.25, "have": 0, "want": 0, "ts": "2026-11-16T04:24:54-05:00"}
+{"event": "crypto_check", "coin": "ETH", "price": 1796.14, "ema20": 1809.65, "ema50": 1814.18, "have": 0, "want": 0, "ts": "2026-11-16T04:24:54-05:00"}
+{"event": "crypto_check", "coin": "BTC", "price": 64329.0, "ema20": 64582.01, "ema50": 64736.5, "have": 0, "want": 0, "ts": "2026-11-16T04:29:54-05:00"}
+{"event": "crypto_check", "coin": "ETH", "price": 1796.14, "ema20": 1809.81, "ema50": 1814.25, "have": 0, "want": 0, "ts": "2026-11-16T04:29:55-05:00"}
+{"event": "crypto_check", "coin": "BTC", "price": 64352.64, "ema20": 64551.28, "ema50": 64717.71, "have": 0, "want": 0, "ts": "2026-11-16T04:34:56-05:00"}
+{"event": "crypto_check", "coin": "ETH", "price": 1796.14, "ema20": 1808.49, "ema50": 1813.52, "have": 0, "want": 0, "ts": "2026-11-16T04:34:56-05:00"}
+{"event": "crypto_check", "coin": "BTC", "price": 64344.2, "ema20": 64552.35, "ema50": 64718.15, "have": 0, "want": 0, "ts": "2026-11-16T04:39:56-05:00"}
+{"event": "crypto_check", "coin": "ETH", "price": 1796.14, "ema20": 1808.39, "ema50": 1813.48, "have": 0, "want": 0, "ts": "2026-11-16T04:39:57-05:00"}
+{"event": "crypto_check", "coin": "BTC", "price": 64275.61, "ema20": 64558.14, "ema50": 64720.54, "have": 0, "want": 0, "ts": "2026-11-16T04:44:58-05:00"}
+{"event": "crypto_check", "coin": "ETH", "price": 1796.14, "ema20": 1808.58, "ema50": 1813.56, "have": 0, "want": 0, "ts": "2026-11-16T04:44:58-05:00"}
+{"event": "handoff", "why": "runtime limit", "ts": "2026-11-16T04:48:24-05:00"}
