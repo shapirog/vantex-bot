@@ -1,0 +1,2319 @@
+{
+ "updated": "2026-11-16T18:16:42-05:00",
+ "rule": "EMA9 x VWAP(hlcc4) cross, 3-min candles, stop-and-reverse, flat 15:57, 0.03% slippage",
+ "sessions": 300,
+ "pooled": {
+  "train": {
+   "trades": 17542,
+   "win_rate_pct": 28.5,
+   "mean_bps": -5.91,
+   "total_pct": -1036.5,
+   "profit_factor": 0.85,
+   "ci95_mean_bps_day_clustered": [
+    -9.36,
+    -2.03
+   ]
+  },
+  "test": {
+   "trades": 14307,
+   "win_rate_pct": 29.4,
+   "mean_bps": -4.88,
+   "total_pct": -698.1,
+   "profit_factor": 0.88,
+   "ci95_mean_bps_day_clustered": [
+    -7.68,
+    -1.85
+   ]
+  },
+  "train_long": {
+   "trades": 8882,
+   "win_rate_pct": 27.5,
+   "mean_bps": -9.39,
+   "total_pct": -833.6,
+   "profit_factor": 0.77,
+   "ci95_mean_bps_day_clustered": [
+    -14.86,
+    -4.04
+   ]
+  },
+  "test_long": {
+   "trades": 7121,
+   "win_rate_pct": 27.9,
+   "mean_bps": -6.74,
+   "total_pct": -479.7,
+   "profit_factor": 0.83,
+   "ci95_mean_bps_day_clustered": [
+    -11.88,
+    -1.49
+   ]
+  }
+ },
+ "picked_on_train": {
+  "best3_on_train": [
+   "CVNA",
+   "UPST",
+   "INTC"
+  ],
+  "their_train": {
+   "trades": 1288,
+   "win_rate_pct": 32.1,
+   "mean_bps": 5.79,
+   "total_pct": 74.5,
+   "profit_factor": 1.12,
+   "ci95_mean_bps_day_clustered": [
+    -2.81,
+    15.45
+   ]
+  },
+  "their_test": {
+   "trades": 1026,
+   "win_rate_pct": 32.5,
+   "mean_bps": -1.94,
+   "total_pct": -19.9,
+   "profit_factor": 0.96,
+   "ci95_mean_bps_day_clustered": [
+    -9.63,
+    6.41
+   ]
+  },
+  "their_test_long": {
+   "trades": 510,
+   "win_rate_pct": 31.8,
+   "mean_bps": -5.18,
+   "total_pct": -26.4,
+   "profit_factor": 0.9,
+   "ci95_mean_bps_day_clustered": [
+    -17.64,
+    7.7
+   ]
+  },
+  "best1": "CVNA",
+  "best1_test": {
+   "trades": 347,
+   "win_rate_pct": 30.3,
+   "mean_bps": -5.96,
+   "total_pct": -20.7,
+   "profit_factor": 0.89,
+   "ci95_mean_bps_day_clustered": [
+    -18.3,
+    7.99
+   ]
+  },
+  "best1_test_account": {
+   "end_equity": 1976.46,
+   "max_dd_pct": 31.1
+  }
+ },
+ "positive_in_both_periods": [
+  "INTC",
+  "SHOP"
+ ],
+ "per_symbol": {
+  "SPY": {
+   "sessions": 300,
+   "train": {
+    "trades": 408,
+    "win_rate_pct": 24.0,
+    "mean_bps": -6.32,
+    "total_pct": -25.8,
+    "profit_factor": 0.59,
+    "ci95_mean_bps_day_clustered": [
+     -9.35,
+     -2.76
+    ]
+   },
+   "test": {
+    "trades": 381,
+    "win_rate_pct": 27.6,
+    "mean_bps": -4.69,
+    "total_pct": -17.9,
+    "profit_factor": 0.63,
+    "ci95_mean_bps_day_clustered": [
+     -7.33,
+     -1.53
+    ]
+   },
+   "train_long": {
+    "trades": 214,
+    "win_rate_pct": 25.2,
+    "mean_bps": -5.89,
+    "total_pct": -12.6,
+    "profit_factor": 0.61,
+    "ci95_mean_bps_day_clustered": [
+     -9.9,
+     -1.49
+    ]
+   },
+   "test_long": {
+    "trades": 195,
+    "win_rate_pct": 25.6,
+    "mean_bps": -5.93,
+    "total_pct": -11.6,
+    "profit_factor": 0.55,
+    "ci95_mean_bps_day_clustered": [
+     -9.11,
+     -2.5
+    ]
+   },
+   "account_test_both": {
+    "end_equity": 2087.43,
+    "max_dd_pct": 20.8
+   },
+   "account_test_long": {
+    "end_equity": 2225.43,
+    "max_dd_pct": 13.3
+   }
+  },
+  "QQQ": {
+   "sessions": 300,
+   "train": {
+    "trades": 434,
+    "win_rate_pct": 26.3,
+    "mean_bps": -7.07,
+    "total_pct": -30.7,
+    "profit_factor": 0.63,
+    "ci95_mean_bps_day_clustered": [
+     -10.75,
+     -2.76
+    ]
+   },
+   "test": {
+    "trades": 370,
+    "win_rate_pct": 28.6,
+    "mean_bps": -4.89,
+    "total_pct": -18.1,
+    "profit_factor": 0.73,
+    "ci95_mean_bps_day_clustered": [
+     -9.08,
+     0.18
+    ]
+   },
+   "train_long": {
+    "trades": 224,
+    "win_rate_pct": 27.2,
+    "mean_bps": -7.0,
+    "total_pct": -15.7,
+    "profit_factor": 0.62,
+    "ci95_mean_bps_day_clustered": [
+     -11.5,
+     -1.63
+    ]
+   },
+   "test_long": {
+    "trades": 191,
+    "win_rate_pct": 26.2,
+    "mean_bps": -7.53,
+    "total_pct": -14.4,
+    "profit_factor": 0.59,
+    "ci95_mean_bps_day_clustered": [
+     -12.85,
+     -1.66
+    ]
+   },
+   "account_test_both": {
+    "end_equity": 2079.03,
+    "max_dd_pct": 19.5
+   },
+   "account_test_long": {
+    "end_equity": 2162.49,
+    "max_dd_pct": 15.9
+   }
+  },
+  "IWM": {
+   "sessions": 300,
+   "train": {
+    "trades": 404,
+    "win_rate_pct": 32.2,
+    "mean_bps": -3.85,
+    "total_pct": -15.6,
+    "profit_factor": 0.81,
+    "ci95_mean_bps_day_clustered": [
+     -8.5,
+     1.47
+    ]
+   },
+   "test": {
+    "trades": 340,
+    "win_rate_pct": 31.5,
+    "mean_bps": -5.68,
+    "total_pct": -19.3,
+    "profit_factor": 0.69,
+    "ci95_mean_bps_day_clustered": [
+     -9.58,
+     -1.08
+    ]
+   },
+   "train_long": {
+    "trades": 205,
+    "win_rate_pct": 31.7,
+    "mean_bps": -4.18,
+    "total_pct": -8.6,
+    "profit_factor": 0.8,
+    "ci95_mean_bps_day_clustered": [
+     -10.69,
+     3.21
+    ]
+   },
+   "test_long": {
+    "trades": 176,
+    "win_rate_pct": 30.1,
+    "mean_bps": -7.86,
+    "total_pct": -13.8,
+    "profit_factor": 0.59,
+    "ci95_mean_bps_day_clustered": [
+     -13.04,
+     -1.72
+    ]
+   },
+   "account_test_both": {
+    "end_equity": 2055.17,
+    "max_dd_pct": 21.4
+   },
+   "account_test_long": {
+    "end_equity": 2174.33,
+    "max_dd_pct": 16.6
+   }
+  },
+  "DIA": {
+   "sessions": 300,
+   "train": {
+    "trades": 411,
+    "win_rate_pct": 25.3,
+    "mean_bps": -7.2,
+    "total_pct": -29.6,
+    "profit_factor": 0.55,
+    "ci95_mean_bps_day_clustered": [
+     -10.1,
+     -3.91
+    ]
+   },
+   "test": {
+    "trades": 347,
+    "win_rate_pct": 27.4,
+    "mean_bps": -5.92,
+    "total_pct": -20.6,
+    "profit_factor": 0.58,
+    "ci95_mean_bps_day_clustered": [
+     -8.59,
+     -3.05
+    ]
+   },
+   "train_long": {
+    "trades": 214,
+    "win_rate_pct": 25.2,
+    "mean_bps": -7.86,
+    "total_pct": -16.8,
+    "profit_factor": 0.51,
+    "ci95_mean_bps_day_clustered": [
+     -11.55,
+     -3.55
+    ]
+   },
+   "test_long": {
+    "trades": 176,
+    "win_rate_pct": 27.8,
+    "mean_bps": -6.86,
+    "total_pct": -12.1,
+    "profit_factor": 0.52,
+    "ci95_mean_bps_day_clustered": [
+     -10.44,
+     -3.11
+    ]
+   },
+   "account_test_both": {
+    "end_equity": 2032.77,
+    "max_dd_pct": 19.8
+   },
+   "account_test_long": {
+    "end_equity": 2214.19,
+    "max_dd_pct": 12.4
+   }
+  },
+  "AAPL": {
+   "sessions": 300,
+   "train": {
+    "trades": 451,
+    "win_rate_pct": 23.3,
+    "mean_bps": -7.16,
+    "total_pct": -32.3,
+    "profit_factor": 0.71,
+    "ci95_mean_bps_day_clustered": [
+     -12.6,
+     -1.2
+    ]
+   },
+   "test": {
+    "trades": 341,
+    "win_rate_pct": 30.5,
+    "mean_bps": -1.97,
+    "total_pct": -6.7,
+    "profit_factor": 0.91,
+    "ci95_mean_bps_day_clustered": [
+     -6.85,
+     3.46
+    ]
+   },
+   "train_long": {
+    "trades": 233,
+    "win_rate_pct": 22.3,
+    "mean_bps": -8.34,
+    "total_pct": -19.4,
+    "profit_factor": 0.66,
+    "ci95_mean_bps_day_clustered": [
+     -15.21,
+     -0.9
+    ]
+   },
+   "test_long": {
+    "trades": 183,
+    "win_rate_pct": 33.3,
+    "mean_bps": 0.71,
+    "total_pct": 1.3,
+    "profit_factor": 1.03,
+    "ci95_mean_bps_day_clustered": [
+     -7.62,
+     9.58
+    ]
+   },
+   "account_test_both": {
+    "end_equity": 2324.62,
+    "max_dd_pct": 14.2
+   },
+   "account_test_long": {
+    "end_equity": 2524.35,
+    "max_dd_pct": 6.3
+   }
+  },
+  "MSFT": {
+   "sessions": 300,
+   "train": {
+    "trades": 443,
+    "win_rate_pct": 28.2,
+    "mean_bps": -6.47,
+    "total_pct": -28.7,
+    "profit_factor": 0.71,
+    "ci95_mean_bps_day_clustered": [
+     -10.91,
+     -1.41
+    ]
+   },
+   "test": {
+    "trades": 349,
+    "win_rate_pct": 25.5,
+    "mean_bps": -5.09,
+    "total_pct": -17.8,
+    "profit_factor": 0.8,
+    "ci95_mean_bps_day_clustered": [
+     -11.46,
+     2.73
+    ]
+   },
+   "train_long": {
+    "trades": 223,
+    "win_rate_pct": 27.4,
+    "mean_bps": -6.62,
+    "total_pct": -14.8,
+    "profit_factor": 0.7,
+    "ci95_mean_bps_day_clustered": [
+     -13.05,
+     0.44
+    ]
+   },
+   "test_long": {
+    "trades": 178,
+    "win_rate_pct": 26.4,
+    "mean_bps": -5.56,
+    "total_pct": -9.9,
+    "profit_factor": 0.77,
+    "ci95_mean_bps_day_clustered": [
+     -13.93,
+     4.87
+    ]
+   },
+   "account_test_both": {
+    "end_equity": 2078.82,
+    "max_dd_pct": 26.1
+   },
+   "account_test_long": {
+    "end_equity": 2256.87,
+    "max_dd_pct": 12.2
+   }
+  },
+  "NVDA": {
+   "sessions": 300,
+   "train": {
+    "trades": 439,
+    "win_rate_pct": 26.9,
+    "mean_bps": -3.97,
+    "total_pct": -17.4,
+    "profit_factor": 0.87,
+    "ci95_mean_bps_day_clustered": [
+     -11.37,
+     4.19
+    ]
+   },
+   "test": {
+    "trades": 361,
+    "win_rate_pct": 29.1,
+    "mean_bps": -5.92,
+    "total_pct": -21.4,
+    "profit_factor": 0.82,
+    "ci95_mean_bps_day_clustered": [
+     -13.41,
+     2.7
+    ]
+   },
+   "train_long": {
+    "trades": 216,
+    "win_rate_pct": 25.5,
+    "mean_bps": -3.87,
+    "total_pct": -8.3,
+    "profit_factor": 0.88,
+    "ci95_mean_bps_day_clustered": [
+     -15.11,
+     9.41
+    ]
+   },
+   "test_long": {
+    "trades": 183,
+    "win_rate_pct": 26.8,
+    "mean_bps": -10.51,
+    "total_pct": -19.2,
+    "profit_factor": 0.7,
+    "ci95_mean_bps_day_clustered": [
+     -20.61,
+     1.14
+    ]
+   },
+   "account_test_both": {
+    "end_equity": 1995.81,
+    "max_dd_pct": 28.0
+   },
+   "account_test_long": {
+    "end_equity": 2050.63,
+    "max_dd_pct": 19.6
+   }
+  },
+  "AMZN": {
+   "sessions": 300,
+   "train": {
+    "trades": 424,
+    "win_rate_pct": 30.4,
+    "mean_bps": -5.48,
+    "total_pct": -23.2,
+    "profit_factor": 0.8,
+    "ci95_mean_bps_day_clustered": [
+     -10.92,
+     0.64
+    ]
+   },
+   "test": {
+    "trades": 368,
+    "win_rate_pct": 27.7,
+    "mean_bps": -7.64,
+    "total_pct": -28.1,
+    "profit_factor": 0.71,
+    "ci95_mean_bps_day_clustered": [
+     -13.45,
+     -0.72
+    ]
+   },
+   "train_long": {
+    "trades": 213,
+    "win_rate_pct": 30.5,
+    "mean_bps": -4.7,
+    "total_pct": -10.0,
+    "profit_factor": 0.82,
+    "ci95_mean_bps_day_clustered": [
+     -12.43,
+     4.0
+    ]
+   },
+   "test_long": {
+    "trades": 178,
+    "win_rate_pct": 26.4,
+    "mean_bps": -9.86,
+    "total_pct": -17.6,
+    "profit_factor": 0.64,
+    "ci95_mean_bps_day_clustered": [
+     -18.24,
+     -0.07
+    ]
+   },
+   "account_test_both": {
+    "end_equity": 1874.93,
+    "max_dd_pct": 28.5
+   },
+   "account_test_long": {
+    "end_equity": 2090.72,
+    "max_dd_pct": 17.9
+   }
+  },
+  "GOOGL": {
+   "sessions": 300,
+   "train": {
+    "trades": 384,
+    "win_rate_pct": 29.7,
+    "mean_bps": -3.89,
+    "total_pct": -14.9,
+    "profit_factor": 0.86,
+    "ci95_mean_bps_day_clustered": [
+     -10.33,
+     3.59
+    ]
+   },
+   "test": {
+    "trades": 398,
+    "win_rate_pct": 27.4,
+    "mean_bps": -7.34,
+    "total_pct": -29.2,
+    "profit_factor": 0.73,
+    "ci95_mean_bps_day_clustered": [
+     -13.38,
+     -0.24
+    ]
+   },
+   "train_long": {
+    "trades": 201,
+    "win_rate_pct": 32.3,
+    "mean_bps": -0.36,
+    "total_pct": -0.7,
+    "profit_factor": 0.99,
+    "ci95_mean_bps_day_clustered": [
+     -9.65,
+     10.36
+    ]
+   },
+   "test_long": {
+    "trades": 198,
+    "win_rate_pct": 26.3,
+    "mean_bps": -10.27,
+    "total_pct": -20.3,
+    "profit_factor": 0.62,
+    "ci95_mean_bps_day_clustered": [
+     -18.36,
+     -0.99
+    ]
+   },
+   "account_test_both": {
+    "end_equity": 1849.3,
+    "max_dd_pct": 26.7
+   },
+   "account_test_long": {
+    "end_equity": 2032.91,
+    "max_dd_pct": 19.6
+   }
+  },
+  "META": {
+   "sessions": 300,
+   "train": {
+    "trades": 436,
+    "win_rate_pct": 26.6,
+    "mean_bps": -9.09,
+    "total_pct": -39.6,
+    "profit_factor": 0.66,
+    "ci95_mean_bps_day_clustered": [
+     -14.23,
+     -3.12
+    ]
+   },
+   "test": {
+    "trades": 375,
+    "win_rate_pct": 26.1,
+    "mean_bps": -10.74,
+    "total_pct": -40.3,
+    "profit_factor": 0.69,
+    "ci95_mean_bps_day_clustered": [
+     -18.47,
+     -2.03
+    ]
+   },
+   "train_long": {
+    "trades": 218,
+    "win_rate_pct": 27.1,
+    "mean_bps": -8.94,
+    "total_pct": -19.5,
+    "profit_factor": 0.67,
+    "ci95_mean_bps_day_clustered": [
+     -16.18,
+     -0.95
+    ]
+   },
+   "test_long": {
+    "trades": 184,
+    "win_rate_pct": 23.4,
+    "mean_bps": -16.14,
+    "total_pct": -29.7,
+    "profit_factor": 0.56,
+    "ci95_mean_bps_day_clustered": [
+     -26.49,
+     -4.64
+    ]
+   },
+   "account_test_both": {
+    "end_equity": 1652.94,
+    "max_dd_pct": 34.8
+   },
+   "account_test_long": {
+    "end_equity": 1847.7,
+    "max_dd_pct": 27.1
+   }
+  },
+  "TSLA": {
+   "sessions": 300,
+   "train": {
+    "trades": 452,
+    "win_rate_pct": 27.2,
+    "mean_bps": -4.75,
+    "total_pct": -21.5,
+    "profit_factor": 0.87,
+    "ci95_mean_bps_day_clustered": [
+     -13.0,
+     4.77
+    ]
+   },
+   "test": {
+    "trades": 400,
+    "win_rate_pct": 23.0,
+    "mean_bps": -13.52,
+    "total_pct": -54.1,
+    "profit_factor": 0.65,
+    "ci95_mean_bps_day_clustered": [
+     -22.23,
+     -2.94
+    ]
+   },
+   "train_long": {
+    "trades": 232,
+    "win_rate_pct": 27.6,
+    "mean_bps": -6.1,
+    "total_pct": -14.1,
+    "profit_factor": 0.84,
+    "ci95_mean_bps_day_clustered": [
+     -17.99,
+     8.34
+    ]
+   },
+   "test_long": {
+    "trades": 198,
+    "win_rate_pct": 22.2,
+    "mean_bps": -9.88,
+    "total_pct": -19.6,
+    "profit_factor": 0.75,
+    "ci95_mean_bps_day_clustered": [
+     -22.81,
+     5.11
+    ]
+   },
+   "account_test_both": {
+    "end_equity": 1433.58,
+    "max_dd_pct": 46.1
+   },
+   "account_test_long": {
+    "end_equity": 2037.12,
+    "max_dd_pct": 23.7
+   }
+  },
+  "AMD": {
+   "sessions": 300,
+   "train": {
+    "trades": 394,
+    "win_rate_pct": 29.9,
+    "mean_bps": -2.53,
+    "total_pct": -10.0,
+    "profit_factor": 0.94,
+    "ci95_mean_bps_day_clustered": [
+     -12.71,
+     9.27
+    ]
+   },
+   "test": {
+    "trades": 336,
+    "win_rate_pct": 31.5,
+    "mean_bps": -1.82,
+    "total_pct": -6.1,
+    "profit_factor": 0.96,
+    "ci95_mean_bps_day_clustered": [
+     -15.38,
+     14.59
+    ]
+   },
+   "train_long": {
+    "trades": 199,
+    "win_rate_pct": 29.1,
+    "mean_bps": -4.33,
+    "total_pct": -8.6,
+    "profit_factor": 0.89,
+    "ci95_mean_bps_day_clustered": [
+     -19.49,
+     12.13
+    ]
+   },
+   "test_long": {
+    "trades": 169,
+    "win_rate_pct": 30.8,
+    "mean_bps": -3.95,
+    "total_pct": -6.7,
+    "profit_factor": 0.92,
+    "ci95_mean_bps_day_clustered": [
+     -24.23,
+     17.61
+    ]
+   },
+   "account_test_both": {
+    "end_equity": 2284.04,
+    "max_dd_pct": 28.4
+   },
+   "account_test_long": {
+    "end_equity": 2305.4,
+    "max_dd_pct": 21.5
+   }
+  },
+  "NFLX": {
+   "sessions": 300,
+   "train": {
+    "trades": 425,
+    "win_rate_pct": 24.9,
+    "mean_bps": -8.62,
+    "total_pct": -36.6,
+    "profit_factor": 0.7,
+    "ci95_mean_bps_day_clustered": [
+     -14.49,
+     -1.64
+    ]
+   },
+   "test": {
+    "trades": 341,
+    "win_rate_pct": 32.0,
+    "mean_bps": 0.09,
+    "total_pct": 0.3,
+    "profit_factor": 1.0,
+    "ci95_mean_bps_day_clustered": [
+     -7.09,
+     8.6
+    ]
+   },
+   "train_long": {
+    "trades": 214,
+    "win_rate_pct": 27.6,
+    "mean_bps": -5.97,
+    "total_pct": -12.8,
+    "profit_factor": 0.79,
+    "ci95_mean_bps_day_clustered": [
+     -14.95,
+     4.04
+    ]
+   },
+   "test_long": {
+    "trades": 166,
+    "win_rate_pct": 27.7,
+    "mean_bps": -5.81,
+    "total_pct": -9.7,
+    "profit_factor": 0.78,
+    "ci95_mean_bps_day_clustered": [
+     -15.1,
+     5.26
+    ]
+   },
+   "account_test_both": {
+    "end_equity": 2484.95,
+    "max_dd_pct": 13.1
+   },
+   "account_test_long": {
+    "end_equity": 2262.07,
+    "max_dd_pct": 12.4
+   }
+  },
+  "AVGO": {
+   "sessions": 300,
+   "train": {
+    "trades": 407,
+    "win_rate_pct": 29.5,
+    "mean_bps": -7.87,
+    "total_pct": -32.0,
+    "profit_factor": 0.79,
+    "ci95_mean_bps_day_clustered": [
+     -16.23,
+     1.63
+    ]
+   },
+   "test": {
+    "trades": 317,
+    "win_rate_pct": 32.8,
+    "mean_bps": -5.26,
+    "total_pct": -16.7,
+    "profit_factor": 0.85,
+    "ci95_mean_bps_day_clustered": [
+     -13.79,
+     4.4
+    ]
+   },
+   "train_long": {
+    "trades": 214,
+    "win_rate_pct": 29.0,
+    "mean_bps": -9.55,
+    "total_pct": -20.4,
+    "profit_factor": 0.75,
+    "ci95_mean_bps_day_clustered": [
+     -20.63,
+     3.22
+    ]
+   },
+   "test_long": {
+    "trades": 157,
+    "win_rate_pct": 30.6,
+    "mean_bps": -9.38,
+    "total_pct": -14.7,
+    "profit_factor": 0.73,
+    "ci95_mean_bps_day_clustered": [
+     -20.69,
+     3.72
+    ]
+   },
+   "account_test_both": {
+    "end_equity": 2094.39,
+    "max_dd_pct": 25.1
+   },
+   "account_test_long": {
+    "end_equity": 2147.65,
+    "max_dd_pct": 17.9
+   }
+  },
+  "PLTR": {
+   "sessions": 300,
+   "train": {
+    "trades": 435,
+    "win_rate_pct": 30.1,
+    "mean_bps": -9.76,
+    "total_pct": -42.5,
+    "profit_factor": 0.78,
+    "ci95_mean_bps_day_clustered": [
+     -18.87,
+     0.33
+    ]
+   },
+   "test": {
+    "trades": 307,
+    "win_rate_pct": 28.7,
+    "mean_bps": -2.38,
+    "total_pct": -7.3,
+    "profit_factor": 0.94,
+    "ci95_mean_bps_day_clustered": [
+     -13.9,
+     12.5
+    ]
+   },
+   "train_long": {
+    "trades": 218,
+    "win_rate_pct": 29.4,
+    "mean_bps": -12.1,
+    "total_pct": -26.4,
+    "profit_factor": 0.72,
+    "ci95_mean_bps_day_clustered": [
+     -23.42,
+     0.42
+    ]
+   },
+   "test_long": {
+    "trades": 153,
+    "win_rate_pct": 29.4,
+    "mean_bps": 3.11,
+    "total_pct": 4.8,
+    "profit_factor": 1.08,
+    "ci95_mean_bps_day_clustered": [
+     -14.01,
+     22.91
+    ]
+   },
+   "account_test_both": {
+    "end_equity": 2281.74,
+    "max_dd_pct": 19.4
+   },
+   "account_test_long": {
+    "end_equity": 2597.59,
+    "max_dd_pct": 8.5
+   }
+  },
+  "COIN": {
+   "sessions": 300,
+   "train": {
+    "trades": 439,
+    "win_rate_pct": 29.4,
+    "mean_bps": -1.23,
+    "total_pct": -5.4,
+    "profit_factor": 0.98,
+    "ci95_mean_bps_day_clustered": [
+     -15.78,
+     14.84
+    ]
+   },
+   "test": {
+    "trades": 341,
+    "win_rate_pct": 30.2,
+    "mean_bps": -8.45,
+    "total_pct": -28.8,
+    "profit_factor": 0.84,
+    "ci95_mean_bps_day_clustered": [
+     -20.56,
+     6.15
+    ]
+   },
+   "train_long": {
+    "trades": 217,
+    "win_rate_pct": 26.7,
+    "mean_bps": -6.1,
+    "total_pct": -13.2,
+    "profit_factor": 0.89,
+    "ci95_mean_bps_day_clustered": [
+     -25.1,
+     16.24
+    ]
+   },
+   "test_long": {
+    "trades": 163,
+    "win_rate_pct": 26.4,
+    "mean_bps": -15.87,
+    "total_pct": -25.9,
+    "profit_factor": 0.7,
+    "ci95_mean_bps_day_clustered": [
+     -33.37,
+     3.5
+    ]
+   },
+   "account_test_both": {
+    "end_equity": 1823.81,
+    "max_dd_pct": 31.6
+   },
+   "account_test_long": {
+    "end_equity": 1905.85,
+    "max_dd_pct": 24.3
+   }
+  },
+  "MU": {
+   "sessions": 300,
+   "train": {
+    "trades": 419,
+    "win_rate_pct": 28.9,
+    "mean_bps": -7.54,
+    "total_pct": -31.6,
+    "profit_factor": 0.85,
+    "ci95_mean_bps_day_clustered": [
+     -20.37,
+     7.94
+    ]
+   },
+   "test": {
+    "trades": 358,
+    "win_rate_pct": 28.5,
+    "mean_bps": -7.04,
+    "total_pct": -25.2,
+    "profit_factor": 0.87,
+    "ci95_mean_bps_day_clustered": [
+     -20.7,
+     9.92
+    ]
+   },
+   "train_long": {
+    "trades": 218,
+    "win_rate_pct": 28.4,
+    "mean_bps": -2.91,
+    "total_pct": -6.3,
+    "profit_factor": 0.94,
+    "ci95_mean_bps_day_clustered": [
+     -21.94,
+     19.11
+    ]
+   },
+   "test_long": {
+    "trades": 184,
+    "win_rate_pct": 28.3,
+    "mean_bps": -8.11,
+    "total_pct": -14.9,
+    "profit_factor": 0.84,
+    "ci95_mean_bps_day_clustered": [
+     -26.04,
+     13.87
+    ]
+   },
+   "account_test_both": {
+    "end_equity": 1870.78,
+    "max_dd_pct": 43.6
+   },
+   "account_test_long": {
+    "end_equity": 2116.7,
+    "max_dd_pct": 26.6
+   }
+  },
+  "MSTR": {
+   "sessions": 300,
+   "train": {
+    "trades": 450,
+    "win_rate_pct": 30.0,
+    "mean_bps": -3.6,
+    "total_pct": -16.2,
+    "profit_factor": 0.94,
+    "ci95_mean_bps_day_clustered": [
+     -17.87,
+     13.56
+    ]
+   },
+   "test": {
+    "trades": 344,
+    "win_rate_pct": 31.1,
+    "mean_bps": -4.35,
+    "total_pct": -15.0,
+    "profit_factor": 0.93,
+    "ci95_mean_bps_day_clustered": [
+     -21.18,
+     15.84
+    ]
+   },
+   "train_long": {
+    "trades": 216,
+    "win_rate_pct": 23.6,
+    "mean_bps": -19.3,
+    "total_pct": -41.7,
+    "profit_factor": 0.69,
+    "ci95_mean_bps_day_clustered": [
+     -37.65,
+     1.56
+    ]
+   },
+   "test_long": {
+    "trades": 163,
+    "win_rate_pct": 28.2,
+    "mean_bps": -3.8,
+    "total_pct": -6.2,
+    "profit_factor": 0.94,
+    "ci95_mean_bps_day_clustered": [
+     -29.59,
+     26.57
+    ]
+   },
+   "account_test_both": {
+    "end_equity": 2057.21,
+    "max_dd_pct": 31.3
+   },
+   "account_test_long": {
+    "end_equity": 2292.23,
+    "max_dd_pct": 19.1
+   }
+  },
+  "UBER": {
+   "sessions": 300,
+   "train": {
+    "trades": 406,
+    "win_rate_pct": 29.6,
+    "mean_bps": -8.2,
+    "total_pct": -33.3,
+    "profit_factor": 0.74,
+    "ci95_mean_bps_day_clustered": [
+     -14.42,
+     -0.79
+    ]
+   },
+   "test": {
+    "trades": 374,
+    "win_rate_pct": 27.5,
+    "mean_bps": -6.39,
+    "total_pct": -23.9,
+    "profit_factor": 0.79,
+    "ci95_mean_bps_day_clustered": [
+     -12.84,
+     1.45
+    ]
+   },
+   "train_long": {
+    "trades": 209,
+    "win_rate_pct": 28.7,
+    "mean_bps": -11.47,
+    "total_pct": -24.0,
+    "profit_factor": 0.63,
+    "ci95_mean_bps_day_clustered": [
+     -19.28,
+     -2.55
+    ]
+   },
+   "test_long": {
+    "trades": 185,
+    "win_rate_pct": 28.6,
+    "mean_bps": -4.09,
+    "total_pct": -7.6,
+    "profit_factor": 0.86,
+    "ci95_mean_bps_day_clustered": [
+     -14.42,
+     7.23
+    ]
+   },
+   "account_test_both": {
+    "end_equity": 1947.11,
+    "max_dd_pct": 23.5
+   },
+   "account_test_long": {
+    "end_equity": 2304.74,
+    "max_dd_pct": 15.1
+   }
+  },
+  "BA": {
+   "sessions": 300,
+   "train": {
+    "trades": 471,
+    "win_rate_pct": 25.5,
+    "mean_bps": -15.16,
+    "total_pct": -71.4,
+    "profit_factor": 0.52,
+    "ci95_mean_bps_day_clustered": [
+     -20.45,
+     -9.4
+    ]
+   },
+   "test": {
+    "trades": 411,
+    "win_rate_pct": 29.4,
+    "mean_bps": -6.09,
+    "total_pct": -25.0,
+    "profit_factor": 0.8,
+    "ci95_mean_bps_day_clustered": [
+     -13.58,
+     3.23
+    ]
+   },
+   "train_long": {
+    "trades": 238,
+    "win_rate_pct": 26.1,
+    "mean_bps": -14.18,
+    "total_pct": -33.7,
+    "profit_factor": 0.54,
+    "ci95_mean_bps_day_clustered": [
+     -21.65,
+     -5.61
+    ]
+   },
+   "test_long": {
+    "trades": 205,
+    "win_rate_pct": 26.3,
+    "mean_bps": -13.32,
+    "total_pct": -27.3,
+    "profit_factor": 0.57,
+    "ci95_mean_bps_day_clustered": [
+     -22.6,
+     -3.35
+    ]
+   },
+   "account_test_both": {
+    "end_equity": 1919.13,
+    "max_dd_pct": 26.0
+   },
+   "account_test_long": {
+    "end_equity": 1893.45,
+    "max_dd_pct": 25.4
+   }
+  },
+  "JPM": {
+   "sessions": 300,
+   "train": {
+    "trades": 408,
+    "win_rate_pct": 27.5,
+    "mean_bps": -7.28,
+    "total_pct": -29.7,
+    "profit_factor": 0.7,
+    "ci95_mean_bps_day_clustered": [
+     -12.9,
+     -0.54
+    ]
+   },
+   "test": {
+    "trades": 383,
+    "win_rate_pct": 26.6,
+    "mean_bps": -8.29,
+    "total_pct": -31.7,
+    "profit_factor": 0.61,
+    "ci95_mean_bps_day_clustered": [
+     -12.31,
+     -3.43
+    ]
+   },
+   "train_long": {
+    "trades": 208,
+    "win_rate_pct": 25.0,
+    "mean_bps": -12.98,
+    "total_pct": -27.0,
+    "profit_factor": 0.48,
+    "ci95_mean_bps_day_clustered": [
+     -18.65,
+     -6.86
+    ]
+   },
+   "test_long": {
+    "trades": 193,
+    "win_rate_pct": 25.4,
+    "mean_bps": -9.81,
+    "total_pct": -18.9,
+    "profit_factor": 0.55,
+    "ci95_mean_bps_day_clustered": [
+     -15.5,
+     -3.16
+    ]
+   },
+   "account_test_both": {
+    "end_equity": 1813.17,
+    "max_dd_pct": 28.4
+   },
+   "account_test_long": {
+    "end_equity": 2065.17,
+    "max_dd_pct": 18.1
+   }
+  },
+  "XOM": {
+   "sessions": 300,
+   "train": {
+    "trades": 418,
+    "win_rate_pct": 31.6,
+    "mean_bps": -6.08,
+    "total_pct": -25.4,
+    "profit_factor": 0.75,
+    "ci95_mean_bps_day_clustered": [
+     -10.65,
+     -0.66
+    ]
+   },
+   "test": {
+    "trades": 344,
+    "win_rate_pct": 27.3,
+    "mean_bps": -8.39,
+    "total_pct": -28.9,
+    "profit_factor": 0.64,
+    "ci95_mean_bps_day_clustered": [
+     -13.41,
+     -2.87
+    ]
+   },
+   "train_long": {
+    "trades": 216,
+    "win_rate_pct": 34.3,
+    "mean_bps": -3.01,
+    "total_pct": -6.5,
+    "profit_factor": 0.87,
+    "ci95_mean_bps_day_clustered": [
+     -10.08,
+     4.81
+    ]
+   },
+   "test_long": {
+    "trades": 179,
+    "win_rate_pct": 31.3,
+    "mean_bps": -6.48,
+    "total_pct": -11.6,
+    "profit_factor": 0.7,
+    "ci95_mean_bps_day_clustered": [
+     -12.99,
+     1.02
+    ]
+   },
+   "account_test_both": {
+    "end_equity": 1864.49,
+    "max_dd_pct": 26.7
+   },
+   "account_test_long": {
+    "end_equity": 2222.02,
+    "max_dd_pct": 14.1
+   }
+  },
+  "SMCI": {
+   "sessions": 300,
+   "train": {
+    "trades": 425,
+    "win_rate_pct": 27.5,
+    "mean_bps": -6.95,
+    "total_pct": -29.5,
+    "profit_factor": 0.87,
+    "ci95_mean_bps_day_clustered": [
+     -19.34,
+     7.67
+    ]
+   },
+   "test": {
+    "trades": 372,
+    "win_rate_pct": 29.3,
+    "mean_bps": -0.53,
+    "total_pct": -2.0,
+    "profit_factor": 0.99,
+    "ci95_mean_bps_day_clustered": [
+     -18.56,
+     20.69
+    ]
+   },
+   "train_long": {
+    "trades": 210,
+    "win_rate_pct": 25.2,
+    "mean_bps": -14.29,
+    "total_pct": -30.0,
+    "profit_factor": 0.75,
+    "ci95_mean_bps_day_clustered": [
+     -31.7,
+     5.27
+    ]
+   },
+   "test_long": {
+    "trades": 185,
+    "win_rate_pct": 25.9,
+    "mean_bps": -14.47,
+    "total_pct": -26.8,
+    "profit_factor": 0.78,
+    "ci95_mean_bps_day_clustered": [
+     -38.1,
+     11.51
+    ]
+   },
+   "account_test_both": {
+    "end_equity": 2296.21,
+    "max_dd_pct": 35.9
+   },
+   "account_test_long": {
+    "end_equity": 1859.89,
+    "max_dd_pct": 35.0
+   }
+  },
+  "ARM": {
+   "sessions": 300,
+   "train": {
+    "trades": 442,
+    "win_rate_pct": 27.4,
+    "mean_bps": -6.7,
+    "total_pct": -29.6,
+    "profit_factor": 0.84,
+    "ci95_mean_bps_day_clustered": [
+     -17.42,
+     4.98
+    ]
+   },
+   "test": {
+    "trades": 307,
+    "win_rate_pct": 32.2,
+    "mean_bps": 1.9,
+    "total_pct": 5.8,
+    "profit_factor": 1.03,
+    "ci95_mean_bps_day_clustered": [
+     -14.56,
+     21.7
+    ]
+   },
+   "train_long": {
+    "trades": 225,
+    "win_rate_pct": 25.8,
+    "mean_bps": -5.79,
+    "total_pct": -13.0,
+    "profit_factor": 0.86,
+    "ci95_mean_bps_day_clustered": [
+     -20.52,
+     11.67
+    ]
+   },
+   "test_long": {
+    "trades": 154,
+    "win_rate_pct": 30.5,
+    "mean_bps": 4.15,
+    "total_pct": 6.4,
+    "profit_factor": 1.07,
+    "ci95_mean_bps_day_clustered": [
+     -21.76,
+     32.77
+    ]
+   },
+   "account_test_both": {
+    "end_equity": 2543.89,
+    "max_dd_pct": 35.0
+   },
+   "account_test_long": {
+    "end_equity": 2604.38,
+    "max_dd_pct": 28.3
+   }
+  },
+  "HOOD": {
+   "sessions": 300,
+   "train": {
+    "trades": 437,
+    "win_rate_pct": 32.0,
+    "mean_bps": -2.45,
+    "total_pct": -10.7,
+    "profit_factor": 0.95,
+    "ci95_mean_bps_day_clustered": [
+     -15.22,
+     11.78
+    ]
+   },
+   "test": {
+    "trades": 338,
+    "win_rate_pct": 29.3,
+    "mean_bps": -0.49,
+    "total_pct": -1.6,
+    "profit_factor": 0.99,
+    "ci95_mean_bps_day_clustered": [
+     -13.82,
+     15.22
+    ]
+   },
+   "train_long": {
+    "trades": 223,
+    "win_rate_pct": 30.5,
+    "mean_bps": -6.32,
+    "total_pct": -14.1,
+    "profit_factor": 0.88,
+    "ci95_mean_bps_day_clustered": [
+     -21.75,
+     11.85
+    ]
+   },
+   "test_long": {
+    "trades": 166,
+    "win_rate_pct": 25.3,
+    "mean_bps": -4.76,
+    "total_pct": -7.9,
+    "profit_factor": 0.91,
+    "ci95_mean_bps_day_clustered": [
+     -26.37,
+     18.58
+    ]
+   },
+   "account_test_both": {
+    "end_equity": 2382.03,
+    "max_dd_pct": 26.1
+   },
+   "account_test_long": {
+    "end_equity": 2267.78,
+    "max_dd_pct": 21.2
+   }
+  },
+  "SOFI": {
+   "sessions": 300,
+   "train": {
+    "trades": 444,
+    "win_rate_pct": 30.0,
+    "mean_bps": -4.51,
+    "total_pct": -20.0,
+    "profit_factor": 0.91,
+    "ci95_mean_bps_day_clustered": [
+     -17.28,
+     10.22
+    ]
+   },
+   "test": {
+    "trades": 325,
+    "win_rate_pct": 33.5,
+    "mean_bps": -0.15,
+    "total_pct": -0.5,
+    "profit_factor": 1.0,
+    "ci95_mean_bps_day_clustered": [
+     -12.33,
+     15.14
+    ]
+   },
+   "train_long": {
+    "trades": 226,
+    "win_rate_pct": 27.4,
+    "mean_bps": -15.27,
+    "total_pct": -34.5,
+    "profit_factor": 0.71,
+    "ci95_mean_bps_day_clustered": [
+     -29.55,
+     1.63
+    ]
+   },
+   "test_long": {
+    "trades": 158,
+    "win_rate_pct": 29.1,
+    "mean_bps": -7.74,
+    "total_pct": -12.2,
+    "profit_factor": 0.82,
+    "ci95_mean_bps_day_clustered": [
+     -24.41,
+     10.95
+    ]
+   },
+   "account_test_both": {
+    "end_equity": 2440.44,
+    "max_dd_pct": 16.7
+   },
+   "account_test_long": {
+    "end_equity": 2192.66,
+    "max_dd_pct": 19.7
+   }
+  },
+  "INTC": {
+   "sessions": 300,
+   "train": {
+    "trades": 405,
+    "win_rate_pct": 29.6,
+    "mean_bps": 2.8,
+    "total_pct": 11.3,
+    "profit_factor": 1.06,
+    "ci95_mean_bps_day_clustered": [
+     -9.23,
+     17.22
+    ]
+   },
+   "test": {
+    "trades": 300,
+    "win_rate_pct": 36.3,
+    "mean_bps": 5.2,
+    "total_pct": 15.6,
+    "profit_factor": 1.09,
+    "ci95_mean_bps_day_clustered": [
+     -12.28,
+     25.79
+    ]
+   },
+   "train_long": {
+    "trades": 207,
+    "win_rate_pct": 30.4,
+    "mean_bps": 7.21,
+    "total_pct": 14.9,
+    "profit_factor": 1.16,
+    "ci95_mean_bps_day_clustered": [
+     -9.53,
+     27.64
+    ]
+   },
+   "test_long": {
+    "trades": 150,
+    "win_rate_pct": 36.0,
+    "mean_bps": 5.77,
+    "total_pct": 8.7,
+    "profit_factor": 1.1,
+    "ci95_mean_bps_day_clustered": [
+     -18.37,
+     33.3
+    ]
+   },
+   "account_test_both": {
+    "end_equity": 2816.3,
+    "max_dd_pct": 35.0
+   },
+   "account_test_long": {
+    "end_equity": 2677.47,
+    "max_dd_pct": 16.7
+   }
+  },
+  "BAC": {
+   "sessions": 300,
+   "train": {
+    "trades": 421,
+    "win_rate_pct": 28.0,
+    "mean_bps": -5.75,
+    "total_pct": -24.2,
+    "profit_factor": 0.75,
+    "ci95_mean_bps_day_clustered": [
+     -10.26,
+     -0.62
+    ]
+   },
+   "test": {
+    "trades": 349,
+    "win_rate_pct": 30.9,
+    "mean_bps": -4.46,
+    "total_pct": -15.6,
+    "profit_factor": 0.8,
+    "ci95_mean_bps_day_clustered": [
+     -8.54,
+     0.3
+    ]
+   },
+   "train_long": {
+    "trades": 218,
+    "win_rate_pct": 27.1,
+    "mean_bps": -9.9,
+    "total_pct": -21.6,
+    "profit_factor": 0.58,
+    "ci95_mean_bps_day_clustered": [
+     -15.72,
+     -3.37
+    ]
+   },
+   "test_long": {
+    "trades": 180,
+    "win_rate_pct": 30.6,
+    "mean_bps": -8.71,
+    "total_pct": -15.7,
+    "profit_factor": 0.61,
+    "ci95_mean_bps_day_clustered": [
+     -15.23,
+     -1.79
+    ]
+   },
+   "account_test_both": {
+    "end_equity": 2128.98,
+    "max_dd_pct": 18.6
+   },
+   "account_test_long": {
+    "end_equity": 2132.59,
+    "max_dd_pct": 16.2
+   }
+  },
+  "F": {
+   "sessions": 300,
+   "train": {
+    "trades": 473,
+    "win_rate_pct": 26.4,
+    "mean_bps": -4.86,
+    "total_pct": -23.0,
+    "profit_factor": 0.79,
+    "ci95_mean_bps_day_clustered": [
+     -9.57,
+     0.5
+    ]
+   },
+   "test": {
+    "trades": 340,
+    "win_rate_pct": 31.5,
+    "mean_bps": -0.07,
+    "total_pct": -0.2,
+    "profit_factor": 1.0,
+    "ci95_mean_bps_day_clustered": [
+     -9.12,
+     10.69
+    ]
+   },
+   "train_long": {
+    "trades": 232,
+    "win_rate_pct": 25.4,
+    "mean_bps": -5.18,
+    "total_pct": -12.0,
+    "profit_factor": 0.77,
+    "ci95_mean_bps_day_clustered": [
+     -12.17,
+     2.62
+    ]
+   },
+   "test_long": {
+    "trades": 168,
+    "win_rate_pct": 28.0,
+    "mean_bps": -4.04,
+    "total_pct": -6.8,
+    "profit_factor": 0.87,
+    "ci95_mean_bps_day_clustered": [
+     -18.24,
+     13.54
+    ]
+   },
+   "account_test_both": {
+    "end_equity": 2458.87,
+    "max_dd_pct": 14.1
+   },
+   "account_test_long": {
+    "end_equity": 2316.18,
+    "max_dd_pct": 21.3
+   }
+  },
+  "RIVN": {
+   "sessions": 300,
+   "train": {
+    "trades": 519,
+    "win_rate_pct": 25.8,
+    "mean_bps": -13.82,
+    "total_pct": -71.7,
+    "profit_factor": 0.76,
+    "ci95_mean_bps_day_clustered": [
+     -25.41,
+     -0.09
+    ]
+   },
+   "test": {
+    "trades": 431,
+    "win_rate_pct": 28.1,
+    "mean_bps": -1.21,
+    "total_pct": -5.2,
+    "profit_factor": 0.97,
+    "ci95_mean_bps_day_clustered": [
+     -12.98,
+     12.1
+    ]
+   },
+   "train_long": {
+    "trades": 258,
+    "win_rate_pct": 24.8,
+    "mean_bps": -15.47,
+    "total_pct": -39.9,
+    "profit_factor": 0.75,
+    "ci95_mean_bps_day_clustered": [
+     -33.66,
+     5.65
+    ]
+   },
+   "test_long": {
+    "trades": 213,
+    "win_rate_pct": 26.3,
+    "mean_bps": -3.09,
+    "total_pct": -6.6,
+    "profit_factor": 0.93,
+    "ci95_mean_bps_day_clustered": [
+     -19.13,
+     14.27
+    ]
+   },
+   "account_test_both": {
+    "end_equity": 2286.63,
+    "max_dd_pct": 40.1
+   },
+   "account_test_long": {
+    "end_equity": 2299.77,
+    "max_dd_pct": 30.1
+   }
+  },
+  "SOUN": {
+   "sessions": 300,
+   "train": {
+    "trades": 492,
+    "win_rate_pct": 27.8,
+    "mean_bps": -15.81,
+    "total_pct": -77.8,
+    "profit_factor": 0.79,
+    "ci95_mean_bps_day_clustered": [
+     -30.6,
+     1.92
+    ]
+   },
+   "test": {
+    "trades": 426,
+    "win_rate_pct": 25.1,
+    "mean_bps": -15.21,
+    "total_pct": -64.8,
+    "profit_factor": 0.73,
+    "ci95_mean_bps_day_clustered": [
+     -27.66,
+     -0.24
+    ]
+   },
+   "train_long": {
+    "trades": 244,
+    "win_rate_pct": 21.3,
+    "mean_bps": -39.29,
+    "total_pct": -95.9,
+    "profit_factor": 0.55,
+    "ci95_mean_bps_day_clustered": [
+     -59.82,
+     -15.67
+    ]
+   },
+   "test_long": {
+    "trades": 201,
+    "win_rate_pct": 21.9,
+    "mean_bps": -18.78,
+    "total_pct": -37.8,
+    "profit_factor": 0.69,
+    "ci95_mean_bps_day_clustered": [
+     -38.7,
+     5.9
+    ]
+   },
+   "account_test_both": {
+    "end_equity": 1252.83,
+    "max_dd_pct": 56.5
+   },
+   "account_test_long": {
+    "end_equity": 1673.1,
+    "max_dd_pct": 44.8
+   }
+  },
+  "MARA": {
+   "sessions": 300,
+   "train": {
+    "trades": 479,
+    "win_rate_pct": 28.0,
+    "mean_bps": -9.15,
+    "total_pct": -43.8,
+    "profit_factor": 0.88,
+    "ci95_mean_bps_day_clustered": [
+     -26.33,
+     10.47
+    ]
+   },
+   "test": {
+    "trades": 370,
+    "win_rate_pct": 33.0,
+    "mean_bps": -5.4,
+    "total_pct": -20.0,
+    "profit_factor": 0.93,
+    "ci95_mean_bps_day_clustered": [
+     -23.22,
+     15.3
+    ]
+   },
+   "train_long": {
+    "trades": 234,
+    "win_rate_pct": 20.5,
+    "mean_bps": -26.09,
+    "total_pct": -61.0,
+    "profit_factor": 0.69,
+    "ci95_mean_bps_day_clustered": [
+     -51.31,
+     2.52
+    ]
+   },
+   "test_long": {
+    "trades": 175,
+    "win_rate_pct": 30.3,
+    "mean_bps": -7.12,
+    "total_pct": -12.5,
+    "profit_factor": 0.9,
+    "ci95_mean_bps_day_clustered": [
+     -33.52,
+     22.8
+    ]
+   },
+   "account_test_both": {
+    "end_equity": 1923.99,
+    "max_dd_pct": 35.9
+   },
+   "account_test_long": {
+    "end_equity": 2146.12,
+    "max_dd_pct": 33.6
+   }
+  },
+  "RIOT": {
+   "sessions": 300,
+   "train": {
+    "trades": 470,
+    "win_rate_pct": 28.9,
+    "mean_bps": -7.51,
+    "total_pct": -35.3,
+    "profit_factor": 0.9,
+    "ci95_mean_bps_day_clustered": [
+     -24.1,
+     11.04
+    ]
+   },
+   "test": {
+    "trades": 331,
+    "win_rate_pct": 35.3,
+    "mean_bps": 13.58,
+    "total_pct": 45.0,
+    "profit_factor": 1.2,
+    "ci95_mean_bps_day_clustered": [
+     -5.33,
+     36.26
+    ]
+   },
+   "train_long": {
+    "trades": 236,
+    "win_rate_pct": 26.7,
+    "mean_bps": -21.27,
+    "total_pct": -50.2,
+    "profit_factor": 0.72,
+    "ci95_mean_bps_day_clustered": [
+     -42.71,
+     1.08
+    ]
+   },
+   "test_long": {
+    "trades": 162,
+    "win_rate_pct": 30.9,
+    "mean_bps": 11.94,
+    "total_pct": 19.3,
+    "profit_factor": 1.17,
+    "ci95_mean_bps_day_clustered": [
+     -19.87,
+     50.39
+    ]
+   },
+   "account_test_both": {
+    "end_equity": 3644.57,
+    "max_dd_pct": 20.1
+   },
+   "account_test_long": {
+    "end_equity": 2912.98,
+    "max_dd_pct": 18.0
+   }
+  },
+  "CVNA": {
+   "sessions": 300,
+   "train": {
+    "trades": 449,
+    "win_rate_pct": 36.1,
+    "mean_bps": 9.76,
+    "total_pct": 43.8,
+    "profit_factor": 1.2,
+    "ci95_mean_bps_day_clustered": [
+     -3.95,
+     24.46
+    ]
+   },
+   "test": {
+    "trades": 347,
+    "win_rate_pct": 30.3,
+    "mean_bps": -5.96,
+    "total_pct": -20.7,
+    "profit_factor": 0.89,
+    "ci95_mean_bps_day_clustered": [
+     -18.3,
+     7.99
+    ]
+   },
+   "train_long": {
+    "trades": 235,
+    "win_rate_pct": 37.0,
+    "mean_bps": 7.59,
+    "total_pct": 17.8,
+    "profit_factor": 1.16,
+    "ci95_mean_bps_day_clustered": [
+     -8.94,
+     25.79
+    ]
+   },
+   "test_long": {
+    "trades": 174,
+    "win_rate_pct": 28.7,
+    "mean_bps": -12.17,
+    "total_pct": -21.2,
+    "profit_factor": 0.77,
+    "ci95_mean_bps_day_clustered": [
+     -29.3,
+     7.07
+    ]
+   },
+   "account_test_both": {
+    "end_equity": 1976.46,
+    "max_dd_pct": 31.1
+   },
+   "account_test_long": {
+    "end_equity": 1997.8,
+    "max_dd_pct": 26.5
+   }
+  },
+  "SHOP": {
+   "sessions": 300,
+   "train": {
+    "trades": 424,
+    "win_rate_pct": 31.4,
+    "mean_bps": 0.24,
+    "total_pct": 1.0,
+    "profit_factor": 1.01,
+    "ci95_mean_bps_day_clustered": [
+     -11.74,
+     13.57
+    ]
+   },
+   "test": {
+    "trades": 342,
+    "win_rate_pct": 31.6,
+    "mean_bps": 5.4,
+    "total_pct": 18.5,
+    "profit_factor": 1.14,
+    "ci95_mean_bps_day_clustered": [
+     -6.74,
+     20.08
+    ]
+   },
+   "train_long": {
+    "trades": 211,
+    "win_rate_pct": 31.3,
+    "mean_bps": -0.37,
+    "total_pct": -0.8,
+    "profit_factor": 0.99,
+    "ci95_mean_bps_day_clustered": [
+     -16.41,
+     17.8
+    ]
+   },
+   "test_long": {
+    "trades": 168,
+    "win_rate_pct": 31.0,
+    "mean_bps": 5.13,
+    "total_pct": 8.6,
+    "profit_factor": 1.13,
+    "ci95_mean_bps_day_clustered": [
+     -12.99,
+     25.91
+    ]
+   },
+   "account_test_both": {
+    "end_equity": 2935.68,
+    "max_dd_pct": 19.9
+   },
+   "account_test_long": {
+    "end_equity": 2691.09,
+    "max_dd_pct": 13.4
+   }
+  },
+  "CRWD": {
+   "sessions": 300,
+   "train": {
+    "trades": 442,
+    "win_rate_pct": 29.9,
+    "mean_bps": -9.04,
+    "total_pct": -39.9,
+    "profit_factor": 0.77,
+    "ci95_mean_bps_day_clustered": [
+     -16.6,
+     0.01
+    ]
+   },
+   "test": {
+    "trades": 335,
+    "win_rate_pct": 29.9,
+    "mean_bps": -6.35,
+    "total_pct": -21.3,
+    "profit_factor": 0.87,
+    "ci95_mean_bps_day_clustered": [
+     -18.57,
+     8.8
+    ]
+   },
+   "train_long": {
+    "trades": 228,
+    "win_rate_pct": 32.5,
+    "mean_bps": -6.5,
+    "total_pct": -14.8,
+    "profit_factor": 0.82,
+    "ci95_mean_bps_day_clustered": [
+     -16.67,
+     4.6
+    ]
+   },
+   "test_long": {
+    "trades": 170,
+    "win_rate_pct": 31.8,
+    "mean_bps": 3.41,
+    "total_pct": 5.8,
+    "profit_factor": 1.07,
+    "ci95_mean_bps_day_clustered": [
+     -16.51,
+     26.9
+    ]
+   },
+   "account_test_both": {
+    "end_equity": 1970.77,
+    "max_dd_pct": 34.0
+   },
+   "account_test_long": {
+    "end_equity": 2606.83,
+    "max_dd_pct": 17.0
+   }
+  },
+  "SNOW": {
+   "sessions": 300,
+   "train": {
+    "trades": 428,
+    "win_rate_pct": 32.2,
+    "mean_bps": -5.96,
+    "total_pct": -25.5,
+    "profit_factor": 0.85,
+    "ci95_mean_bps_day_clustered": [
+     -15.46,
+     5.33
+    ]
+   },
+   "test": {
+    "trades": 378,
+    "win_rate_pct": 25.7,
+    "mean_bps": -18.23,
+    "total_pct": -68.9,
+    "profit_factor": 0.63,
+    "ci95_mean_bps_day_clustered": [
+     -27.86,
+     -7.37
+    ]
+   },
+   "train_long": {
+    "trades": 218,
+    "win_rate_pct": 31.2,
+    "mean_bps": -11.36,
+    "total_pct": -24.8,
+    "profit_factor": 0.73,
+    "ci95_mean_bps_day_clustered": [
+     -23.88,
+     3.83
+    ]
+   },
+   "test_long": {
+    "trades": 185,
+    "win_rate_pct": 22.7,
+    "mean_bps": -19.99,
+    "total_pct": -37.0,
+    "profit_factor": 0.61,
+    "ci95_mean_bps_day_clustered": [
+     -34.96,
+     -3.33
+    ]
+   },
+   "account_test_both": {
+    "end_equity": 1227.32,
+    "max_dd_pct": 55.9
+   },
+   "account_test_long": {
+    "end_equity": 1707.07,
+    "max_dd_pct": 33.3
+   }
+  },
+  "DKNG": {
+   "sessions": 300,
+   "train": {
+    "trades": 507,
+    "win_rate_pct": 24.9,
+    "mean_bps": -10.32,
+    "total_pct": -52.3,
+    "profit_factor": 0.76,
+    "ci95_mean_bps_day_clustered": [
+     -19.39,
+     0.37
+    ]
+   },
+   "test": {
+    "trades": 399,
+    "win_rate_pct": 29.3,
+    "mean_bps": -8.3,
+    "total_pct": -33.1,
+    "profit_factor": 0.83,
+    "ci95_mean_bps_day_clustered": [
+     -19.19,
+     4.02
+    ]
+   },
+   "train_long": {
+    "trades": 251,
+    "win_rate_pct": 21.9,
+    "mean_bps": -20.76,
+    "total_pct": -52.1,
+    "profit_factor": 0.55,
+    "ci95_mean_bps_day_clustered": [
+     -32.35,
+     -8.25
+    ]
+   },
+   "test_long": {
+    "trades": 200,
+    "win_rate_pct": 28.5,
+    "mean_bps": -7.06,
+    "total_pct": -14.1,
+    "profit_factor": 0.86,
+    "ci95_mean_bps_day_clustered": [
+     -23.54,
+     13.14
+    ]
+   },
+   "account_test_both": {
+    "end_equity": 1739.44,
+    "max_dd_pct": 35.3
+   },
+   "account_test_long": {
+    "end_equity": 2132.75,
+    "max_dd_pct": 27.9
+   }
+  },
+  "AFRM": {
+   "sessions": 300,
+   "train": {
+    "trades": 493,
+    "win_rate_pct": 28.8,
+    "mean_bps": -3.06,
+    "total_pct": -15.1,
+    "profit_factor": 0.94,
+    "ci95_mean_bps_day_clustered": [
+     -14.33,
+     10.11
+    ]
+   },
+   "test": {
+    "trades": 352,
+    "win_rate_pct": 28.1,
+    "mean_bps": -9.29,
+    "total_pct": -32.7,
+    "profit_factor": 0.81,
+    "ci95_mean_bps_day_clustered": [
+     -20.45,
+     3.83
+    ]
+   },
+   "train_long": {
+    "trades": 250,
+    "win_rate_pct": 28.0,
+    "mean_bps": -8.08,
+    "total_pct": -20.2,
+    "profit_factor": 0.85,
+    "ci95_mean_bps_day_clustered": [
+     -22.91,
+     9.54
+    ]
+   },
+   "test_long": {
+    "trades": 169,
+    "win_rate_pct": 27.2,
+    "mean_bps": -6.34,
+    "total_pct": -10.7,
+    "profit_factor": 0.87,
+    "ci95_mean_bps_day_clustered": [
+     -25.01,
+     14.88
+    ]
+   },
+   "account_test_both": {
+    "end_equity": 1756.16,
+    "max_dd_pct": 34.9
+   },
+   "account_test_long": {
+    "end_equity": 2216.52,
+    "max_dd_pct": 23.8
+   }
+  },
+  "UPST": {
+   "sessions": 300,
+   "train": {
+    "trades": 434,
+    "win_rate_pct": 30.4,
+    "mean_bps": 4.46,
+    "total_pct": 19.4,
+    "profit_factor": 1.08,
+    "ci95_mean_bps_day_clustered": [
+     -9.85,
+     21.04
+    ]
+   },
+   "test": {
+    "trades": 379,
+    "win_rate_pct": 31.4,
+    "mean_bps": -3.91,
+    "total_pct": -14.8,
+    "profit_factor": 0.92,
+    "ci95_mean_bps_day_clustered": [
+     -14.76,
+     8.87
+    ]
+   },
+   "train_long": {
+    "trades": 216,
+    "win_rate_pct": 26.4,
+    "mean_bps": -9.38,
+    "total_pct": -20.3,
+    "profit_factor": 0.83,
+    "ci95_mean_bps_day_clustered": [
+     -27.26,
+     10.73
+    ]
+   },
+   "test_long": {
+    "trades": 186,
+    "win_rate_pct": 31.2,
+    "mean_bps": -7.46,
+    "total_pct": -13.9,
+    "profit_factor": 0.85,
+    "ci95_mean_bps_day_clustered": [
+     -24.33,
+     10.18
+    ]
+   },
+   "account_test_both": {
+    "end_equity": 2085.21,
+    "max_dd_pct": 22.6
+   },
+   "account_test_long": {
+    "end_equity": 2143.4,
+    "max_dd_pct": 18.1
+   }
+  }
+ },
+ "seconds": 318,
+ "notes": [
+  "Stock moves stand in for calls/puts (no historical option quotes). Options add leverage, time decay and spread.",
+  "Day-trade limit: under $25K only 3 day trades per 5 days in a margin account; accounts here ignore it (upper bound).",
+  "The reel shows a monthly P&L screenshot; it does not show the rules for exits, position size or which tickers."
+ ]
+}
