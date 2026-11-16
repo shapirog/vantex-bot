@@ -1,50 +1,22 @@
 {
-"day": "2026-11-15",
-"built": "2026-11-15T18:40:34-05:00",
-"count": 536,
+"day": "2026-11-16",
+"built": "2026-11-16T05:36:14-05:00",
+"count": 518,
 "splits_ok": true,
 "stocks": {
+"AFJK": {
+"prev_close": 12.39,
+"prev_day": "2026-11-13",
+"avg_vol20": 2485.95,
+"shares_out": 3166332.0,
+"name": "Aimei Health Technology Co., Ltd Ordinary Share"
+},
 "ACET": {
 "prev_close": 2.78,
 "prev_day": "2026-11-13",
 "avg_vol20": 241184.95,
 "shares_out": 9361596.0,
 "name": "Adicet Bio, Inc. Common Stock"
-},
-"AIMD": {
-"prev_close": 1.23,
-"prev_day": "2026-11-13",
-"avg_vol20": 4324437.0,
-"shares_out": 7384073.0,
-"name": "Ainos, Inc. Common Stock"
-},
-"AGRZ": {
-"prev_close": 1.8743,
-"prev_day": "2026-11-13",
-"avg_vol20": 19076.45,
-"shares_out": 1092674.25,
-"name": "Agroz Inc. Class A Ordinary Shares"
-},
-"AIRI": {
-"prev_close": 2.5,
-"prev_day": "2026-11-13",
-"avg_vol20": 52909.5,
-"shares_out": 4856181.0,
-"name": "Air Industries Group"
-},
-"AIFA": {
-"prev_close": 3.54,
-"prev_day": "2026-11-13",
-"avg_vol20": 75020.2,
-"shares_out": 6420316.0,
-"name": "All In FutureTech Alliance, Inc. Common Stock"
-},
-"AERT": {
-"prev_close": 4.5,
-"prev_day": "2026-11-13",
-"avg_vol20": 22119.15,
-"shares_out": 6062144.25,
-"name": "Aeries Technology, Inc. Class A Ordinary Share"
 },
 "ACFN": {
 "prev_close": 14.93,
@@ -53,89 +25,19 @@
 "shares_out": 2534714.0,
 "name": "Acorn Energy, Inc. Common Stock"
 },
-"ACON": {
-"prev_close": 1.56,
+"ADGM": {
+"prev_close": 1.93,
 "prev_day": "2026-11-13",
-"avg_vol20": 15484.2,
-"shares_out": 2882370.0,
-"name": "Aclarion, Inc. Common Stock"
+"avg_vol20": 960610.15,
+"shares_out": 740348.6333333333,
+"name": "Adagio Medical Holdings, Inc Common Stock"
 },
-"AESP": {
-"prev_close": 10.06,
+"AERT": {
+"prev_close": 4.5,
 "prev_day": "2026-11-13",
-"avg_vol20": 27968.15,
-"shares_out": 6160715.0,
-"name": "Aeon Acquisition I Corp. Class A Ordinary Shares"
-},
-"AIXI": {
-"prev_close": 1.92,
-"prev_day": "2026-11-13",
-"avg_vol20": 2782660.55,
-"shares_out": 394537.7428571429,
-"name": "XIAO-I Corporation American Depositary Shares"
-},
-"AEMD": {
-"prev_close": 5.29,
-"prev_day": "2026-11-13",
-"avg_vol20": 45635.25,
-"shares_out": 1607367.0,
-"name": "Aethlon Medical, Inc. Common Stock"
-},
-"ACXP": {
-"prev_close": 0.96,
-"prev_day": "2026-11-13",
-"avg_vol20": 100173.95,
-"shares_out": 6058135.0,
-"name": "Acurx Pharmaceuticals, Inc. Common Stock"
-},
-"AHT": {
-"prev_close": 2.39,
-"prev_day": "2026-11-13",
-"avg_vol20": 1976157.45,
-"shares_out": 6469814.0,
-"name": "Ashford Hospitality Trust, Inc."
-},
-"ACNT": {
-"prev_close": 13.02,
-"prev_day": "2026-11-13",
-"avg_vol20": 33280.65,
-"shares_out": 9021347.0,
-"name": "Ascent Industries Co. Common Stock"
-},
-"AFJK": {
-"prev_close": 12.39,
-"prev_day": "2026-11-13",
-"avg_vol20": 2485.95,
-"shares_out": 3166332.0,
-"name": "Aimei Health Technology Co., Ltd Ordinary Share"
-},
-"AIAI": {
-"prev_close": 0.9202,
-"prev_day": "2026-11-13",
-"avg_vol20": 469726.75,
-"shares_out": 1000.0,
-"name": "AIAI Holdings Corporation Class A Common Stock"
-},
-"ACCV": {
-"prev_close": 12.92,
-"prev_day": "2026-11-13",
-"avg_vol20": 1581823.05,
-"shares_out": 1000.0,
-"name": "Accelevation Holdings Corp. Class A Ordinary Shares"
-},
-"ADVB": {
-"prev_close": 2.53,
-"prev_day": "2026-11-13",
-"avg_vol20": 90792.6,
-"shares_out": 1652133.0,
-"name": "Advanced Biomed Inc. Common Stock"
-},
-"AEHL": {
-"prev_close": 8.285,
-"prev_day": "2026-11-13",
-"avg_vol20": 1671621.05,
-"shares_out": 47714.03125,
-"name": "Antelope Enterprise Holdings Limited Class A Ordinary Shares"
+"avg_vol20": 22119.15,
+"shares_out": 6062144.25,
+"name": "Aeries Technology, Inc. Class A Ordinary Share"
 },
 "ACCS": {
 "prev_close": 3.8,
@@ -144,47 +46,96 @@
 "shares_out": 3769479.0,
 "name": "ACCESS Newswire Inc."
 },
-"ADGM": {
-"prev_close": 1.93,
+"AIRI": {
+"prev_close": 2.5,
 "prev_day": "2026-11-13",
-"avg_vol20": 960610.15,
-"shares_out": 740348.6333333333,
-"name": "Adagio Medical Holdings, Inc Common Stock"
+"avg_vol20": 52909.5,
+"shares_out": 4856181.0,
+"name": "Air Industries Group"
 },
-"APC": {
-"prev_close": 14.62,
+"AIXI": {
+"prev_close": 1.92,
 "prev_day": "2026-11-13",
-"avg_vol20": 122359.1,
-"shares_out": 1000.0,
-"name": "ARKO Petroleum Corp. Class A Common Stock"
+"avg_vol20": 2782660.55,
+"shares_out": 394537.7428571429,
+"name": "XIAO-I Corporation American Depositary Shares"
 },
-"ARAY": {
-"prev_close": 2.8,
+"ACNT": {
+"prev_close": 13.02,
 "prev_day": "2026-11-13",
-"avg_vol20": 1651648.55,
-"shares_out": 3004045.45,
-"name": "Accuray Incorporated Common Stock"
+"avg_vol20": 33280.65,
+"shares_out": 9021347.0,
+"name": "Ascent Industries Co. Common Stock"
 },
-"ALP": {
-"prev_close": 3.17,
+"AESP": {
+"prev_close": 10.06,
 "prev_day": "2026-11-13",
-"avg_vol20": 29114.25,
-"shares_out": 469417.54000000004,
-"name": "Alpha Compute Corp Ordinary Shares"
+"avg_vol20": 27968.15,
+"shares_out": 6160715.0,
+"name": "Aeon Acquisition I Corp. Class A Ordinary Shares"
 },
-"AMS": {
-"prev_close": 1.08,
+"ACXP": {
+"prev_close": 0.96,
 "prev_day": "2026-11-13",
-"avg_vol20": 11359.9,
-"shares_out": 6675000.0,
-"name": "American Shared Hospital Services"
+"avg_vol20": 100173.95,
+"shares_out": 6058135.0,
+"name": "Acurx Pharmaceuticals, Inc. Common Stock"
 },
-"AMIX": {
-"prev_close": 1.37,
+"AEMD": {
+"prev_close": 5.29,
 "prev_day": "2026-11-13",
-"avg_vol20": 3773077.85,
-"shares_out": 2045193.0,
-"name": "Autonomix Medical, Inc. Common Stock"
+"avg_vol20": 45635.25,
+"shares_out": 1607367.0,
+"name": "Aethlon Medical, Inc. Common Stock"
+},
+"ACON": {
+"prev_close": 1.56,
+"prev_day": "2026-11-13",
+"avg_vol20": 15484.2,
+"shares_out": 2882370.0,
+"name": "Aclarion, Inc. Common Stock"
+},
+"AEHL": {
+"prev_close": 8.285,
+"prev_day": "2026-11-13",
+"avg_vol20": 1671621.05,
+"shares_out": 47714.03125,
+"name": "Antelope Enterprise Holdings Limited Class A Ordinary Shares"
+},
+"ADVB": {
+"prev_close": 2.53,
+"prev_day": "2026-11-13",
+"avg_vol20": 90792.6,
+"shares_out": 1652133.0,
+"name": "Advanced Biomed Inc. Common Stock"
+},
+"AGRZ": {
+"prev_close": 1.8743,
+"prev_day": "2026-11-13",
+"avg_vol20": 19076.45,
+"shares_out": 1092674.25,
+"name": "Agroz Inc. Class A Ordinary Shares"
+},
+"AHT": {
+"prev_close": 2.39,
+"prev_day": "2026-11-13",
+"avg_vol20": 1976157.45,
+"shares_out": 6469814.0,
+"name": "Ashford Hospitality Trust, Inc."
+},
+"AIFA": {
+"prev_close": 3.54,
+"prev_day": "2026-11-13",
+"avg_vol20": 75020.2,
+"shares_out": 6420316.0,
+"name": "All In FutureTech Alliance, Inc. Common Stock"
+},
+"AIMD": {
+"prev_close": 1.23,
+"prev_day": "2026-11-13",
+"avg_vol20": 4324437.0,
+"shares_out": 7384073.0,
+"name": "Ainos, Inc. Common Stock"
 },
 "ANGH": {
 "prev_close": 3.36,
@@ -193,68 +144,12 @@
 "shares_out": 9064808.0,
 "name": "Anghami Inc. Ordinary Shares"
 },
-"ARKR": {
-"prev_close": 4.51,
+"ALP": {
+"prev_close": 3.17,
 "prev_day": "2026-11-13",
-"avg_vol20": 1971.65,
-"shares_out": 3606157.0,
-"name": "Ark Restaurants Corp. Common Stock"
-},
-"ALIS": {
-"prev_close": 8.6999,
-"prev_day": "2026-11-13",
-"avg_vol20": 13577.35,
-"shares_out": 8427500.0,
-"name": "Calisa Acquisition Corp Ordinary shares"
-},
-"ALGS": {
-"prev_close": 2.1,
-"prev_day": "2026-11-13",
-"avg_vol20": 65029.6,
-"shares_out": 6248440.0,
-"name": "Aligos Therapeutics, Inc. Common Stock"
-},
-"AKAN": {
-"prev_close": 1.36,
-"prev_day": "2026-11-13",
-"avg_vol20": 4833734.4,
-"shares_out": 88157.59999999999,
-"name": "Akanda Corp. Common Shares"
-},
-"APUS": {
-"prev_close": 2.23,
-"prev_day": "2026-11-13",
-"avg_vol20": 51306.35,
-"shares_out": 1509118.0,
-"name": "Apimeds Pharmaceuticals US, Inc."
-},
-"AQMS": {
-"prev_close": 1.31,
-"prev_day": "2026-11-13",
-"avg_vol20": 34737.6,
-"shares_out": 3563531.0,
-"name": "Aqua Metals, Inc. Common Stock"
-},
-"ALZN": {
-"prev_close": 1.24,
-"prev_day": "2026-11-13",
-"avg_vol20": 39564.0,
-"shares_out": 4825723.0,
-"name": "Alzamend Neuro, Inc. Common Stock"
-},
-"ARAI": {
-"prev_close": 2.25,
-"prev_day": "2026-11-13",
-"avg_vol20": 5832073.85,
-"shares_out": 1432782.0,
-"name": "Arrive AI Inc. Common Stock"
-},
-"ARBB": {
-"prev_close": 3.61,
-"prev_day": "2026-11-13",
-"avg_vol20": 7205.6,
-"shares_out": 1765256.0,
-"name": "ARB IOT Group Limited Ordinary Shares"
+"avg_vol20": 29114.25,
+"shares_out": 469417.54000000004,
+"name": "Alpha Compute Corp Ordinary Shares"
 },
 "APLM": {
 "prev_close": 17.68,
@@ -263,12 +158,61 @@
 "shares_out": 2196052.0,
 "name": "Apollomics Inc. Class A Ordinary Shares"
 },
-"APVO": {
-"prev_close": 0.5941,
+"AKAN": {
+"prev_close": 1.36,
 "prev_day": "2026-11-13",
-"avg_vol20": 84413.0,
-"shares_out": 1801970.0,
-"name": "Aptevo Therapeutics Inc. Common Stock"
+"avg_vol20": 4833734.4,
+"shares_out": 88157.59999999999,
+"name": "Akanda Corp. Common Shares"
+},
+"ARAI": {
+"prev_close": 2.25,
+"prev_day": "2026-11-13",
+"avg_vol20": 5832073.85,
+"shares_out": 1432782.0,
+"name": "Arrive AI Inc. Common Stock"
+},
+"ALZN": {
+"prev_close": 1.24,
+"prev_day": "2026-11-13",
+"avg_vol20": 39564.0,
+"shares_out": 4825723.0,
+"name": "Alzamend Neuro, Inc. Common Stock"
+},
+"ARAY": {
+"prev_close": 2.8,
+"prev_day": "2026-11-13",
+"avg_vol20": 1651648.55,
+"shares_out": 3004045.45,
+"name": "Accuray Incorporated Common Stock"
+},
+"ARKR": {
+"prev_close": 4.51,
+"prev_day": "2026-11-13",
+"avg_vol20": 1971.65,
+"shares_out": 3606157.0,
+"name": "Ark Restaurants Corp. Common Stock"
+},
+"ALGS": {
+"prev_close": 2.1,
+"prev_day": "2026-11-13",
+"avg_vol20": 65029.6,
+"shares_out": 6248440.0,
+"name": "Aligos Therapeutics, Inc. Common Stock"
+},
+"AMIX": {
+"prev_close": 1.37,
+"prev_day": "2026-11-13",
+"avg_vol20": 3773077.85,
+"shares_out": 2045193.0,
+"name": "Autonomix Medical, Inc. Common Stock"
+},
+"AQMS": {
+"prev_close": 1.31,
+"prev_day": "2026-11-13",
+"avg_vol20": 34737.6,
+"shares_out": 3563531.0,
+"name": "Aqua Metals, Inc. Common Stock"
 },
 "AMOD": {
 "prev_close": 0.8907,
@@ -277,12 +221,68 @@
 "shares_out": 4966818.0,
 "name": "Alpha Modus Holdings, Inc. Class A Common Stock"
 },
-"AVEX": {
-"prev_close": 12.51,
+"APUS": {
+"prev_close": 2.23,
 "prev_day": "2026-11-13",
-"avg_vol20": 2798246.0,
-"shares_out": 1000.0,
-"name": "AEVEX Corp."
+"avg_vol20": 51306.35,
+"shares_out": 1509118.0,
+"name": "Apimeds Pharmaceuticals US, Inc."
+},
+"ALIS": {
+"prev_close": 8.6999,
+"prev_day": "2026-11-13",
+"avg_vol20": 13577.35,
+"shares_out": 8427500.0,
+"name": "Calisa Acquisition Corp Ordinary shares"
+},
+"ARBB": {
+"prev_close": 3.61,
+"prev_day": "2026-11-13",
+"avg_vol20": 7205.6,
+"shares_out": 1765256.0,
+"name": "ARB IOT Group Limited Ordinary Shares"
+},
+"AMS": {
+"prev_close": 1.08,
+"prev_day": "2026-11-13",
+"avg_vol20": 11359.9,
+"shares_out": 6675000.0,
+"name": "American Shared Hospital Services"
+},
+"APVO": {
+"prev_close": 0.5941,
+"prev_day": "2026-11-13",
+"avg_vol20": 84413.0,
+"shares_out": 1801970.0,
+"name": "Aptevo Therapeutics Inc. Common Stock"
+},
+"ARTW": {
+"prev_close": 2.7776,
+"prev_day": "2026-11-13",
+"avg_vol20": 5170.0,
+"shares_out": 5206386.0,
+"name": "Art's-Way Manufacturing Co., Inc. Common Stock"
+},
+"ATOS": {
+"prev_close": 1.96,
+"prev_day": "2026-11-13",
+"avg_vol20": 61139.6,
+"shares_out": 9979298.0,
+"name": "Atossa Therapeutics, Inc. Common Stock"
+},
+"AZTR": {
+"prev_close": 0.6084,
+"prev_day": "2026-11-13",
+"avg_vol20": 8145783.4,
+"shares_out": 6060435.0,
+"name": "Azitra Inc"
+},
+"BANL": {
+"prev_close": 3.11,
+"prev_day": "2026-11-13",
+"avg_vol20": 17148.4,
+"shares_out": 2115409.7692307695,
+"name": "CBL International Limited Class B Ordinary Shares"
 },
 "AXIL": {
 "prev_close": 5.19,
@@ -291,12 +291,54 @@
 "shares_out": 6822681.0,
 "name": "AXIL Brands, Inc."
 },
-"AVX": {
-"prev_close": 3.86,
+"AWX": {
+"prev_close": 2.815,
 "prev_day": "2026-11-13",
-"avg_vol20": 194287.3,
-"shares_out": 9480988.0,
-"name": "Avax One Technology Ltd. Common Shares"
+"avg_vol20": 13213.5,
+"shares_out": 3287647.0,
+"name": "Avalon Holdings Corp."
+},
+"ARTL": {
+"prev_close": 2.07,
+"prev_day": "2026-11-13",
+"avg_vol20": 40017.5,
+"shares_out": 937177.0,
+"name": "Artelo Biosciences, Inc. Common Stock"
+},
+"ATXG": {
+"prev_close": 2.43,
+"prev_day": "2026-11-13",
+"avg_vol20": 109381.55,
+"shares_out": 1177974.0,
+"name": "Addentax Group Corp. Common Stock"
+},
+"ASTI": {
+"prev_close": 1.28,
+"prev_day": "2026-11-13",
+"avg_vol20": 222774.95,
+"shares_out": 9816431.0,
+"name": "Ascent Solar Technologies, Inc. Common Stock"
+},
+"ASBP": {
+"prev_close": 8.41,
+"prev_day": "2026-11-13",
+"avg_vol20": 23116.75,
+"shares_out": 1402557.0,
+"name": "Aspire-Lakewood Holdings, Inc. Common Stock"
+},
+"ATCX": {
+"prev_close": 1.88,
+"prev_day": "2026-11-13",
+"avg_vol20": 7030.05,
+"shares_out": 3474972.0,
+"name": "Atlas Critical Minerals Corporation Common Stock"
+},
+"ATPC": {
+"prev_close": 1.27,
+"prev_day": "2026-11-13",
+"avg_vol20": 21956.45,
+"shares_out": 1000626.0,
+"name": "Agape ATP Corporation Common Stock"
 },
 "ASTC": {
 "prev_close": 4.2,
@@ -305,12 +347,19 @@
 "shares_out": 2127491.0,
 "name": "Astrotech Corporation (DE) Common Stock"
 },
-"ATCX": {
-"prev_close": 1.88,
+"ATTT": {
+"prev_close": 2.02,
 "prev_day": "2026-11-13",
-"avg_vol20": 7030.05,
-"shares_out": 3474972.0,
-"name": "Atlas Critical Minerals Corporation Common Stock"
+"avg_vol20": 8813.9,
+"shares_out": 5874743.0,
+"name": "Atlas Trinity Tech Limited Ordinary Shares"
+},
+"AVX": {
+"prev_close": 3.86,
+"prev_day": "2026-11-13",
+"avg_vol20": 194287.3,
+"shares_out": 9480988.0,
+"name": "Avax One Technology Ltd. Common Shares"
 },
 "ATYR": {
 "prev_close": 6.105,
@@ -326,194 +375,12 @@
 "shares_out": 8911437.0,
 "name": "BARK, Inc."
 },
-"ASTI": {
-"prev_close": 1.28,
-"prev_day": "2026-11-13",
-"avg_vol20": 222774.95,
-"shares_out": 9816431.0,
-"name": "Ascent Solar Technologies, Inc. Common Stock"
-},
-"ATTT": {
-"prev_close": 2.02,
-"prev_day": "2026-11-13",
-"avg_vol20": 8813.9,
-"shares_out": 5874743.0,
-"name": "Atlas Trinity Tech Limited Ordinary Shares"
-},
-"AVAL": {
-"prev_close": 4.06,
-"prev_day": "2026-11-13",
-"avg_vol20": 205126.45,
-"shares_out": 7.0,
-"name": "GRUPO AVAL ACCIONES Y VALORES S.A."
-},
-"AWX": {
-"prev_close": 2.815,
-"prev_day": "2026-11-13",
-"avg_vol20": 13213.5,
-"shares_out": 3287647.0,
-"name": "Avalon Holdings Corp."
-},
-"ATPC": {
-"prev_close": 1.27,
-"prev_day": "2026-11-13",
-"avg_vol20": 21956.45,
-"shares_out": 1000626.0,
-"name": "Agape ATP Corporation Common Stock"
-},
-"BANL": {
-"prev_close": 3.11,
-"prev_day": "2026-11-13",
-"avg_vol20": 17148.4,
-"shares_out": 2115409.7692307695,
-"name": "CBL International Limited Class B Ordinary Shares"
-},
-"ASBP": {
-"prev_close": 8.41,
-"prev_day": "2026-11-13",
-"avg_vol20": 23116.75,
-"shares_out": 1402557.0,
-"name": "Aspire-Lakewood Holdings, Inc. Common Stock"
-},
-"ARTW": {
-"prev_close": 2.7776,
-"prev_day": "2026-11-13",
-"avg_vol20": 5170.0,
-"shares_out": 5206386.0,
-"name": "Art's-Way Manufacturing Co., Inc. Common Stock"
-},
-"AZTR": {
-"prev_close": 0.6084,
-"prev_day": "2026-11-13",
-"avg_vol20": 8145783.4,
-"shares_out": 6060435.0,
-"name": "Azitra Inc"
-},
-"ATXG": {
-"prev_close": 2.43,
-"prev_day": "2026-11-13",
-"avg_vol20": 109381.55,
-"shares_out": 1177974.0,
-"name": "Addentax Group Corp. Common Stock"
-},
-"ATOS": {
-"prev_close": 1.96,
-"prev_day": "2026-11-13",
-"avg_vol20": 61139.6,
-"shares_out": 9979298.0,
-"name": "Atossa Therapeutics, Inc. Common Stock"
-},
-"ARTL": {
-"prev_close": 2.07,
-"prev_day": "2026-11-13",
-"avg_vol20": 40017.5,
-"shares_out": 937177.0,
-"name": "Artelo Biosciences, Inc. Common Stock"
-},
-"BKYI": {
-"prev_close": 2.12,
-"prev_day": "2026-11-13",
-"avg_vol20": 4343517.05,
-"shares_out": 2035149.0,
-"name": "BIO-key International, Inc. Common Stock"
-},
-"BKHA": {
-"prev_close": 7.3,
-"prev_day": "2026-11-13",
-"avg_vol20": 170598.0,
-"shares_out": 4153577.0,
-"name": "Black Hawk Acquisition Corporation Class A Ordinary Shares"
-},
-"BJDX": {
-"prev_close": 2.61,
-"prev_day": "2026-11-13",
-"avg_vol20": 91190.2,
-"shares_out": 1117009.0,
-"name": "Bluejay Diagnostics, Inc. Common Stock"
-},
-"BGDE": {
-"prev_close": 3.0,
-"prev_day": "2026-11-13",
-"avg_vol20": 89660.0,
-"shares_out": 6419242.0,
-"name": "Big Digital Energy, Inc. Common Stock"
-},
 "BIYA": {
 "prev_close": 1.21,
 "prev_day": "2026-11-13",
 "avg_vol20": 89088.2,
 "shares_out": 118583.5,
 "name": "Baiya International Group Inc Class A Ordinary Shares"
-},
-"BMRA": {
-"prev_close": 1.36,
-"prev_day": "2026-11-13",
-"avg_vol20": 10169.3,
-"shares_out": 4598968.0,
-"name": "Biomerica, Inc. Common Stock"
-},
-"BOLT": {
-"prev_close": 6.08,
-"prev_day": "2026-11-13",
-"avg_vol20": 747402.85,
-"shares_out": 2607490.0,
-"name": "Bolt Biotherapeutics, Inc. Common Stock"
-},
-"BON": {
-"prev_close": 1.1,
-"prev_day": "2026-11-13",
-"avg_vol20": 9698.4,
-"shares_out": 11000.0,
-"name": "Bon Natural Life Limited Class A Ordinary Shares"
-},
-"BGM": {
-"prev_close": 7.875,
-"prev_day": "2026-11-13",
-"avg_vol20": 7993.0,
-"shares_out": 6687445.266666667,
-"name": "BGM Group Ltd. Class A Ordinary Shares"
-},
-"BPAC": {
-"prev_close": 10.23,
-"prev_day": "2026-11-13",
-"avg_vol20": 8158.5,
-"shares_out": 1437500.0,
-"name": "Blueport Acquisition Ltd Class A Ordinary Shares"
-},
-"BOXL": {
-"prev_close": 1.86,
-"prev_day": "2026-11-13",
-"avg_vol20": 17229.85,
-"shares_out": 667393.0,
-"name": "Boxlight Corporation Class A Common Stock"
-},
-"BESS": {
-"prev_close": 2.97,
-"prev_day": "2026-11-13",
-"avg_vol20": 300388.5,
-"shares_out": 7097573.0,
-"name": "Bimergen Energy Corporation"
-},
-"BOSC": {
-"prev_close": 4.02,
-"prev_day": "2026-11-13",
-"avg_vol20": 40138.8,
-"shares_out": 7028934.0,
-"name": "B.O.S. Better Online Solutions Common Stock"
-},
-"BNKK": {
-"prev_close": 0.9125,
-"prev_day": "2026-11-13",
-"avg_vol20": 82990.6,
-"shares_out": 8000940.0,
-"name": "Bonk, Inc. Common Stock"
-},
-"BGMS": {
-"prev_close": 0.6403,
-"prev_day": "2026-11-13",
-"avg_vol20": 24635.35,
-"shares_out": 6622794.0,
-"name": "Bio Green Med Solution, Inc. Common Stock"
 },
 "BCTX": {
 "prev_close": 3.39,
@@ -522,19 +389,12 @@
 "shares_out": 8732381.0,
 "name": "BriaCell Therapeutics Corp. Common Shares"
 },
-"BIAF": {
-"prev_close": 2.2,
+"BGM": {
+"prev_close": 7.875,
 "prev_day": "2026-11-13",
-"avg_vol20": 91888.3,
-"shares_out": 1820006.0,
-"name": "bioAffinity Technologies, Inc. Common Stock"
-},
-"BNAI": {
-"prev_close": 4.23,
-"prev_day": "2026-11-13",
-"avg_vol20": 120428.55,
-"shares_out": 7488046.0,
-"name": "Brand Engagement Network Inc. Common Stock"
+"avg_vol20": 7993.0,
+"shares_out": 6687445.266666667,
+"name": "BGM Group Ltd. Class A Ordinary Shares"
 },
 "BGLC": {
 "prev_close": 0.821,
@@ -543,54 +403,103 @@
 "shares_out": 2933442.0,
 "name": "BioNexus Gene Lab Corp Common stock"
 },
-"BTCT": {
-"prev_close": 0.6378,
+"BESS": {
+"prev_close": 2.97,
 "prev_day": "2026-11-13",
-"avg_vol20": 299110.65,
-"shares_out": 9516975.0,
-"name": "BTC Digital Ltd. Ordinary Shares"
+"avg_vol20": 300388.5,
+"shares_out": 7097573.0,
+"name": "Bimergen Energy Corporation"
 },
-"CALC": {
-"prev_close": 1.21,
+"BNAI": {
+"prev_close": 4.23,
 "prev_day": "2026-11-13",
-"avg_vol20": 82044.7,
-"shares_out": 6895149.0,
-"name": "CalciMedica, Inc. Common Stock"
+"avg_vol20": 120428.55,
+"shares_out": 7488046.0,
+"name": "Brand Engagement Network Inc. Common Stock"
 },
-"BTOC": {
-"prev_close": 1.73,
+"BOLT": {
+"prev_close": 6.08,
 "prev_day": "2026-11-13",
-"avg_vol20": 59516.0,
-"shares_out": 2840192.4375,
-"name": "Armlogi Holding Corp. Common Stock"
+"avg_vol20": 747402.85,
+"shares_out": 2607490.0,
+"name": "Bolt Biotherapeutics, Inc. Common Stock"
 },
-"BVC": {
-"prev_close": 14.56,
+"BJDX": {
+"prev_close": 2.61,
 "prev_day": "2026-11-13",
-"avg_vol20": 39439.35,
-"shares_out": 8484581.0,
-"name": "BitVentures Limited Ordinary Shares"
+"avg_vol20": 91190.2,
+"shares_out": 1117009.0,
+"name": "Bluejay Diagnostics, Inc. Common Stock"
 },
-"CDLX": {
-"prev_close": 1.34,
+"BKYI": {
+"prev_close": 2.12,
 "prev_day": "2026-11-13",
-"avg_vol20": 75183.85,
-"shares_out": 6101364.0,
-"name": "Cardlytics, Inc. Common Stock"
+"avg_vol20": 4343517.05,
+"shares_out": 2035149.0,
+"name": "BIO-key International, Inc. Common Stock"
 },
-"CDIO": {
-"prev_close": 1.89,
+"BPAC": {
+"prev_close": 10.23,
 "prev_day": "2026-11-13",
-"avg_vol20": 18391.35,
-"shares_out": 2959469.0,
-"name": "Cardio Diagnostics Holdings Inc. Common stock"
+"avg_vol20": 8158.5,
+"shares_out": 1437500.0,
+"name": "Blueport Acquisition Ltd Class A Ordinary Shares"
 },
-"CCEL": {
-"prev_close": 4.85,
+"BOSC": {
+"prev_close": 4.02,
 "prev_day": "2026-11-13",
-"avg_vol20": 8640.75,
-"shares_out": 8062650.0,
-"name": "Cryo-Cell International Inc."
+"avg_vol20": 40138.8,
+"shares_out": 7028934.0,
+"name": "B.O.S. Better Online Solutions Common Stock"
+},
+"BOXL": {
+"prev_close": 1.86,
+"prev_day": "2026-11-13",
+"avg_vol20": 17229.85,
+"shares_out": 667393.0,
+"name": "Boxlight Corporation Class A Common Stock"
+},
+"BGMS": {
+"prev_close": 0.6403,
+"prev_day": "2026-11-13",
+"avg_vol20": 24635.35,
+"shares_out": 6622794.0,
+"name": "Bio Green Med Solution, Inc. Common Stock"
+},
+"BKHA": {
+"prev_close": 7.3,
+"prev_day": "2026-11-13",
+"avg_vol20": 170598.0,
+"shares_out": 4153577.0,
+"name": "Black Hawk Acquisition Corporation Class A Ordinary Shares"
+},
+"BIAF": {
+"prev_close": 2.2,
+"prev_day": "2026-11-13",
+"avg_vol20": 91888.3,
+"shares_out": 1820006.0,
+"name": "bioAffinity Technologies, Inc. Common Stock"
+},
+"BMRA": {
+"prev_close": 1.36,
+"prev_day": "2026-11-13",
+"avg_vol20": 10169.3,
+"shares_out": 4598968.0,
+"name": "Biomerica, Inc. Common Stock"
+},
+"BNKK": {
+"prev_close": 0.9125,
+"prev_day": "2026-11-13",
+"avg_vol20": 82990.6,
+"shares_out": 8000940.0,
+"name": "Bonk, Inc. Common Stock"
+},
+"BGDE": {
+"prev_close": 3.0,
+"prev_day": "2026-11-13",
+"avg_vol20": 89660.0,
+"shares_out": 6419242.0,
+"name": "Big Digital Energy, Inc. Common Stock"
 },
 "CANF": {
 "prev_close": 1.42,
@@ -599,19 +508,12 @@
 "shares_out": 130921.25,
 "name": "Can-Fite BioPharma Ltd. American Depositary Shares, each rep"
 },
-"CCHH": {
-"prev_close": 1.0,
+"BRID": {
+"prev_close": 5.4,
 "prev_day": "2026-11-13",
-"avg_vol20": 26386.95,
-"shares_out": 2195000.0,
-"name": "CCH Holdings Ltd Class A Ordinary Shares"
-},
-"BTBD": {
-"prev_close": 1.515,
-"prev_day": "2026-11-13",
-"avg_vol20": 11355.15,
-"shares_out": 6184724.0,
-"name": "BT Brands, Inc. Common Stock"
+"avg_vol20": 5358.2,
+"shares_out": 9076832.0,
+"name": "Bridgford Foods Corporation Common Stock"
 },
 "CAPN": {
 "prev_close": 11.46,
@@ -620,54 +522,12 @@
 "shares_out": 5288092.0,
 "name": "Cayson Acquisition Corp Ordinary shares"
 },
-"BRTX": {
-"prev_close": 1.49,
-"prev_day": "2026-11-13",
-"avg_vol20": 26865.6,
-"shares_out": 1273908.5,
-"name": "BioRestorative Therapies, Inc. Common Stock (NV)"
-},
-"BRID": {
-"prev_close": 5.4,
-"prev_day": "2026-11-13",
-"avg_vol20": 5358.2,
-"shares_out": 9076832.0,
-"name": "Bridgford Foods Corporation Common Stock"
-},
-"CCG": {
-"prev_close": 11.13,
-"prev_day": "2026-11-13",
-"avg_vol20": 32320.1,
-"shares_out": 2294910.657142857,
-"name": "Cheche Group Inc. Class A Ordinary Shares"
-},
-"CAPS": {
-"prev_close": 1.74,
-"prev_day": "2026-11-13",
-"avg_vol20": 42848.7,
-"shares_out": 935385.0,
-"name": "Capstone Holding Corp. Common Stock"
-},
-"BTLN": {
-"prev_close": 3.69,
-"prev_day": "2026-11-13",
-"avg_vol20": 16764.55,
-"shares_out": 2935642.0,
-"name": "Brightline Interactive, Inc. Common Stock"
-},
 "BXBL": {
 "prev_close": 1.69,
 "prev_day": "2026-11-13",
 "avg_vol20": 152832.3,
 "shares_out": 2295800.0,
 "name": "BOXABL, Inc. Common stock"
-},
-"BRUN": {
-"prev_close": 5.53,
-"prev_day": "2026-11-13",
-"avg_vol20": 3975466.35,
-"shares_out": 1.0,
-"name": "Boost Run Inc. Class A Common Stock"
 },
 "CABO": {
 "prev_close": 3.0,
@@ -676,61 +536,96 @@
 "shares_out": 5680440.0,
 "name": "Cable One, Inc."
 },
-"CMND": {
-"prev_close": 4.53,
+"CAPS": {
+"prev_close": 1.74,
 "prev_day": "2026-11-13",
-"avg_vol20": 6841.65,
-"shares_out": 1975.95,
-"name": "Clearmind Medicine Inc. Common Shares"
+"avg_vol20": 42848.7,
+"shares_out": 935385.0,
+"name": "Capstone Holding Corp. Common Stock"
 },
-"CELZ": {
-"prev_close": 0.5281,
+"CDLX": {
+"prev_close": 1.34,
 "prev_day": "2026-11-13",
-"avg_vol20": 105094.45,
-"shares_out": 7597557.0,
-"name": "Creative Medical Technology Holdings, Inc. Common Stock"
+"avg_vol20": 75183.85,
+"shares_out": 6101364.0,
+"name": "Cardlytics, Inc. Common Stock"
 },
-"CLIR": {
-"prev_close": 2.3,
+"BTBD": {
+"prev_close": 1.515,
 "prev_day": "2026-11-13",
-"avg_vol20": 14594.1,
-"shares_out": 6807455.0,
-"name": "ClearSign Technologies Corporation Common Stock (DE)"
+"avg_vol20": 11355.15,
+"shares_out": 6184724.0,
+"name": "BT Brands, Inc. Common Stock"
 },
-"CNET": {
-"prev_close": 0.78,
+"BVC": {
+"prev_close": 14.56,
 "prev_day": "2026-11-13",
-"avg_vol20": 14383.6,
-"shares_out": 3668429.0,
-"name": "ZW Data Action Technologies Inc. Common Stock"
+"avg_vol20": 39439.35,
+"shares_out": 8484581.0,
+"name": "BitVentures Limited Ordinary Shares"
 },
-"CLIK": {
-"prev_close": 0.7311,
+"CCHH": {
+"prev_close": 1.0,
 "prev_day": "2026-11-13",
-"avg_vol20": 977000.7,
-"shares_out": 8563033.0,
-"name": "Click Holdings Limited Class A Ordinary Share"
+"avg_vol20": 26386.95,
+"shares_out": 2195000.0,
+"name": "CCH Holdings Ltd Class A Ordinary Shares"
 },
-"CDTG": {
-"prev_close": 1.045,
+"CALC": {
+"prev_close": 1.21,
 "prev_day": "2026-11-13",
-"avg_vol20": 80388.55,
-"shares_out": 541000.0,
-"name": "CDT Environmental Technology Investment Holdings Limited ord"
+"avg_vol20": 82044.7,
+"shares_out": 6895149.0,
+"name": "CalciMedica, Inc. Common Stock"
 },
-"CETX": {
-"prev_close": 0.61,
+"BTLN": {
+"prev_close": 3.69,
 "prev_day": "2026-11-13",
-"avg_vol20": 2171511.75,
-"shares_out": 1721141.0,
-"name": "Cemtrex Inc. Common Stock"
+"avg_vol20": 16764.55,
+"shares_out": 2935642.0,
+"name": "Brightline Interactive, Inc. Common Stock"
 },
-"CLWT": {
-"prev_close": 1.22,
+"CCG": {
+"prev_close": 11.13,
 "prev_day": "2026-11-13",
-"avg_vol20": 32556.35,
-"shares_out": 7447012.0,
-"name": "Euro Tech Holdings Company Limited Common Stock"
+"avg_vol20": 32320.1,
+"shares_out": 2294910.657142857,
+"name": "Cheche Group Inc. Class A Ordinary Shares"
+},
+"CCEL": {
+"prev_close": 4.85,
+"prev_day": "2026-11-13",
+"avg_vol20": 8640.75,
+"shares_out": 8062650.0,
+"name": "Cryo-Cell International Inc."
+},
+"BTOC": {
+"prev_close": 1.73,
+"prev_day": "2026-11-13",
+"avg_vol20": 59516.0,
+"shares_out": 2840192.4375,
+"name": "Armlogi Holding Corp. Common Stock"
+},
+"BRTX": {
+"prev_close": 1.49,
+"prev_day": "2026-11-13",
+"avg_vol20": 26865.6,
+"shares_out": 1273908.5,
+"name": "BioRestorative Therapies, Inc. Common Stock (NV)"
+},
+"CDIO": {
+"prev_close": 1.89,
+"prev_day": "2026-11-13",
+"avg_vol20": 18391.35,
+"shares_out": 2959469.0,
+"name": "Cardio Diagnostics Holdings Inc. Common stock"
+},
+"BTCT": {
+"prev_close": 0.6378,
+"prev_day": "2026-11-13",
+"avg_vol20": 299110.65,
+"shares_out": 9516975.0,
+"name": "BTC Digital Ltd. Ordinary Shares"
 },
 "CNSY": {
 "prev_close": 0.9502,
@@ -739,19 +634,33 @@
 "shares_out": 9776935.0,
 "name": "Cerenome, Inc. Common Stock"
 },
-"CHGA": {
-"prev_close": 1.06,
+"CNSP": {
+"prev_close": 2.89,
 "prev_day": "2026-11-13",
-"avg_vol20": 49314.4,
-"shares_out": 34193.4,
-"name": "Change Agents Corporation Common Stock"
+"avg_vol20": 17119.0,
+"shares_out": 1461449.0,
+"name": "CNS Pharmaceuticals, Inc. Common Stock"
 },
-"CKX": {
-"prev_close": 15.25,
+"CLIR": {
+"prev_close": 2.3,
 "prev_day": "2026-11-13",
-"avg_vol20": 677257.25,
-"shares_out": 2053129.0,
-"name": "CKX Lands, Inc."
+"avg_vol20": 14594.1,
+"shares_out": 6807455.0,
+"name": "ClearSign Technologies Corporation Common Stock (DE)"
+},
+"CLRO": {
+"prev_close": 3.37,
+"prev_day": "2026-11-13",
+"avg_vol20": 9971774.45,
+"shares_out": 2675412.0,
+"name": "ClearOne, Inc. Common Stock"
+},
+"CLWT": {
+"prev_close": 1.22,
+"prev_day": "2026-11-13",
+"avg_vol20": 32556.35,
+"shares_out": 7447012.0,
+"name": "Euro Tech Holdings Company Limited Common Stock"
 },
 "CLST": {
 "prev_close": 17.57,
@@ -767,19 +676,19 @@
 "shares_out": 1256388.0,
 "name": "China Natural Resources, Inc. Common Stock"
 },
-"CNSP": {
-"prev_close": 2.89,
+"CMCT": {
+"prev_close": 4.99,
 "prev_day": "2026-11-13",
-"avg_vol20": 17119.0,
-"shares_out": 1461449.0,
-"name": "CNS Pharmaceuticals, Inc. Common Stock"
+"avg_vol20": 44575.7,
+"shares_out": 2947493.0,
+"name": "Creative Media & Community Trust Corporation Common stock"
 },
-"CHSN": {
-"prev_close": 0.5637,
+"CHGA": {
+"prev_close": 1.06,
 "prev_day": "2026-11-13",
-"avg_vol20": 14367175.25,
-"shares_out": 389787.8,
-"name": "Chanson International Holding Class A Ordinary Shares"
+"avg_vol20": 49314.4,
+"shares_out": 34193.4,
+"name": "Change Agents Corporation Common Stock"
 },
 "CHOW": {
 "prev_close": 3.46,
@@ -788,26 +697,19 @@
 "shares_out": 3549000.0,
 "name": "ChowChow Cloud International Holdings Limited"
 },
-"CISS": {
-"prev_close": 1.8,
+"CDTG": {
+"prev_close": 1.045,
 "prev_day": "2026-11-13",
-"avg_vol20": 994301.65,
-"shares_out": 23.55957142857143,
-"name": "C3is Inc. Common Stock"
+"avg_vol20": 80388.55,
+"shares_out": 541000.0,
+"name": "CDT Environmental Technology Investment Holdings Limited ord"
 },
-"CIIT": {
-"prev_close": 1.91,
+"CLIK": {
+"prev_close": 0.7311,
 "prev_day": "2026-11-13",
-"avg_vol20": 2660884.25,
-"shares_out": 1184039.0,
-"name": "Tianci International, Inc. Common Stock"
-},
-"COCH": {
-"prev_close": 6.735,
-"prev_day": "2026-11-13",
-"avg_vol20": 90016.35,
-"shares_out": 7744488.0,
-"name": "Envoy Medical, Inc. Class A Common Stock"
+"avg_vol20": 977000.7,
+"shares_out": 8563033.0,
+"name": "Click Holdings Limited Class A Ordinary Share"
 },
 "CLDI": {
 "prev_close": 0.6219,
@@ -816,40 +718,61 @@
 "shares_out": 3449184.0,
 "name": "Calidi Biotherapeutics, Inc."
 },
-"CMCT": {
-"prev_close": 4.99,
+"CNET": {
+"prev_close": 0.78,
 "prev_day": "2026-11-13",
-"avg_vol20": 44575.7,
-"shares_out": 2947493.0,
-"name": "Creative Media & Community Trust Corporation Common stock"
+"avg_vol20": 14383.6,
+"shares_out": 3668429.0,
+"name": "ZW Data Action Technologies Inc. Common Stock"
 },
-"CLRO": {
-"prev_close": 3.37,
+"CETX": {
+"prev_close": 0.61,
 "prev_day": "2026-11-13",
-"avg_vol20": 9971774.45,
-"shares_out": 2675412.0,
-"name": "ClearOne, Inc. Common Stock"
+"avg_vol20": 2171511.75,
+"shares_out": 1721141.0,
+"name": "Cemtrex Inc. Common Stock"
 },
-"CURX": {
-"prev_close": 4.8,
+"CIIT": {
+"prev_close": 1.91,
 "prev_day": "2026-11-13",
-"avg_vol20": 9347.8,
-"shares_out": 1568216.0,
-"name": "Curanex Pharmaceuticals Inc Common Stock"
+"avg_vol20": 2660884.25,
+"shares_out": 1184039.0,
+"name": "Tianci International, Inc. Common Stock"
 },
-"CUE": {
-"prev_close": 16.12,
+"CHSN": {
+"prev_close": 0.5637,
 "prev_day": "2026-11-13",
-"avg_vol20": 143189.85,
-"shares_out": 7264414.0,
-"name": "Cue Biopharma, Inc. Common Stock"
+"avg_vol20": 14367175.25,
+"shares_out": 389787.8,
+"name": "Chanson International Holding Class A Ordinary Shares"
 },
-"CPHC": {
-"prev_close": 15.72,
+"CELZ": {
+"prev_close": 0.5281,
 "prev_day": "2026-11-13",
-"avg_vol20": 2449.9,
-"shares_out": 5197717.0,
-"name": "Canterbury Park Holding Corporation 'New' Common Stock"
+"avg_vol20": 105094.45,
+"shares_out": 7597557.0,
+"name": "Creative Medical Technology Holdings, Inc. Common Stock"
+},
+"COCH": {
+"prev_close": 6.735,
+"prev_day": "2026-11-13",
+"avg_vol20": 90016.35,
+"shares_out": 7744488.0,
+"name": "Envoy Medical, Inc. Class A Common Stock"
+},
+"CKX": {
+"prev_close": 15.25,
+"prev_day": "2026-11-13",
+"avg_vol20": 677257.25,
+"shares_out": 2053129.0,
+"name": "CKX Lands, Inc."
+},
+"CISS": {
+"prev_close": 1.8,
+"prev_day": "2026-11-13",
+"avg_vol20": 994301.65,
+"shares_out": 23.55957142857143,
+"name": "C3is Inc. Common Stock"
 },
 "CUPR": {
 "prev_close": 1.69,
@@ -858,19 +781,47 @@
 "shares_out": 920625.0,
 "name": "Cuprina Holdings (Cayman) Limited Class A Ordinary Shares"
 },
-"DAIC": {
-"prev_close": 0.8511,
+"CURX": {
+"prev_close": 4.8,
 "prev_day": "2026-11-13",
-"avg_vol20": 520610.7,
-"shares_out": 2337767.0,
-"name": "CID HoldCo, Inc. Common Stock"
+"avg_vol20": 9347.8,
+"shares_out": 1568216.0,
+"name": "Curanex Pharmaceuticals Inc Common Stock"
 },
-"CVV": {
-"prev_close": 4.54,
+"CTAA": {
+"prev_close": 10.03,
 "prev_day": "2026-11-13",
-"avg_vol20": 57547.1,
-"shares_out": 6952453.0,
-"name": "CVD Equipment Corporation Common Stock"
+"avg_vol20": 8729.45,
+"shares_out": 315000.0,
+"name": "ClearThink 1 Acquisition Corp. Class A Ordinary Shares"
+},
+"COHN": {
+"prev_close": 9.74,
+"prev_day": "2026-11-13",
+"avg_vol20": 8764.7,
+"shares_out": 3366686.0,
+"name": "Cohen & Company Inc"
+},
+"CVR": {
+"prev_close": 9.85,
+"prev_day": "2026-11-13",
+"avg_vol20": 2850.35,
+"shares_out": 966132.0,
+"name": "Chicago Rivet & Machine Co."
+},
+"CTSO": {
+"prev_close": 4.87,
+"prev_day": "2026-11-13",
+"avg_vol20": 43340.5,
+"shares_out": 3142137.4000000004,
+"name": "Cytosorbents Corporation Common Stock"
+},
+"CPHC": {
+"prev_close": 15.72,
+"prev_day": "2026-11-13",
+"avg_vol20": 2449.9,
+"shares_out": 5197717.0,
+"name": "Canterbury Park Holding Corporation 'New' Common Stock"
 },
 "CVKD": {
 "prev_close": 1.51,
@@ -886,26 +837,12 @@
 "shares_out": 8338478.0,
 "name": "America's Car-Mart Inc Common Stock"
 },
-"COSM": {
-"prev_close": 3.24,
+"CTNT": {
+"prev_close": 1.61,
 "prev_day": "2026-11-13",
-"avg_vol20": 2260567.85,
-"shares_out": 5031688.65,
-"name": "Cosmos Health Inc. Common Stock"
-},
-"CTSO": {
-"prev_close": 4.87,
-"prev_day": "2026-11-13",
-"avg_vol20": 43340.5,
-"shares_out": 3142137.4000000004,
-"name": "Cytosorbents Corporation Common Stock"
-},
-"CTAA": {
-"prev_close": 10.03,
-"prev_day": "2026-11-13",
-"avg_vol20": 8729.45,
-"shares_out": 315000.0,
-"name": "ClearThink 1 Acquisition Corp. Class A Ordinary Shares"
+"avg_vol20": 170971.5,
+"shares_out": 1333445.0,
+"name": "Cheetah Net Supply Chain Service Inc Class A Common Stock"
 },
 "CTRM": {
 "prev_close": 1.31,
@@ -914,26 +851,19 @@
 "shares_out": 9662354.0,
 "name": "Castor Maritime Inc. Common Shares"
 },
-"CYCU": {
-"prev_close": 2.29,
+"CUE": {
+"prev_close": 16.12,
 "prev_day": "2026-11-13",
-"avg_vol20": 125466.0,
-"shares_out": 1486220.875,
-"name": "Cycurion, Inc. Common Stock"
+"avg_vol20": 143189.85,
+"shares_out": 7264414.0,
+"name": "Cue Biopharma, Inc. Common Stock"
 },
-"CVR": {
-"prev_close": 9.85,
+"COSM": {
+"prev_close": 3.24,
 "prev_day": "2026-11-13",
-"avg_vol20": 2850.35,
-"shares_out": 966132.0,
-"name": "Chicago Rivet & Machine Co."
-},
-"COHN": {
-"prev_close": 9.74,
-"prev_day": "2026-11-13",
-"avg_vol20": 8764.7,
-"shares_out": 3366686.0,
-"name": "Cohen & Company Inc"
+"avg_vol20": 2260567.85,
+"shares_out": 5031688.65,
+"name": "Cosmos Health Inc. Common Stock"
 },
 "CXAI": {
 "prev_close": 1.38,
@@ -942,19 +872,26 @@
 "shares_out": 2567744.0,
 "name": "CXApp Inc. Class A Common Stock"
 },
-"CTNT": {
-"prev_close": 1.61,
+"CYCU": {
+"prev_close": 2.29,
 "prev_day": "2026-11-13",
-"avg_vol20": 170971.5,
-"shares_out": 1333445.0,
-"name": "Cheetah Net Supply Chain Service Inc Class A Common Stock"
+"avg_vol20": 125466.0,
+"shares_out": 1486220.875,
+"name": "Cycurion, Inc. Common Stock"
 },
-"DTST": {
-"prev_close": 2.84,
+"DAIC": {
+"prev_close": 0.8511,
 "prev_day": "2026-11-13",
-"avg_vol20": 302064.0,
-"shares_out": 2337738.0,
-"name": "Data Storage Corporation Common Stock"
+"avg_vol20": 520610.7,
+"shares_out": 2337767.0,
+"name": "CID HoldCo, Inc. Common Stock"
+},
+"CVV": {
+"prev_close": 4.54,
+"prev_day": "2026-11-13",
+"avg_vol20": 57547.1,
+"shares_out": 6952453.0,
+"name": "CVD Equipment Corporation Common Stock"
 },
 "EDHL": {
 "prev_close": 6.81,
@@ -963,40 +900,19 @@
 "shares_out": 1666250.0,
 "name": "Everbright Digital Holding Limited Ordinary Shares"
 },
-"DCM": {
-"prev_close": 3.0,
+"DDI": {
+"prev_close": 15.77,
 "prev_day": "2026-11-13",
-"avg_vol20": 12914.55,
-"shares_out": 3028463.0,
-"name": "DeFi Capital Markets, Inc."
+"avg_vol20": 276710.1,
+"shares_out": 2477672.0,
+"name": "DoubleDown Interactive Co., Ltd. American Depository Shares"
 },
-"EDBL": {
-"prev_close": 0.62,
+"DTST": {
+"prev_close": 2.84,
 "prev_day": "2026-11-13",
-"avg_vol20": 123798.25,
-"shares_out": 1951509.0,
-"name": "Edible Garden AG Incorporated Common Stock"
-},
-"DSY": {
-"prev_close": 2.83,
-"prev_day": "2026-11-13",
-"avg_vol20": 4678.15,
-"shares_out": 217433.75,
-"name": "Big Tree Cloud Holdings Limited Class A Ordinary Shares"
-},
-"DRMA": {
-"prev_close": 0.6212,
-"prev_day": "2026-11-13",
-"avg_vol20": 148223.15,
-"shares_out": 4930207.0,
-"name": "Dermata Therapeutics, Inc. Common Stock"
-},
-"DCOY": {
-"prev_close": 0.9752,
-"prev_day": "2026-11-13",
-"avg_vol20": 51118.85,
-"shares_out": 2385282.0,
-"name": "Decoy Therapeutics Inc. Common Stock"
+"avg_vol20": 302064.0,
+"shares_out": 2337738.0,
+"name": "Data Storage Corporation Common Stock"
 },
 "DGAC": {
 "prev_close": 10.05,
@@ -1012,54 +928,19 @@
 "shares_out": 3641266.25,
 "name": "Diginex Limited Ordinary Shares"
 },
-"DTSQ": {
-"prev_close": 11.51,
+"DRMA": {
+"prev_close": 0.6212,
 "prev_day": "2026-11-13",
-"avg_vol20": 923.05,
-"shares_out": 3653409.0,
-"name": "DT Cloud Star Acquisition Corporation Ordinary Shares"
+"avg_vol20": 148223.15,
+"shares_out": 4930207.0,
+"name": "Dermata Therapeutics, Inc. Common Stock"
 },
-"DCX": {
-"prev_close": 0.875,
+"EDBL": {
+"prev_close": 0.62,
 "prev_day": "2026-11-13",
-"avg_vol20": 86836.2,
-"shares_out": 10187.928645833334,
-"name": "Digital Currency X Technology Inc. Class A Ordinary Shares"
-},
-"DDI": {
-"prev_close": 15.77,
-"prev_day": "2026-11-13",
-"avg_vol20": 276710.1,
-"shares_out": 2477672.0,
-"name": "DoubleDown Interactive Co., Ltd. American Depository Shares"
-},
-"DFLI": {
-"prev_close": 1.79,
-"prev_day": "2026-11-13",
-"avg_vol20": 71466.9,
-"shares_out": 1948863.0,
-"name": "Dragonfly Energy Holdings Corp. Common Stock (NV)"
-},
-"DFNS": {
-"prev_close": 1.89,
-"prev_day": "2026-11-13",
-"avg_vol20": 820553.15,
-"shares_out": 12138.56,
-"name": "T3 Defense Inc. Common Stock"
-},
-"DLXY": {
-"prev_close": 1.5,
-"prev_day": "2026-11-13",
-"avg_vol20": 29816.25,
-"shares_out": 3270000.0,
-"name": "Delixy Holdings Limited Class A Ordinary Shares"
-},
-"ECOR": {
-"prev_close": 5.25,
-"prev_day": "2026-11-13",
-"avg_vol20": 144893.25,
-"shares_out": 9226006.0,
-"name": "electroCore, Inc. Common Stock"
+"avg_vol20": 123798.25,
+"shares_out": 1951509.0,
+"name": "Edible Garden AG Incorporated Common Stock"
 },
 "DUKR": {
 "prev_close": 2.02,
@@ -1068,54 +949,68 @@
 "shares_out": 3425978.0,
 "name": "DUKE Robotics Corp. Common Stock"
 },
-"ENLV": {
-"prev_close": 1.19,
+"DCM": {
+"prev_close": 3.0,
 "prev_day": "2026-11-13",
-"avg_vol20": 206258.6,
-"shares_out": 989089.575,
-"name": "Enlivex Ltd. Ordinary Shares"
+"avg_vol20": 12914.55,
+"shares_out": 3028463.0,
+"name": "DeFi Capital Markets, Inc."
 },
-"EFOI": {
-"prev_close": 4.44,
+"DCOY": {
+"prev_close": 0.9752,
 "prev_day": "2026-11-13",
-"avg_vol20": 52503.85,
-"shares_out": 6369222.0,
-"name": "Energy Focus, Inc. Common Stock"
+"avg_vol20": 51118.85,
+"shares_out": 2385282.0,
+"name": "Decoy Therapeutics Inc. Common Stock"
 },
-"EUDA": {
-"prev_close": 15.55,
+"DFLI": {
+"prev_close": 1.79,
 "prev_day": "2026-11-13",
-"avg_vol20": 47035.9,
-"shares_out": 94518.75,
-"name": "EUDA Health Holdings Limited Class A Ordinary Shares"
+"avg_vol20": 71466.9,
+"shares_out": 1948863.0,
+"name": "Dragonfly Energy Holdings Corp. Common Stock (NV)"
 },
-"EEIQ": {
-"prev_close": 3.5101,
+"DCX": {
+"prev_close": 0.875,
 "prev_day": "2026-11-13",
-"avg_vol20": 4295.4,
-"shares_out": 1462291.6875,
-"name": "EpicQuest Education Group International Limited Common Stock"
+"avg_vol20": 86836.2,
+"shares_out": 10187.928645833334,
+"name": "Digital Currency X Technology Inc. Class A Ordinary Shares"
 },
-"EDSA": {
-"prev_close": 1.94,
+"ECOR": {
+"prev_close": 5.25,
 "prev_day": "2026-11-13",
-"avg_vol20": 4467006.5,
-"shares_out": 9641031.0,
-"name": "Edesa Biotech, Inc. Common Shares"
+"avg_vol20": 144893.25,
+"shares_out": 9226006.0,
+"name": "electroCore, Inc. Common Stock"
 },
-"EOCN": {
-"prev_close": 2.48,
+"DFNS": {
+"prev_close": 1.89,
 "prev_day": "2026-11-13",
-"avg_vol20": 7317.45,
-"shares_out": 1001394.0,
-"name": "Eocene Ltd. Ordinary Shares"
+"avg_vol20": 820553.15,
+"shares_out": 12138.56,
+"name": "T3 Defense Inc. Common Stock"
 },
-"EJH": {
-"prev_close": 1.135,
+"DTSQ": {
+"prev_close": 11.51,
 "prev_day": "2026-11-13",
-"avg_vol20": 11087.7,
-"shares_out": 3200210.0,
-"name": "E-Home Household Service Holdings Limited Ordinary Shares"
+"avg_vol20": 923.05,
+"shares_out": 3653409.0,
+"name": "DT Cloud Star Acquisition Corporation Ordinary Shares"
+},
+"DSY": {
+"prev_close": 2.83,
+"prev_day": "2026-11-13",
+"avg_vol20": 4678.15,
+"shares_out": 217433.75,
+"name": "Big Tree Cloud Holdings Limited Class A Ordinary Shares"
+},
+"DLXY": {
+"prev_close": 1.5,
+"prev_day": "2026-11-13",
+"avg_vol20": 29816.25,
+"shares_out": 3270000.0,
+"name": "Delixy Holdings Limited Class A Ordinary Shares"
 },
 "ERNA": {
 "prev_close": 1.68,
@@ -1124,26 +1019,19 @@
 "shares_out": 1692550.0,
 "name": "Ernexa Therapeutics Inc. Common Stock"
 },
-"ELAB": {
-"prev_close": 1.58,
+"EJH": {
+"prev_close": 1.135,
 "prev_day": "2026-11-13",
-"avg_vol20": 708255.35,
-"shares_out": 1168935.0,
-"name": "PMGC Holdings Inc. Common Stock"
+"avg_vol20": 11087.7,
+"shares_out": 3200210.0,
+"name": "E-Home Household Service Holdings Limited Ordinary Shares"
 },
-"ENVB": {
-"prev_close": 1.515,
+"EDSA": {
+"prev_close": 1.94,
 "prev_day": "2026-11-13",
-"avg_vol20": 32110.25,
-"shares_out": 4475884.0,
-"name": "Enveric Biosciences, Inc. Common Stock"
-},
-"EXOZ": {
-"prev_close": 3.83,
-"prev_day": "2026-11-13",
-"avg_vol20": 13020.55,
-"shares_out": 9439915.0,
-"name": "eXoZymes Inc. Common Stock"
+"avg_vol20": 4467006.5,
+"shares_out": 9641031.0,
+"name": "Edesa Biotech, Inc. Common Shares"
 },
 "EDUC": {
 "prev_close": 0.86,
@@ -1152,12 +1040,82 @@
 "shares_out": 8524964.0,
 "name": "Educational Development Corporation Common Stock"
 },
+"EXOZ": {
+"prev_close": 3.83,
+"prev_day": "2026-11-13",
+"avg_vol20": 13020.55,
+"shares_out": 9439915.0,
+"name": "eXoZymes Inc. Common Stock"
+},
+"ELAB": {
+"prev_close": 1.58,
+"prev_day": "2026-11-13",
+"avg_vol20": 708255.35,
+"shares_out": 1168935.0,
+"name": "PMGC Holdings Inc. Common Stock"
+},
+"EOCN": {
+"prev_close": 2.48,
+"prev_day": "2026-11-13",
+"avg_vol20": 7317.45,
+"shares_out": 1001394.0,
+"name": "Eocene Ltd. Ordinary Shares"
+},
+"ENVB": {
+"prev_close": 1.515,
+"prev_day": "2026-11-13",
+"avg_vol20": 32110.25,
+"shares_out": 4475884.0,
+"name": "Enveric Biosciences, Inc. Common Stock"
+},
+"ENLV": {
+"prev_close": 1.19,
+"prev_day": "2026-11-13",
+"avg_vol20": 206258.6,
+"shares_out": 989089.575,
+"name": "Enlivex Ltd. Ordinary Shares"
+},
+"EXYN": {
+"prev_close": 1.955,
+"prev_day": "2026-11-13",
+"avg_vol20": 1302151.75,
+"shares_out": 7953957.0,
+"name": "Exyn Technologies, Inc. Common Stock"
+},
 "ELOX": {
 "prev_close": 13.15,
 "prev_day": "2026-11-13",
 "avg_vol20": 23077.65,
 "shares_out": 4036398.0,
 "name": "Eloxx Pharmaceuticals, Inc. Common Stock"
+},
+"EHLD": {
+"prev_close": 11.3,
+"prev_day": "2026-11-13",
+"avg_vol20": 1618.45,
+"shares_out": 2816615.0,
+"name": "Euroholdings Ltd. Common Stock"
+},
+"EFOI": {
+"prev_close": 4.44,
+"prev_day": "2026-11-13",
+"avg_vol20": 52503.85,
+"shares_out": 6369222.0,
+"name": "Energy Focus, Inc. Common Stock"
+},
+"EEIQ": {
+"prev_close": 3.5101,
+"prev_day": "2026-11-13",
+"avg_vol20": 4295.4,
+"shares_out": 1462291.6875,
+"name": "EpicQuest Education Group International Limited Common Stock"
+},
+"EUDA": {
+"prev_close": 15.55,
+"prev_day": "2026-11-13",
+"avg_vol20": 47035.9,
+"shares_out": 94518.75,
+"name": "EUDA Health Holdings Limited Class A Ordinary Shares"
 },
 "ELWT": {
 "prev_close": 2.8451,
@@ -1173,40 +1131,33 @@
 "shares_out": 6719827.0,
 "name": "Eltek Ltd. Ordinary Shares"
 },
-"EHLD": {
-"prev_close": 11.3,
+"FOXX": {
+"prev_close": 1.307,
 "prev_day": "2026-11-13",
-"avg_vol20": 1618.45,
-"shares_out": 2816615.0,
-"name": "Euroholdings Ltd. Common Stock"
+"avg_vol20": 13804.3,
+"shares_out": 7074907.0,
+"name": "Foxx Development Holdings Inc. Common Stock"
 },
-"EXYN": {
-"prev_close": 1.955,
+"FABC": {
+"prev_close": 1.61,
 "prev_day": "2026-11-13",
-"avg_vol20": 1302151.75,
-"shares_out": 7953957.0,
-"name": "Exyn Technologies, Inc. Common Stock"
+"avg_vol20": 93291.35,
+"shares_out": 7591447.0,
+"name": "Fabric.AI, Inc. Common Stock"
 },
-"FRGT": {
-"prev_close": 0.748,
+"FDSB": {
+"prev_close": 17.72,
 "prev_day": "2026-11-13",
-"avg_vol20": 1733114.6,
-"shares_out": 33212.54,
-"name": "Freight Technologies, Inc. Ordinary Shares"
+"avg_vol20": 2720.05,
+"shares_out": 5197813.0,
+"name": "Fifth District Bancorp, Inc. Common Stock"
 },
-"FBLG": {
-"prev_close": 0.9271,
+"FGC": {
+"prev_close": 5.97,
 "prev_day": "2026-11-13",
-"avg_vol20": 85611.45,
-"shares_out": 6658193.0,
-"name": "FibroBiologics, Inc. Common Stock"
-},
-"FCHL": {
-"prev_close": 0.7437,
-"prev_day": "2026-11-13",
-"avg_vol20": 60586.05,
-"shares_out": 37777.777777777774,
-"name": "Fitness Champs Holdings Limited Common Stock"
+"avg_vol20": 67936.3,
+"shares_out": 4575300.0,
+"name": "FG Communities Holdings Inc. Common Stock"
 },
 "FIEE": {
 "prev_close": 2.6297,
@@ -1215,12 +1166,12 @@
 "shares_out": 8528598.0,
 "name": "FiEE, Inc Common Stock"
 },
-"FLYE": {
-"prev_close": 1.96,
+"FBGL": {
+"prev_close": 2.05,
 "prev_day": "2026-11-13",
-"avg_vol20": 1473056.9,
-"shares_out": 1632386.0,
-"name": "Fly-E Group, Inc. Common Stock"
+"avg_vol20": 9742.25,
+"shares_out": 1350000.0,
+"name": "FBS Global Limited Ordinary Shares"
 },
 "FNUC": {
 "prev_close": 0.6661,
@@ -1228,6 +1179,27 @@
 "avg_vol20": 197195.3,
 "shares_out": 8748167.0,
 "name": "Frontier Nuclear and Minerals Inc. Common Shares"
+},
+"FLYE": {
+"prev_close": 1.96,
+"prev_day": "2026-11-13",
+"avg_vol20": 1473056.9,
+"shares_out": 1632386.0,
+"name": "Fly-E Group, Inc. Common Stock"
+},
+"FNWB": {
+"prev_close": 9.78,
+"prev_day": "2026-11-13",
+"avg_vol20": 23010.6,
+"shares_out": 9508205.0,
+"name": "First Northwest Bancorp Common Stock"
+},
+"FCUV": {
+"prev_close": 7.08,
+"prev_day": "2026-11-13",
+"avg_vol20": 5882442.95,
+"shares_out": 982012.0,
+"name": "Focus Universal Inc. Common Stock"
 },
 "FOFO": {
 "prev_close": 1.76,
@@ -1243,33 +1215,19 @@
 "shares_out": 1931271.0,
 "name": "FGI Industries Ltd. Ordinary Shares"
 },
-"FABC": {
-"prev_close": 1.61,
+"FRGT": {
+"prev_close": 0.748,
 "prev_day": "2026-11-13",
-"avg_vol20": 93291.35,
-"shares_out": 7591447.0,
-"name": "Fabric.AI, Inc. Common Stock"
+"avg_vol20": 1733114.6,
+"shares_out": 33212.54,
+"name": "Freight Technologies, Inc. Ordinary Shares"
 },
-"FCUV": {
-"prev_close": 7.08,
+"FBLG": {
+"prev_close": 0.9271,
 "prev_day": "2026-11-13",
-"avg_vol20": 5882442.95,
-"shares_out": 982012.0,
-"name": "Focus Universal Inc. Common Stock"
-},
-"FDSB": {
-"prev_close": 17.72,
-"prev_day": "2026-11-13",
-"avg_vol20": 2720.05,
-"shares_out": 5197813.0,
-"name": "Fifth District Bancorp, Inc. Common Stock"
-},
-"FBGL": {
-"prev_close": 2.05,
-"prev_day": "2026-11-13",
-"avg_vol20": 9742.25,
-"shares_out": 1350000.0,
-"name": "FBS Global Limited Ordinary Shares"
+"avg_vol20": 85611.45,
+"shares_out": 6658193.0,
+"name": "FibroBiologics, Inc. Common Stock"
 },
 "FEMY": {
 "prev_close": 1.42,
@@ -1278,27 +1236,6 @@
 "shares_out": 8656277.0,
 "name": "Femasys Inc. Common Stock"
 },
-"FGC": {
-"prev_close": 5.97,
-"prev_day": "2026-11-13",
-"avg_vol20": 67936.3,
-"shares_out": 4575300.0,
-"name": "FG Communities Holdings Inc. Common Stock"
-},
-"FOXX": {
-"prev_close": 1.307,
-"prev_day": "2026-11-13",
-"avg_vol20": 13804.3,
-"shares_out": 7074907.0,
-"name": "Foxx Development Holdings Inc. Common Stock"
-},
-"FNWB": {
-"prev_close": 9.78,
-"prev_day": "2026-11-13",
-"avg_vol20": 23010.6,
-"shares_out": 9508205.0,
-"name": "First Northwest Bancorp Common Stock"
-},
 "FSHP": {
 "prev_close": 11.35,
 "prev_day": "2026-11-13",
@@ -1306,47 +1243,12 @@
 "shares_out": 5025517.0,
 "name": "Flag Ship Acquisition Corp. Ordinary Shares"
 },
-"GOVX": {
-"prev_close": 1.705,
+"FCHL": {
+"prev_close": 0.7437,
 "prev_day": "2026-11-13",
-"avg_vol20": 386795.0,
-"shares_out": 544453.0,
-"name": "GeoVax Labs, Inc. Common Stock"
-},
-"FVN": {
-"prev_close": 13.8,
-"prev_day": "2026-11-13",
-"avg_vol20": 7068.5,
-"shares_out": 5673970.0,
-"name": "Future Vision II Acquisition Corporation Ordinary shares"
-},
-"GLE": {
-"prev_close": 2.125,
-"prev_day": "2026-11-13",
-"avg_vol20": 38474.35,
-"shares_out": 1600000.0,
-"name": "Global Engine Group Holding Limited Class A Ordinary Shares"
-},
-"GOSS": {
-"prev_close": 10.97,
-"prev_day": "2026-11-13",
-"avg_vol20": 174065.45,
-"shares_out": 6116390.0,
-"name": "Gossamer Bio, Inc. Common Stock"
-},
-"GBR": {
-"prev_close": 0.568,
-"prev_day": "2026-11-13",
-"avg_vol20": 31484.85,
-"shares_out": 5131934.0,
-"name": "New Concept Energy Inc"
-},
-"GDC": {
-"prev_close": 1.15,
-"prev_day": "2026-11-13",
-"avg_vol20": 134096.65,
-"shares_out": 4162500.0,
-"name": "GD Culture Group Limited Common Stock"
+"avg_vol20": 60586.05,
+"shares_out": 37777.777777777774,
+"name": "Fitness Champs Holdings Limited Common Stock"
 },
 "FTLF": {
 "prev_close": 8.48,
@@ -1354,27 +1256,6 @@
 "avg_vol20": 9850.7,
 "shares_out": 9391072.0,
 "name": "FitLife Brands, Inc. Common Stock"
-},
-"GNLN": {
-"prev_close": 0.8865,
-"prev_day": "2026-11-13",
-"avg_vol20": 18721.55,
-"shares_out": 694544.0,
-"name": "Greenlane Holdings, Inc. Class A Common Stock"
-},
-"FTFT": {
-"prev_close": 4.1,
-"prev_day": "2026-11-13",
-"avg_vol20": 1055816.8,
-"shares_out": 8061610.75,
-"name": "Future FinTech Group Inc. Common Stock"
-},
-"GNPX": {
-"prev_close": 2.08,
-"prev_day": "2026-11-13",
-"avg_vol20": 159684.9,
-"shares_out": 1334753.0,
-"name": "Genprex, Inc. Common Stock"
 },
 "GITS": {
 "prev_close": 1.34,
@@ -1390,12 +1271,54 @@
 "shares_out": 1600000.0,
 "name": "Galaxy Payroll Group Limited Class A Ordinary Shares"
 },
+"FVN": {
+"prev_close": 13.8,
+"prev_day": "2026-11-13",
+"avg_vol20": 7068.5,
+"shares_out": 5673970.0,
+"name": "Future Vision II Acquisition Corporation Ordinary shares"
+},
+"GDC": {
+"prev_close": 1.15,
+"prev_day": "2026-11-13",
+"avg_vol20": 134096.65,
+"shares_out": 4162500.0,
+"name": "GD Culture Group Limited Common Stock"
+},
+"GOSS": {
+"prev_close": 10.97,
+"prev_day": "2026-11-13",
+"avg_vol20": 174065.45,
+"shares_out": 6116390.0,
+"name": "Gossamer Bio, Inc. Common Stock"
+},
+"GOVX": {
+"prev_close": 1.705,
+"prev_day": "2026-11-13",
+"avg_vol20": 386795.0,
+"shares_out": 544453.0,
+"name": "GeoVax Labs, Inc. Common Stock"
+},
 "FUSB": {
 "prev_close": 16.8472,
 "prev_day": "2026-11-13",
 "avg_vol20": 3603.95,
 "shares_out": 5097209.0,
 "name": "First US Bancshares, Inc. Common Stock"
+},
+"GENI": {
+"prev_close": 6.26,
+"prev_day": "2026-11-13",
+"avg_vol20": 6946205.15,
+"shares_out": 10000000.0,
+"name": "Genius Sports Limited"
+},
+"FTFT": {
+"prev_close": 4.1,
+"prev_day": "2026-11-13",
+"avg_vol20": 1055816.8,
+"shares_out": 8061610.75,
+"name": "Future FinTech Group Inc. Common Stock"
 },
 "GLOO": {
 "prev_close": 2.9,
@@ -1411,12 +1334,40 @@
 "shares_out": 1692423.0,
 "name": "UTime Limited Class A Ordinary Shares"
 },
-"GENI": {
-"prev_close": 6.26,
+"GNLN": {
+"prev_close": 0.8865,
 "prev_day": "2026-11-13",
-"avg_vol20": 6946205.15,
-"shares_out": 10000000.0,
-"name": "Genius Sports Limited"
+"avg_vol20": 18721.55,
+"shares_out": 694544.0,
+"name": "Greenlane Holdings, Inc. Class A Common Stock"
+},
+"GBR": {
+"prev_close": 0.568,
+"prev_day": "2026-11-13",
+"avg_vol20": 31484.85,
+"shares_out": 5131934.0,
+"name": "New Concept Energy Inc"
+},
+"GNPX": {
+"prev_close": 2.08,
+"prev_day": "2026-11-13",
+"avg_vol20": 159684.9,
+"shares_out": 1334753.0,
+"name": "Genprex, Inc. Common Stock"
+},
+"GLE": {
+"prev_close": 2.125,
+"prev_day": "2026-11-13",
+"avg_vol20": 38474.35,
+"shares_out": 1600000.0,
+"name": "Global Engine Group Holding Limited Class A Ordinary Shares"
+},
+"HIHO": {
+"prev_close": 0.785,
+"prev_day": "2026-11-13",
+"avg_vol20": 34201.85,
+"shares_out": 4626676.0,
+"name": "Highway Holdings Limited Common Stock"
 },
 "GRDX": {
 "prev_close": 3.74,
@@ -1424,6 +1375,69 @@
 "avg_vol20": 125069.0,
 "shares_out": 7131123.0,
 "name": "GridAI Technologies Corp. Common Stock"
+},
+"HBIO": {
+"prev_close": 9.39,
+"prev_day": "2026-11-13",
+"avg_vol20": 29839.75,
+"shares_out": 4573080.0,
+"name": "Harvard Bioscience, Inc. Common Stock"
+},
+"GWAV": {
+"prev_close": 1.9,
+"prev_day": "2026-11-13",
+"avg_vol20": 6239.95,
+"shares_out": 829631.0,
+"name": "Greenwave Technology Solutions, Inc. Common Stock"
+},
+"GSIW": {
+"prev_close": 10.41,
+"prev_day": "2026-11-13",
+"avg_vol20": 3198.65,
+"shares_out": 46409.375,
+"name": "Garden Stage Limited Class A Ordinary Shares"
+},
+"GURE": {
+"prev_close": 2.8,
+"prev_day": "2026-11-13",
+"avg_vol20": 31290.6,
+"shares_out": 7254124.0,
+"name": "Gulf Resources, Inc. (NV) Common Stock"
+},
+"GP": {
+"prev_close": 1.16,
+"prev_day": "2026-11-13",
+"avg_vol20": 6791444.9,
+"shares_out": 1005858.2000000001,
+"name": "GreenPower Motor Company Inc. Common Shares"
+},
+"GPMT": {
+"prev_close": 2.44,
+"prev_day": "2026-11-13",
+"avg_vol20": 44595.45,
+"shares_out": 4820831.0,
+"name": "Granite Point Mortgage Trust Inc. Common Stock"
+},
+"GVH": {
+"prev_close": 0.8201,
+"prev_day": "2026-11-13",
+"avg_vol20": 33851.35,
+"shares_out": 1526113.0,
+"name": "Globavend Holdings Limited Ordinary Shares"
+},
+"HCWB": {
+"prev_close": 0.7731,
+"prev_day": "2026-11-13",
+"avg_vol20": 48236.3,
+"shares_out": 1836324.0,
+"name": "HCW Biologics Inc. Common Stock"
+},
+"GRI": {
+"prev_close": 1.7,
+"prev_day": "2026-11-13",
+"avg_vol20": 46405.15,
+"shares_out": 2186115.0,
+"name": "GRI Bio, Inc. Common Stock"
 },
 "GRNQ": {
 "prev_close": 7.44,
@@ -1439,110 +1453,12 @@
 "shares_out": 2199308.0,
 "name": "Gyrodyne, LLC Common Stock"
 },
-"GP": {
-"prev_close": 1.16,
-"prev_day": "2026-11-13",
-"avg_vol20": 6791444.9,
-"shares_out": 1005858.2000000001,
-"name": "GreenPower Motor Company Inc. Common Shares"
-},
-"GSIW": {
-"prev_close": 10.41,
-"prev_day": "2026-11-13",
-"avg_vol20": 3198.65,
-"shares_out": 46409.375,
-"name": "Garden Stage Limited Class A Ordinary Shares"
-},
-"HNNA": {
-"prev_close": 10.15,
-"prev_day": "2026-11-13",
-"avg_vol20": 5286.95,
-"shares_out": 7904410.0,
-"name": "Hennessy Advisors, Inc. Common Stock"
-},
-"GWAV": {
-"prev_close": 1.9,
-"prev_day": "2026-11-13",
-"avg_vol20": 6239.95,
-"shares_out": 829631.0,
-"name": "Greenwave Technology Solutions, Inc. Common Stock"
-},
-"HBIO": {
-"prev_close": 9.39,
-"prev_day": "2026-11-13",
-"avg_vol20": 29839.75,
-"shares_out": 4573080.0,
-"name": "Harvard Bioscience, Inc. Common Stock"
-},
-"GTBP": {
-"prev_close": 3.72,
-"prev_day": "2026-11-13",
-"avg_vol20": 75351.9,
-"shares_out": 1804379.8800000001,
-"name": "GT Biopharma, Inc. Common Stock"
-},
-"GURE": {
-"prev_close": 2.8,
-"prev_day": "2026-11-13",
-"avg_vol20": 31290.6,
-"shares_out": 7254124.0,
-"name": "Gulf Resources, Inc. (NV) Common Stock"
-},
-"GRI": {
-"prev_close": 1.7,
-"prev_day": "2026-11-13",
-"avg_vol20": 46405.15,
-"shares_out": 2186115.0,
-"name": "GRI Bio, Inc. Common Stock"
-},
-"HQ": {
-"prev_close": 11.86,
-"prev_day": "2026-11-13",
-"avg_vol20": 108636.95,
-"shares_out": 1.0,
-"name": "Horizon Quantum Holdings Ltd. Class A Ordinary Shares"
-},
 "HHS": {
 "prev_close": 4.01,
 "prev_day": "2026-11-13",
 "avg_vol20": 51101.75,
 "shares_out": 7454240.0,
 "name": "Harte Hanks, Inc. Common Stock"
-},
-"HCWB": {
-"prev_close": 0.7731,
-"prev_day": "2026-11-13",
-"avg_vol20": 48236.3,
-"shares_out": 1836324.0,
-"name": "HCW Biologics Inc. Common Stock"
-},
-"HKPD": {
-"prev_close": 1.62,
-"prev_day": "2026-11-13",
-"avg_vol20": 546046.9,
-"shares_out": 817499.3,
-"name": "Cellyan Biotechnology Co., Ltd Class A Ordinary Shares"
-},
-"HIHO": {
-"prev_close": 0.785,
-"prev_day": "2026-11-13",
-"avg_vol20": 34201.85,
-"shares_out": 4626676.0,
-"name": "Highway Holdings Limited Common Stock"
-},
-"GRML": {
-"prev_close": 3.61,
-"prev_day": "2026-11-13",
-"avg_vol20": 931667.0,
-"shares_out": 3177012.74,
-"name": "Greenland Mines Ltd. Common Stock"
-},
-"GVH": {
-"prev_close": 0.8201,
-"prev_day": "2026-11-13",
-"avg_vol20": 33851.35,
-"shares_out": 1526113.0,
-"name": "Globavend Holdings Limited Ordinary Shares"
 },
 "HCTI": {
 "prev_close": 3.66,
@@ -1551,12 +1467,26 @@
 "shares_out": 915189.0,
 "name": "Healthcare Triangle, Inc. Common Stock"
 },
-"GPMT": {
-"prev_close": 2.44,
+"HNNA": {
+"prev_close": 10.15,
 "prev_day": "2026-11-13",
-"avg_vol20": 44595.45,
-"shares_out": 4820831.0,
-"name": "Granite Point Mortgage Trust Inc. Common Stock"
+"avg_vol20": 5286.95,
+"shares_out": 7904410.0,
+"name": "Hennessy Advisors, Inc. Common Stock"
+},
+"HKPD": {
+"prev_close": 1.62,
+"prev_day": "2026-11-13",
+"avg_vol20": 546046.9,
+"shares_out": 817499.3,
+"name": "Cellyan Biotechnology Co., Ltd Class A Ordinary Shares"
+},
+"GTBP": {
+"prev_close": 3.72,
+"prev_day": "2026-11-13",
+"avg_vol20": 75351.9,
+"shares_out": 1804379.8800000001,
+"name": "GT Biopharma, Inc. Common Stock"
 },
 "HIND": {
 "prev_close": 1.58,
@@ -1565,26 +1495,33 @@
 "shares_out": 7018528.0,
 "name": "Vyome Holdings, Inc. Common Stock"
 },
-"HMH": {
-"prev_close": 12.32,
+"GRML": {
+"prev_close": 3.61,
 "prev_day": "2026-11-13",
-"avg_vol20": 248394.7,
-"shares_out": 1000.0,
-"name": "HMH Holding Inc. Class A Common Stock"
+"avg_vol20": 931667.0,
+"shares_out": 3177012.74,
+"name": "Greenland Mines Ltd. Common Stock"
 },
-"IBAC": {
-"prev_close": 10.81,
+"INBS": {
+"prev_close": 1.76,
 "prev_day": "2026-11-13",
-"avg_vol20": 241.5,
-"shares_out": 5008229.0,
-"name": "IB Acquisition Corp. Common Stock"
+"avg_vol20": 38697.2,
+"shares_out": 3316803.0,
+"name": "Intelligent Bio Solutions Inc. Common Stock"
 },
-"ICCM": {
-"prev_close": 0.73,
+"HYNE": {
+"prev_close": 19.08,
 "prev_day": "2026-11-13",
-"avg_vol20": 121160.2,
-"shares_out": 2437409.7666666666,
-"name": "IceCure Medical Ltd. Ordinary Shares"
+"avg_vol20": 19668.1,
+"shares_out": 8096938.0,
+"name": "Hoyne Bancorp, Inc. Common Stock"
+},
+"IBG": {
+"prev_close": 0.782,
+"prev_day": "2026-11-13",
+"avg_vol20": 50775.55,
+"shares_out": 138813.2,
+"name": "Innovation Beverage Group Limited Ordinary Shares"
 },
 "INLF": {
 "prev_close": 0.515,
@@ -1600,103 +1537,12 @@
 "shares_out": 138395.4,
 "name": "Icon Energy Corp. Common stock"
 },
-"INHD": {
-"prev_close": 2.65,
-"prev_day": "2026-11-13",
-"avg_vol20": 26719.7,
-"shares_out": 2520581.0,
-"name": "Inno Holdings Inc. Common Stock"
-},
-"IHRT": {
-"prev_close": 0.5972,
-"prev_day": "2026-11-13",
-"avg_vol20": 3739623.8,
-"shares_out": 5039323.0,
-"name": "iHeartMedia, Inc. Class A Common Stock"
-},
-"IMNN": {
-"prev_close": 0.629,
-"prev_day": "2026-11-13",
-"avg_vol20": 236391.65,
-"shares_out": 6487286.0,
-"name": "Imunon, Inc. Common Stock"
-},
-"INBS": {
-"prev_close": 1.76,
-"prev_day": "2026-11-13",
-"avg_vol20": 38697.2,
-"shares_out": 3316803.0,
-"name": "Intelligent Bio Solutions Inc. Common Stock"
-},
-"HSCS": {
-"prev_close": 2.125,
-"prev_day": "2026-11-13",
-"avg_vol20": 94658.8,
-"shares_out": 4800172.0,
-"name": "HeartSciences Inc. Common Stock"
-},
-"HTCO": {
-"prev_close": 1.76,
-"prev_day": "2026-11-13",
-"avg_vol20": 475414.35,
-"shares_out": 6632441.0,
-"name": "High-Trend International Group Class A Ordinary Shares"
-},
-"HUBC": {
-"prev_close": 1.7,
-"prev_day": "2026-11-13",
-"avg_vol20": 37176006.15,
-"shares_out": 4.832187333333334,
-"name": "Hub Cyber Security Ltd. Ordinary Shares"
-},
-"HTOO": {
-"prev_close": 1.2,
-"prev_day": "2026-11-13",
-"avg_vol20": 19074.1,
-"shares_out": 2288291.0,
-"name": "Fusion Fuel Green PLC Class A Ordinary Shares"
-},
-"HTCR": {
-"prev_close": 1.4004,
-"prev_day": "2026-11-13",
-"avg_vol20": 27942.7,
-"shares_out": 1515328.0,
-"name": "Heartcore Enterprises, Inc. Common Stock"
-},
-"HYNE": {
-"prev_close": 19.08,
-"prev_day": "2026-11-13",
-"avg_vol20": 19668.1,
-"shares_out": 8096938.0,
-"name": "Hoyne Bancorp, Inc. Common Stock"
-},
-"IDAI": {
-"prev_close": 2.55,
-"prev_day": "2026-11-13",
-"avg_vol20": 40907.55,
-"shares_out": 5639291.0,
-"name": "T Stamp Inc. Class A Common Stock"
-},
-"INLX": {
-"prev_close": 3.75,
-"prev_day": "2026-11-13",
-"avg_vol20": 18920.4,
-"shares_out": 4487324.0,
-"name": "Intellinetics, Inc."
-},
 "IFBD": {
 "prev_close": 1.38,
 "prev_day": "2026-11-13",
 "avg_vol20": 110374.4,
 "shares_out": 8188574.0,
 "name": "Infobird Co., Ltd Ordinary Shares"
-},
-"ICU": {
-"prev_close": 0.8384,
-"prev_day": "2026-11-13",
-"avg_vol20": 284912.75,
-"shares_out": 5315967.0,
-"name": "SeaStar Medical Holding Corporation Common Stock"
 },
 "ILAG": {
 "prev_close": 1.75,
@@ -1705,40 +1551,19 @@
 "shares_out": 2076948.0,
 "name": "Intelligent Living Application Group Inc. Ordinary Shares"
 },
-"HYFM": {
-"prev_close": 0.71,
+"IDAI": {
+"prev_close": 2.55,
 "prev_day": "2026-11-13",
-"avg_vol20": 867994.7,
-"shares_out": 4819323.0,
-"name": "Hydrofarm Holdings Group, Inc. Common Stock"
+"avg_vol20": 40907.55,
+"shares_out": 5639291.0,
+"name": "T Stamp Inc. Class A Common Stock"
 },
-"ICCC": {
-"prev_close": 10.75,
+"IBAC": {
+"prev_close": 10.81,
 "prev_day": "2026-11-13",
-"avg_vol20": 7966.25,
-"shares_out": 9091361.0,
-"name": "ImmuCell Corporation Common Stock"
-},
-"IMCC": {
-"prev_close": 0.5682,
-"prev_day": "2026-11-13",
-"avg_vol20": 69758.55,
-"shares_out": 196493.73333333334,
-"name": "IM Cannabis Corp. Common Shares"
-},
-"INKT": {
-"prev_close": 9.34,
-"prev_day": "2026-11-13",
-"avg_vol20": 12135.75,
-"shares_out": 5133645.0,
-"name": "MiNK Therapeutics, Inc. Common Stock"
-},
-"IBG": {
-"prev_close": 0.782,
-"prev_day": "2026-11-13",
-"avg_vol20": 50775.55,
-"shares_out": 138813.2,
-"name": "Innovation Beverage Group Limited Ordinary Shares"
+"avg_vol20": 241.5,
+"shares_out": 5008229.0,
+"name": "IB Acquisition Corp. Common Stock"
 },
 "IBO": {
 "prev_close": 5.14,
@@ -1747,19 +1572,110 @@
 "shares_out": 8640000.0,
 "name": "Impact BioMedical, Inc."
 },
-"JBDI": {
-"prev_close": 2.52,
+"ICU": {
+"prev_close": 0.8384,
 "prev_day": "2026-11-13",
-"avg_vol20": 126919.95,
-"shares_out": 9514532.0,
-"name": "JBDI Holdings Limited Class A Ordinary Shares"
+"avg_vol20": 284912.75,
+"shares_out": 5315967.0,
+"name": "SeaStar Medical Holding Corporation Common Stock"
 },
-"JTAI": {
-"prev_close": 0.83,
+"INKT": {
+"prev_close": 9.34,
 "prev_day": "2026-11-13",
-"avg_vol20": 63653.25,
-"shares_out": 3557521.0,
-"name": "Jet.AI Inc. Common Stock"
+"avg_vol20": 12135.75,
+"shares_out": 5133645.0,
+"name": "MiNK Therapeutics, Inc. Common Stock"
+},
+"IHRT": {
+"prev_close": 0.5972,
+"prev_day": "2026-11-13",
+"avg_vol20": 3739623.8,
+"shares_out": 5039323.0,
+"name": "iHeartMedia, Inc. Class A Common Stock"
+},
+"INHD": {
+"prev_close": 2.65,
+"prev_day": "2026-11-13",
+"avg_vol20": 26719.7,
+"shares_out": 2520581.0,
+"name": "Inno Holdings Inc. Common Stock"
+},
+"IMNN": {
+"prev_close": 0.629,
+"prev_day": "2026-11-13",
+"avg_vol20": 236391.65,
+"shares_out": 6487286.0,
+"name": "Imunon, Inc. Common Stock"
+},
+"HTCO": {
+"prev_close": 1.76,
+"prev_day": "2026-11-13",
+"avg_vol20": 475414.35,
+"shares_out": 6632441.0,
+"name": "High-Trend International Group Class A Ordinary Shares"
+},
+"HTCR": {
+"prev_close": 1.4004,
+"prev_day": "2026-11-13",
+"avg_vol20": 27942.7,
+"shares_out": 1515328.0,
+"name": "Heartcore Enterprises, Inc. Common Stock"
+},
+"ICCM": {
+"prev_close": 0.73,
+"prev_day": "2026-11-13",
+"avg_vol20": 121160.2,
+"shares_out": 2437409.7666666666,
+"name": "IceCure Medical Ltd. Ordinary Shares"
+},
+"IMCC": {
+"prev_close": 0.5682,
+"prev_day": "2026-11-13",
+"avg_vol20": 69758.55,
+"shares_out": 196493.73333333334,
+"name": "IM Cannabis Corp. Common Shares"
+},
+"INLX": {
+"prev_close": 3.75,
+"prev_day": "2026-11-13",
+"avg_vol20": 18920.4,
+"shares_out": 4487324.0,
+"name": "Intellinetics, Inc."
+},
+"ICCC": {
+"prev_close": 10.75,
+"prev_day": "2026-11-13",
+"avg_vol20": 7966.25,
+"shares_out": 9091361.0,
+"name": "ImmuCell Corporation Common Stock"
+},
+"HSCS": {
+"prev_close": 2.125,
+"prev_day": "2026-11-13",
+"avg_vol20": 94658.8,
+"shares_out": 4800172.0,
+"name": "HeartSciences Inc. Common Stock"
+},
+"HYFM": {
+"prev_close": 0.71,
+"prev_day": "2026-11-13",
+"avg_vol20": 867994.7,
+"shares_out": 4819323.0,
+"name": "Hydrofarm Holdings Group, Inc. Common Stock"
+},
+"HTOO": {
+"prev_close": 1.2,
+"prev_day": "2026-11-13",
+"avg_vol20": 19074.1,
+"shares_out": 2288291.0,
+"name": "Fusion Fuel Green PLC Class A Ordinary Shares"
+},
+"HUBC": {
+"prev_close": 1.7,
+"prev_day": "2026-11-13",
+"avg_vol20": 37176006.15,
+"shares_out": 4.832187333333334,
+"name": "Hub Cyber Security Ltd. Ordinary Shares"
 },
 "IOR": {
 "prev_close": 18.5,
@@ -1768,103 +1684,12 @@
 "shares_out": 4066178.0,
 "name": "Income Opportunity Realty Investors, Inc."
 },
-"IPST": {
-"prev_close": 2.05,
-"prev_day": "2026-11-13",
-"avg_vol20": 1009029.1,
-"shares_out": 995933.0,
-"name": "IP Strategy Holdings, Inc. Common Stock"
-},
-"KFFB": {
-"prev_close": 5.95,
-"prev_day": "2026-11-13",
-"avg_vol20": 6175.7,
-"shares_out": 8086715.0,
-"name": "Kentucky First Federal Bancorp Common Stock"
-},
-"IVF": {
-"prev_close": 2.6,
-"prev_day": "2026-11-13",
-"avg_vol20": 62170.25,
-"shares_out": 626742.25,
-"name": "INVO Fertility, Inc. Common Stock"
-},
 "JEM": {
 "prev_close": 2.5201,
 "prev_day": "2026-11-13",
 "avg_vol20": 10534.9,
 "shares_out": 109750.0,
 "name": "707 Cayman Holdings Limited Ordinary Shares"
-},
-"JTTT": {
-"prev_close": 10.2301,
-"prev_day": "2026-11-13",
-"avg_vol20": 5777.8,
-"shares_out": 8859000.0,
-"name": "JATT III Acquisition Corp Ordinary Shares"
-},
-"JATT": {
-"prev_close": 10.375,
-"prev_day": "2026-11-13",
-"avg_vol20": 4138.6,
-"shares_out": 7800000.0,
-"name": "JATT II Acquisition Corp Ordinary Shares"
-},
-"JXG": {
-"prev_close": 12.58,
-"prev_day": "2026-11-13",
-"avg_vol20": 36803.5,
-"shares_out": 1426522.0,
-"name": "JX Luxventure Group Inc. Common Stock"
-},
-"JZXN": {
-"prev_close": 0.97,
-"prev_day": "2026-11-13",
-"avg_vol20": 62785.5,
-"shares_out": 31394.625,
-"name": "Jiuzi Holdings, Inc. Ordinary Shares"
-},
-"IRHO": {
-"prev_close": 10.12,
-"prev_day": "2026-11-13",
-"avg_vol20": 21921.15,
-"shares_out": 6320000.0,
-"name": "Iron Horse Acquisitions II Corp. Common Stock"
-},
-"JCSE": {
-"prev_close": 1.6,
-"prev_day": "2026-11-13",
-"avg_vol20": 12395.3,
-"shares_out": 5306666.0,
-"name": "JE Cleantech Holdings Limited Class A Ordinary Shares"
-},
-"JVA": {
-"prev_close": 5.07,
-"prev_day": "2026-11-13",
-"avg_vol20": 56872.75,
-"shares_out": 5708599.0,
-"name": "Coffee Holding Co., Inc. Common Stock"
-},
-"IOTR": {
-"prev_close": 1.7,
-"prev_day": "2026-11-13",
-"avg_vol20": 3193.8,
-"shares_out": 2296566.0,
-"name": "iOThree Limited Ordinary Shares"
-},
-"JL": {
-"prev_close": 4.43,
-"prev_day": "2026-11-13",
-"avg_vol20": 1719.55,
-"shares_out": 3761701.0,
-"name": "J-Long Group Limited Class A Ordinary Shares"
-},
-"KITT": {
-"prev_close": 1.209,
-"prev_day": "2026-11-13",
-"avg_vol20": 59498.5,
-"shares_out": 1245326.6666666665,
-"name": "Nauticus Robotics, Inc. Common stock"
 },
 "JOB": {
 "prev_close": 6.41,
@@ -1873,82 +1698,12 @@
 "shares_out": 3662356.1999999997,
 "name": "GEE Group Inc."
 },
-"INTS": {
-"prev_close": 3.08,
+"JTAI": {
+"prev_close": 0.83,
 "prev_day": "2026-11-13",
-"avg_vol20": 13901.2,
-"shares_out": 3301175.0,
-"name": "Intensity Therapeutics, Inc. Common stock"
-},
-"KBON": {
-"prev_close": 10.15,
-"prev_day": "2026-11-13",
-"avg_vol20": 80088.4,
-"shares_out": 890000.0,
-"name": "Karbon Capital Partners Corp. Class A Ordinary Shares"
-},
-"KG": {
-"prev_close": 3.36,
-"prev_day": "2026-11-13",
-"avg_vol20": 11057.05,
-"shares_out": 8737137.0,
-"name": "Kestrel Group, Ltd."
-},
-"ISPC": {
-"prev_close": 0.6587,
-"prev_day": "2026-11-13",
-"avg_vol20": 310362.7,
-"shares_out": 2518590.0,
-"name": "iSpecimen Inc. Common Stock"
-},
-"IPW": {
-"prev_close": 1.24,
-"prev_day": "2026-11-13",
-"avg_vol20": 3737983.6,
-"shares_out": 105215.33333333333,
-"name": "iPower Inc. Common Stock"
-},
-"JSPR": {
-"prev_close": 13.68,
-"prev_day": "2026-11-13",
-"avg_vol20": 336659.4,
-"shares_out": 1109152.0333333332,
-"name": "Jasper Therapeutics, Inc. Common Stock"
-},
-"KIDZ": {
-"prev_close": 1.1898,
-"prev_day": "2026-11-13",
-"avg_vol20": 34992.3,
-"shares_out": 7831.453333333334,
-"name": "KIDZ AI Inc. Class B Common Stock"
-},
-"IPM": {
-"prev_close": 1.73,
-"prev_day": "2026-11-13",
-"avg_vol20": 10505.85,
-"shares_out": 9035729.0,
-"name": "Intelligent Protection Management Corp. Common Stock"
-},
-"IPDN": {
-"prev_close": 0.7738,
-"prev_day": "2026-11-13",
-"avg_vol20": 181561.0,
-"shares_out": 481677.43333333335,
-"name": "Professional Diversity Network, Inc. Common Stock"
-},
-"JCTC": {
-"prev_close": 2.9,
-"prev_day": "2026-11-13",
-"avg_vol20": 4403.55,
-"shares_out": 3520113.0,
-"name": "Jewett-Cameron Trading Company Common Shares"
-},
-"JWEL": {
-"prev_close": 1.73,
-"prev_day": "2026-11-13",
-"avg_vol20": 6562.4,
-"shares_out": 2376131.0,
-"name": "Jowell Global Ltd. Ordinary Shares"
+"avg_vol20": 63653.25,
+"shares_out": 3557521.0,
+"name": "Jet.AI Inc. Common Stock"
 },
 "JUNS": {
 "prev_close": 1.76,
@@ -1964,61 +1719,180 @@
 "shares_out": 128192.0,
 "name": "Jayud Global Logistics Limited Class A Ordinary Shares"
 },
-"LIVE": {
-"prev_close": 7.475,
+"JXG": {
+"prev_close": 12.58,
 "prev_day": "2026-11-13",
-"avg_vol20": 3174.4,
-"shares_out": 3071656.0,
-"name": "Live Ventures Incorporated Common Stock"
+"avg_vol20": 36803.5,
+"shares_out": 1426522.0,
+"name": "JX Luxventure Group Inc. Common Stock"
 },
-"KOSS": {
-"prev_close": 3.23,
+"JBDI": {
+"prev_close": 2.52,
 "prev_day": "2026-11-13",
-"avg_vol20": 26695.45,
-"shares_out": 9466438.0,
-"name": "Koss Corporation Common Stock"
+"avg_vol20": 126919.95,
+"shares_out": 9514532.0,
+"name": "JBDI Holdings Limited Class A Ordinary Shares"
 },
-"KUST": {
-"prev_close": 3.2,
+"ISPC": {
+"prev_close": 0.6587,
 "prev_day": "2026-11-13",
-"avg_vol20": 11771.25,
-"shares_out": 650967.0,
-"name": "Kustom Entertainment, Inc. Common Stock"
+"avg_vol20": 310362.7,
+"shares_out": 2518590.0,
+"name": "iSpecimen Inc. Common Stock"
 },
-"KNDI": {
-"prev_close": 3.43,
+"IPW": {
+"prev_close": 1.24,
 "prev_day": "2026-11-13",
-"avg_vol20": 15327.2,
-"shares_out": 8270536.5,
-"name": "Kandi Technologies Group, Inc. Ordinary Shares"
+"avg_vol20": 3737983.6,
+"shares_out": 105215.33333333333,
+"name": "iPower Inc. Common Stock"
 },
-"LFWD": {
-"prev_close": 4.0602,
+"JCTC": {
+"prev_close": 2.9,
 "prev_day": "2026-11-13",
-"avg_vol20": 22355.35,
-"shares_out": 2838715.0,
-"name": "Lifeward Ltd. Ordinary Shares"
+"avg_vol20": 4403.55,
+"shares_out": 3520113.0,
+"name": "Jewett-Cameron Trading Company Common Shares"
 },
-"KPRX": {
-"prev_close": 1.23,
+"IVF": {
+"prev_close": 2.6,
 "prev_day": "2026-11-13",
-"avg_vol20": 68478.95,
-"shares_out": 4424387.0,
-"name": "Kiora Pharmaceuticals, Inc. Common Stock"
+"avg_vol20": 62170.25,
+"shares_out": 626742.25,
+"name": "INVO Fertility, Inc. Common Stock"
 },
-"LAKE": {
-"prev_close": 9.16,
+"JZXN": {
+"prev_close": 0.97,
 "prev_day": "2026-11-13",
-"avg_vol20": 100567.0,
-"shares_out": 9931346.0,
-"name": "Lakeland Industries, Inc. Common Stock"
+"avg_vol20": 62785.5,
+"shares_out": 31394.625,
+"name": "Jiuzi Holdings, Inc. Ordinary Shares"
 },
-"KYNB": {
-"prev_close": 3.44,
+"JATT": {
+"prev_close": 10.375,
 "prev_day": "2026-11-13",
-"avg_vol20": 23002.9,
-"shares_out": 4049124.0,
-"name": "Kyntra Bio, Inc. Common Stock"
+"avg_vol20": 4138.6,
+"shares_out": 7800000.0,
+"name": "JATT II Acquisition Corp Ordinary Shares"
+},
+"JCSE": {
+"prev_close": 1.6,
+"prev_day": "2026-11-13",
+"avg_vol20": 12395.3,
+"shares_out": 5306666.0,
+"name": "JE Cleantech Holdings Limited Class A Ordinary Shares"
+},
+"KIDZ": {
+"prev_close": 1.1898,
+"prev_day": "2026-11-13",
+"avg_vol20": 34992.3,
+"shares_out": 7831.453333333334,
+"name": "KIDZ AI Inc. Class B Common Stock"
+},
+"JL": {
+"prev_close": 4.43,
+"prev_day": "2026-11-13",
+"avg_vol20": 1719.55,
+"shares_out": 3761701.0,
+"name": "J-Long Group Limited Class A Ordinary Shares"
+},
+"JSPR": {
+"prev_close": 13.68,
+"prev_day": "2026-11-13",
+"avg_vol20": 336659.4,
+"shares_out": 1109152.0333333332,
+"name": "Jasper Therapeutics, Inc. Common Stock"
+},
+"KFFB": {
+"prev_close": 5.95,
+"prev_day": "2026-11-13",
+"avg_vol20": 6175.7,
+"shares_out": 8086715.0,
+"name": "Kentucky First Federal Bancorp Common Stock"
+},
+"IPM": {
+"prev_close": 1.73,
+"prev_day": "2026-11-13",
+"avg_vol20": 10505.85,
+"shares_out": 9035729.0,
+"name": "Intelligent Protection Management Corp. Common Stock"
+},
+"JVA": {
+"prev_close": 5.07,
+"prev_day": "2026-11-13",
+"avg_vol20": 56872.75,
+"shares_out": 5708599.0,
+"name": "Coffee Holding Co., Inc. Common Stock"
+},
+"JWEL": {
+"prev_close": 1.73,
+"prev_day": "2026-11-13",
+"avg_vol20": 6562.4,
+"shares_out": 2376131.0,
+"name": "Jowell Global Ltd. Ordinary Shares"
+},
+"IPST": {
+"prev_close": 2.05,
+"prev_day": "2026-11-13",
+"avg_vol20": 1009029.1,
+"shares_out": 995933.0,
+"name": "IP Strategy Holdings, Inc. Common Stock"
+},
+"IOTR": {
+"prev_close": 1.7,
+"prev_day": "2026-11-13",
+"avg_vol20": 3193.8,
+"shares_out": 2296566.0,
+"name": "iOThree Limited Ordinary Shares"
+},
+"KG": {
+"prev_close": 3.36,
+"prev_day": "2026-11-13",
+"avg_vol20": 11057.05,
+"shares_out": 8737137.0,
+"name": "Kestrel Group, Ltd."
+},
+"KBON": {
+"prev_close": 10.15,
+"prev_day": "2026-11-13",
+"avg_vol20": 80088.4,
+"shares_out": 890000.0,
+"name": "Karbon Capital Partners Corp. Class A Ordinary Shares"
+},
+"IRHO": {
+"prev_close": 10.12,
+"prev_day": "2026-11-13",
+"avg_vol20": 21921.15,
+"shares_out": 6320000.0,
+"name": "Iron Horse Acquisitions II Corp. Common Stock"
+},
+"IPDN": {
+"prev_close": 0.7738,
+"prev_day": "2026-11-13",
+"avg_vol20": 181561.0,
+"shares_out": 481677.43333333335,
+"name": "Professional Diversity Network, Inc. Common Stock"
+},
+"JTTT": {
+"prev_close": 10.2301,
+"prev_day": "2026-11-13",
+"avg_vol20": 5777.8,
+"shares_out": 8859000.0,
+"name": "JATT III Acquisition Corp Ordinary Shares"
+},
+"INTS": {
+"prev_close": 3.08,
+"prev_day": "2026-11-13",
+"avg_vol20": 13901.2,
+"shares_out": 3301175.0,
+"name": "Intensity Therapeutics, Inc. Common stock"
+},
+"KITT": {
+"prev_close": 1.209,
+"prev_day": "2026-11-13",
+"avg_vol20": 59498.5,
+"shares_out": 1245326.6666666665,
+"name": "Nauticus Robotics, Inc. Common stock"
 },
 "LGCL": {
 "prev_close": 1.545,
@@ -2027,12 +1901,26 @@
 "shares_out": 22323.232,
 "name": "Lucas GC Limited Class A Ordinary Shares"
 },
+"LAKE": {
+"prev_close": 9.16,
+"prev_day": "2026-11-13",
+"avg_vol20": 100567.0,
+"shares_out": 9931346.0,
+"name": "Lakeland Industries, Inc. Common Stock"
+},
 "LFT": {
 "prev_close": 3.77,
 "prev_day": "2026-11-13",
 "avg_vol20": 16879.0,
 "shares_out": 5256364.0,
 "name": "Lument Finance Trust, Inc."
+},
+"LIVE": {
+"prev_close": 7.475,
+"prev_day": "2026-11-13",
+"avg_vol20": 3174.4,
+"shares_out": 3071656.0,
+"name": "Live Ventures Incorporated Common Stock"
 },
 "LEXX": {
 "prev_close": 4.44,
@@ -2041,12 +1929,12 @@
 "shares_out": 1652496.4,
 "name": "Lexaria Bioscience Corp. Common Stock"
 },
-"LBGJ": {
-"prev_close": 1.93,
+"KNDI": {
+"prev_close": 3.43,
 "prev_day": "2026-11-13",
-"avg_vol20": 108503.0,
-"shares_out": 0.005,
-"name": "Li Bang International Corporation Class A Ordinary Shares"
+"avg_vol20": 15327.2,
+"shares_out": 8270536.5,
+"name": "Kandi Technologies Group, Inc. Ordinary Shares"
 },
 "LEDS": {
 "prev_close": 2.0601,
@@ -2055,12 +1943,54 @@
 "shares_out": 8273403.0,
 "name": "SemiLEDS Corporation Common Stock"
 },
+"LIMN": {
+"prev_close": 2.99,
+"prev_day": "2026-11-13",
+"avg_vol20": 31898.5,
+"shares_out": 1343207.24,
+"name": "Liminatus Pharma, Inc. Class A Common Stock"
+},
+"KPRX": {
+"prev_close": 1.23,
+"prev_day": "2026-11-13",
+"avg_vol20": 68478.95,
+"shares_out": 4424387.0,
+"name": "Kiora Pharmaceuticals, Inc. Common Stock"
+},
+"KUST": {
+"prev_close": 3.2,
+"prev_day": "2026-11-13",
+"avg_vol20": 11771.25,
+"shares_out": 650967.0,
+"name": "Kustom Entertainment, Inc. Common Stock"
+},
+"KYNB": {
+"prev_close": 3.44,
+"prev_day": "2026-11-13",
+"avg_vol20": 23002.9,
+"shares_out": 4049124.0,
+"name": "Kyntra Bio, Inc. Common Stock"
+},
 "LCFY": {
 "prev_close": 0.885,
 "prev_day": "2026-11-13",
 "avg_vol20": 27877.85,
 "shares_out": 1799055.0,
 "name": "Locafy Limited Ordinary Share"
+},
+"LFWD": {
+"prev_close": 4.0602,
+"prev_day": "2026-11-13",
+"avg_vol20": 22355.35,
+"shares_out": 2838715.0,
+"name": "Lifeward Ltd. Ordinary Shares"
+},
+"KOSS": {
+"prev_close": 3.23,
+"prev_day": "2026-11-13",
+"avg_vol20": 26695.45,
+"shares_out": 9466438.0,
+"name": "Koss Corporation Common Stock"
 },
 "LCCC": {
 "prev_close": 10.55,
@@ -2069,19 +1999,19 @@
 "shares_out": 3822787.0,
 "name": "Lakeshore Acquisition III Corp. Ordinary Shares"
 },
-"LIMN": {
-"prev_close": 2.99,
+"LONA": {
+"prev_close": 3.47,
 "prev_day": "2026-11-13",
-"avg_vol20": 31898.5,
-"shares_out": 1343207.24,
-"name": "Liminatus Pharma, Inc. Class A Common Stock"
+"avg_vol20": 61184.5,
+"shares_out": 9421663.0,
+"name": "LeonaBio, Inc. Common Stock"
 },
-"MGN": {
-"prev_close": 3.6,
+"MDRR": {
+"prev_close": 10.3489,
 "prev_day": "2026-11-13",
-"avg_vol20": 125877.6,
-"shares_out": 541666.6666666666,
-"name": "Megan Holdings Limited Class A Ordinary Shares"
+"avg_vol20": 5096.1,
+"shares_out": 1628500.0,
+"name": "Medalist Diversified, Inc. Common Stock"
 },
 "MBAI": {
 "prev_close": 2.055,
@@ -2097,12 +2027,12 @@
 "shares_out": 1922837.0,
 "name": "Medicus Pharma Ltd. Common Stock"
 },
-"MBBC": {
-"prev_close": 14.94,
+"LUCY": {
+"prev_close": 0.8083,
 "prev_day": "2026-11-13",
-"avg_vol20": 992.75,
-"shares_out": 2998889.0,
-"name": "Marathon Bancorp, Inc. Common Stock"
+"avg_vol20": 132473.55,
+"shares_out": 8712263.0,
+"name": "Innovative Eyewear, Inc. Common Stock"
 },
 "MCAH": {
 "prev_close": 10.12,
@@ -2111,33 +2041,12 @@
 "shares_out": 8661429.0,
 "name": "Mountain Crest Acquisition 6 Corp. Ordinary Shares"
 },
-"LUCY": {
-"prev_close": 0.8083,
+"LSBK": {
+"prev_close": 18.96,
 "prev_day": "2026-11-13",
-"avg_vol20": 132473.55,
-"shares_out": 8712263.0,
-"name": "Innovative Eyewear, Inc. Common Stock"
-},
-"MBRX": {
-"prev_close": 7.87,
-"prev_day": "2026-11-13",
-"avg_vol20": 94719.25,
-"shares_out": 1061533.0,
-"name": "Moleculin Biotech, Inc. Common Stock"
-},
-"MEDS": {
-"prev_close": 0.7439,
-"prev_day": "2026-11-13",
-"avg_vol20": 834728.6,
-"shares_out": 5724857.0,
-"name": "DataMeds AI, Inc. Common Stock"
-},
-"MASK": {
-"prev_close": 1.8,
-"prev_day": "2026-11-13",
-"avg_vol20": 4228211.0,
-"shares_out": 5800.0,
-"name": "3 E Network Technology Group Ltd Class A Ordinary Shares"
+"avg_vol20": 18491.95,
+"shares_out": 7718506.0,
+"name": "Lake Shore Bancorp, Inc. Common Stock"
 },
 "MF": {
 "prev_close": 19.5,
@@ -2146,34 +2055,6 @@
 "shares_out": 831366.0,
 "name": "MindForge Inc. Class A Ordinary Shares"
 },
-"MDBH": {
-"prev_close": 1.5039,
-"prev_day": "2026-11-13",
-"avg_vol20": 4096.55,
-"shares_out": 5712846.0,
-"name": "MDB Capital Holdings, LLC Class A common"
-},
-"MDRR": {
-"prev_close": 10.3489,
-"prev_day": "2026-11-13",
-"avg_vol20": 5096.1,
-"shares_out": 1628500.0,
-"name": "Medalist Diversified, Inc. Common Stock"
-},
-"LSBK": {
-"prev_close": 18.96,
-"prev_day": "2026-11-13",
-"avg_vol20": 18491.95,
-"shares_out": 7718506.0,
-"name": "Lake Shore Bancorp, Inc. Common Stock"
-},
-"LONA": {
-"prev_close": 3.47,
-"prev_day": "2026-11-13",
-"avg_vol20": 61184.5,
-"shares_out": 9421663.0,
-"name": "LeonaBio, Inc. Common Stock"
-},
 "LVLU": {
 "prev_close": 8.236,
 "prev_day": "2026-11-13",
@@ -2181,68 +2062,40 @@
 "shares_out": 2895456.0,
 "name": "Lulu's Fashion Lounge Holdings, Inc. Common Stock"
 },
-"MIND": {
-"prev_close": 2.96,
+"MEDS": {
+"prev_close": 0.7439,
 "prev_day": "2026-11-13",
-"avg_vol20": 61427.2,
-"shares_out": 9089055.0,
-"name": "MIND Technology, Inc. Common Stock (DE)"
+"avg_vol20": 834728.6,
+"shares_out": 5724857.0,
+"name": "DataMeds AI, Inc. Common Stock"
 },
-"MSAI": {
-"prev_close": 3.55,
+"MBBC": {
+"prev_close": 14.94,
 "prev_day": "2026-11-13",
-"avg_vol20": 12815.0,
-"shares_out": 2218278.0,
-"name": "MultiSensor AI Holdings, Inc. Common Stock"
+"avg_vol20": 992.75,
+"shares_out": 2998889.0,
+"name": "Marathon Bancorp, Inc. Common Stock"
 },
-"MMTX": {
-"prev_close": 10.3,
+"MGN": {
+"prev_close": 3.6,
 "prev_day": "2026-11-13",
-"avg_vol20": 47350.4,
-"shares_out": 8828100.0,
-"name": "Miluna Acquisition Corp Class A Ordinary Share"
+"avg_vol20": 125877.6,
+"shares_out": 541666.6666666666,
+"name": "Megan Holdings Limited Class A Ordinary Shares"
 },
-"MKZR": {
-"prev_close": 1.1831,
+"MBRX": {
+"prev_close": 7.87,
 "prev_day": "2026-11-13",
-"avg_vol20": 17380.15,
-"shares_out": 2774688.0,
-"name": "MacKenzie Realty Capital, Inc. Common Stock"
+"avg_vol20": 94719.25,
+"shares_out": 1061533.0,
+"name": "Moleculin Biotech, Inc. Common Stock"
 },
-"MTNB": {
-"prev_close": 0.9,
+"MDBH": {
+"prev_close": 1.5039,
 "prev_day": "2026-11-13",
-"avg_vol20": 66653.2,
-"shares_out": 979519.7333333333,
-"name": "Matinas BioPharma Holdings, Inc."
-},
-"MTRI": {
-"prev_close": 18.6,
-"prev_day": "2026-11-13",
-"avg_vol20": 79555.45,
-"shares_out": 5493735.0,
-"name": "Mentari Therapeutics, Inc. Common Stock"
-},
-"MODD": {
-"prev_close": 1.97,
-"prev_day": "2026-11-13",
-"avg_vol20": 102620.75,
-"shares_out": 8150823.0,
-"name": "Modular Medical, Inc. Common Stock"
-},
-"MTVA": {
-"prev_close": 1.3,
-"prev_day": "2026-11-13",
-"avg_vol20": 191784.65,
-"shares_out": 6742889.0,
-"name": "MetaVia Inc. Common Stock"
-},
-"MYSE": {
-"prev_close": 1.03,
-"prev_day": "2026-11-13",
-"avg_vol20": 23689.4,
-"shares_out": 5196430.0,
-"name": "Myseum.AI, Inc. Common Stock"
+"avg_vol20": 4096.55,
+"shares_out": 5712846.0,
+"name": "MDB Capital Holdings, LLC Class A common"
 },
 "MWG": {
 "prev_close": 1.29,
@@ -2251,12 +2104,54 @@
 "shares_out": 3084000.0,
 "name": "Multi Ways Holdings Limited"
 },
-"MNDR": {
-"prev_close": 0.9452,
+"MITQ": {
+"prev_close": 0.5657,
 "prev_day": "2026-11-13",
-"avg_vol20": 846892.65,
-"shares_out": 147632.66666666666,
-"name": "Mobile-health Network Solutions Class A Ordinary Shares"
+"avg_vol20": 56217.85,
+"shares_out": 9952223.0,
+"name": "Moving iMage Technologies, Inc."
+},
+"MMTX": {
+"prev_close": 10.3,
+"prev_day": "2026-11-13",
+"avg_vol20": 47350.4,
+"shares_out": 8828100.0,
+"name": "Miluna Acquisition Corp Class A Ordinary Share"
+},
+"MTNB": {
+"prev_close": 0.9,
+"prev_day": "2026-11-13",
+"avg_vol20": 66653.2,
+"shares_out": 979519.7333333333,
+"name": "Matinas BioPharma Holdings, Inc."
+},
+"MTEX": {
+"prev_close": 6.3,
+"prev_day": "2026-11-13",
+"avg_vol20": 33518.8,
+"shares_out": 1930391.0,
+"name": "Mannatech, Incorporated Common Stock"
+},
+"MIND": {
+"prev_close": 2.96,
+"prev_day": "2026-11-13",
+"avg_vol20": 61427.2,
+"shares_out": 9089055.0,
+"name": "MIND Technology, Inc. Common Stock (DE)"
+},
+"MTRI": {
+"prev_close": 18.6,
+"prev_day": "2026-11-13",
+"avg_vol20": 79555.45,
+"shares_out": 5493735.0,
+"name": "Mentari Therapeutics, Inc. Common Stock"
+},
+"MTVA": {
+"prev_close": 1.3,
+"prev_day": "2026-11-13",
+"avg_vol20": 191784.65,
+"shares_out": 6742889.0,
+"name": "MetaVia Inc. Common Stock"
 },
 "MXC": {
 "prev_close": 9.9008,
@@ -2272,40 +2167,61 @@
 "shares_out": 728482.0,
 "name": "My Size, Inc. Common Stock"
 },
-"NAII": {
-"prev_close": 0.9666,
+"MKZR": {
+"prev_close": 1.1831,
 "prev_day": "2026-11-13",
-"avg_vol20": 13837.55,
-"shares_out": 6259181.0,
-"name": "Natural Alternatives International, Inc. Common Stock"
+"avg_vol20": 17380.15,
+"shares_out": 2774688.0,
+"name": "MacKenzie Realty Capital, Inc. Common Stock"
 },
-"MTEX": {
-"prev_close": 6.3,
+"MYSE": {
+"prev_close": 1.03,
 "prev_day": "2026-11-13",
-"avg_vol20": 33518.8,
-"shares_out": 1930391.0,
-"name": "Mannatech, Incorporated Common Stock"
+"avg_vol20": 23689.4,
+"shares_out": 5196430.0,
+"name": "Myseum.AI, Inc. Common Stock"
 },
-"MITQ": {
-"prev_close": 0.5657,
+"MSAI": {
+"prev_close": 3.55,
 "prev_day": "2026-11-13",
-"avg_vol20": 56217.85,
-"shares_out": 9952223.0,
-"name": "Moving iMage Technologies, Inc."
+"avg_vol20": 12815.0,
+"shares_out": 2218278.0,
+"name": "MultiSensor AI Holdings, Inc. Common Stock"
 },
-"NTIC": {
-"prev_close": 7.62,
+"MODD": {
+"prev_close": 1.97,
 "prev_day": "2026-11-13",
-"avg_vol20": 3234.5,
-"shares_out": 9496439.0,
-"name": "Northern Technologies International Corporation Common Stock"
+"avg_vol20": 102620.75,
+"shares_out": 8150823.0,
+"name": "Modular Medical, Inc. Common Stock"
 },
-"NRSN": {
-"prev_close": 1.69,
+"MNDR": {
+"prev_close": 0.9452,
 "prev_day": "2026-11-13",
-"avg_vol20": 49780.6,
-"shares_out": 1627858.7000000002,
-"name": "NeuroSense Therapeutics Ltd. Ordinary Shares"
+"avg_vol20": 846892.65,
+"shares_out": 147632.66666666666,
+"name": "Mobile-health Network Solutions Class A Ordinary Shares"
+},
+"NOEM": {
+"prev_close": 10.5244,
+"prev_day": "2026-11-13",
+"avg_vol20": 960.4,
+"shares_out": 3716465.0,
+"name": "CO2 Energy Transition Corp. Common Stock"
+},
+"NBRG": {
+"prev_close": 10.16,
+"prev_day": "2026-11-13",
+"avg_vol20": 1714.25,
+"shares_out": 1437500.0,
+"name": "Newbridge Acquisition Limited Class A Ordinary Share"
+},
+"NDLS": {
+"prev_close": 12.15,
+"prev_day": "2026-11-13",
+"avg_vol20": 52158.45,
+"shares_out": 5983722.0,
+"name": "Noodles & Company Class A Common Stock"
 },
 "NCEL": {
 "prev_close": 2.61,
@@ -2313,6 +2229,13 @@
 "avg_vol20": 27993.9,
 "shares_out": 4797505.0,
 "name": "NewcelX Ltd. Ordinary Shares"
+},
+"NRSN": {
+"prev_close": 1.69,
+"prev_day": "2026-11-13",
+"avg_vol20": 49780.6,
+"shares_out": 1627858.7000000002,
+"name": "NeuroSense Therapeutics Ltd. Ordinary Shares"
 },
 "NCRA": {
 "prev_close": 1.38,
@@ -2328,26 +2251,12 @@
 "shares_out": 5712693.0,
 "name": "New Fortress Energy Inc. Class A Common Stock"
 },
-"NCEW": {
-"prev_close": 16.51,
+"NMTC": {
+"prev_close": 0.7451,
 "prev_day": "2026-11-13",
-"avg_vol20": 71.15,
-"shares_out": 3200000.0,
-"name": "New Century Logistics (BVI) Limited Ordinary Shares"
-},
-"NRT": {
-"prev_close": 7.27,
-"prev_day": "2026-11-13",
-"avg_vol20": 42459.4,
-"shares_out": 9190590.0,
-"name": "North European Oil Royalty Trust"
-},
-"NDLS": {
-"prev_close": 12.15,
-"prev_day": "2026-11-13",
-"avg_vol20": 52158.45,
-"shares_out": 5983722.0,
-"name": "Noodles & Company Class A Common Stock"
+"avg_vol20": 65503.25,
+"shares_out": 9105763.0,
+"name": "NeuroOne Medical Technologies Corporation Common Stock"
 },
 "NEXR": {
 "prev_close": 1.49,
@@ -2355,13 +2264,6 @@
 "avg_vol20": 11556713.75,
 "shares_out": 2849.1704545454545,
 "name": "Nexera Technologies Ltd Ordinary Shares"
-},
-"NBRG": {
-"prev_close": 10.16,
-"prev_day": "2026-11-13",
-"avg_vol20": 1714.25,
-"shares_out": 1437500.0,
-"name": "Newbridge Acquisition Limited Class A Ordinary Share"
 },
 "NCPL": {
 "prev_close": 1.64,
@@ -2377,19 +2279,12 @@
 "shares_out": 5411334.0,
 "name": "Neuphoria Therapeutics Inc. Common Stock"
 },
-"NSYS": {
-"prev_close": 10.78,
+"NCEW": {
+"prev_close": 16.51,
 "prev_day": "2026-11-13",
-"avg_vol20": 6026.6,
-"shares_out": 2865782.0,
-"name": "Nortech Systems Incorporated Common Stock"
-},
-"NMTC": {
-"prev_close": 0.7451,
-"prev_day": "2026-11-13",
-"avg_vol20": 65503.25,
-"shares_out": 9105763.0,
-"name": "NeuroOne Medical Technologies Corporation Common Stock"
+"avg_vol20": 71.15,
+"shares_out": 3200000.0,
+"name": "New Century Logistics (BVI) Limited Ordinary Shares"
 },
 "NHTC": {
 "prev_close": 0.7455,
@@ -2405,12 +2300,47 @@
 "shares_out": 1499838.0,
 "name": "ENDRA Life Sciences Inc. Common Stock"
 },
+"NSYS": {
+"prev_close": 10.78,
+"prev_day": "2026-11-13",
+"avg_vol20": 6026.6,
+"shares_out": 2865782.0,
+"name": "Nortech Systems Incorporated Common Stock"
+},
+"NCT": {
+"prev_close": 0.7781,
+"prev_day": "2026-11-13",
+"avg_vol20": 5796841.65,
+"shares_out": 5335.0002,
+"name": "Intercont (Cayman) Limited Class A Ordinary shares"
+},
+"NTIC": {
+"prev_close": 7.62,
+"prev_day": "2026-11-13",
+"avg_vol20": 3234.5,
+"shares_out": 9496439.0,
+"name": "Northern Technologies International Corporation Common Stock"
+},
+"NAII": {
+"prev_close": 0.9666,
+"prev_day": "2026-11-13",
+"avg_vol20": 13837.55,
+"shares_out": 6259181.0,
+"name": "Natural Alternatives International, Inc. Common Stock"
+},
 "NSRX": {
 "prev_close": 2.87,
 "prev_day": "2026-11-13",
 "avg_vol20": 16918.95,
 "shares_out": 9015383.0,
 "name": "Nasus Pharma Ltd."
+},
+"NRT": {
+"prev_close": 7.27,
+"prev_day": "2026-11-13",
+"avg_vol20": 42459.4,
+"shares_out": 9190590.0,
+"name": "North European Oil Royalty Trust"
 },
 "NUWE": {
 "prev_close": 4.9,
@@ -2419,54 +2349,12 @@
 "shares_out": 540912.0,
 "name": "Nuwellis, Inc. Common Stock"
 },
-"NOEM": {
-"prev_close": 10.5244,
+"OLOX": {
+"prev_close": 0.5771,
 "prev_day": "2026-11-13",
-"avg_vol20": 960.4,
-"shares_out": 3716465.0,
-"name": "CO2 Energy Transition Corp. Common Stock"
-},
-"NYC": {
-"prev_close": 5.795,
-"prev_day": "2026-11-13",
-"avg_vol20": 2144.6,
-"shares_out": 3568650.0,
-"name": "American Strategic Investment Co."
-},
-"OFAL": {
-"prev_close": 2.48,
-"prev_day": "2026-11-13",
-"avg_vol20": 374743.35,
-"shares_out": 263705.21,
-"name": "OFA Group Class A Ordinary Shares"
-},
-"NXTC": {
-"prev_close": 6.4,
-"prev_day": "2026-11-13",
-"avg_vol20": 58807.85,
-"shares_out": 4579023.0,
-"name": "NextCure, Inc. Common Stock"
-},
-"OPAD": {
-"prev_close": 1.78,
-"prev_day": "2026-11-13",
-"avg_vol20": 35758.0,
-"shares_out": 5137774.0,
-"name": "Offerpad Solutions Inc. Class A Common Stock"
-},
-"ORKT": {
-"prev_close": 0.9743,
-"prev_day": "2026-11-13",
-"avg_vol20": 107967.6,
-"shares_out": 5839770.0,
-"name": "Orangekloud Technology Inc. Class A Ordinary Shares"
-},
-"ONCO": {
-"prev_close": 3.21,
-"prev_day": "2026-11-13",
-"avg_vol20": 3232911.65,
-"shares_out": 394910.7,
-"name": "Onconetix, Inc. Common Stock"
+"avg_vol20": 6885770.65,
+"shares_out": 1659347.0,
+"name": "Olenox Industries Inc. Common Stock"
 },
 "ONMD": {
 "prev_close": 5.34,
@@ -2475,47 +2363,12 @@
 "shares_out": 5928645.0,
 "name": "OneMedNet Corp Class A Common Stock"
 },
-"OCC": {
-"prev_close": 10.47,
+"ORKT": {
+"prev_close": 0.9743,
 "prev_day": "2026-11-13",
-"avg_vol20": 102973.55,
-"shares_out": 8842024.0,
-"name": "Optical Cable Corporation Common Stock"
-},
-"OLOX": {
-"prev_close": 0.5771,
-"prev_day": "2026-11-13",
-"avg_vol20": 6885770.65,
-"shares_out": 1659347.0,
-"name": "Olenox Industries Inc. Common Stock"
-},
-"OPXS": {
-"prev_close": 8.52,
-"prev_day": "2026-11-13",
-"avg_vol20": 13729.7,
-"shares_out": 6959873.0,
-"name": "Optex Systems Holdings, Inc. Common Stock"
-},
-"NXTS": {
-"prev_close": 2.21,
-"prev_day": "2026-11-13",
-"avg_vol20": 225927.45,
-"shares_out": 290666.60000000003,
-"name": "Nexentis Technologies Inc. Common Stock"
-},
-"OESX": {
-"prev_close": 12.92,
-"prev_day": "2026-11-13",
-"avg_vol20": 43733.3,
-"shares_out": 4104551.0,
-"name": "Orion Energy Systems, Inc. Common Stock"
-},
-"ORIQ": {
-"prev_close": 10.52,
-"prev_day": "2026-11-13",
-"avg_vol20": 20509.7,
-"shares_out": 9032500.0,
-"name": "Origin Investment Corp I Ordinary Shares"
+"avg_vol20": 107967.6,
+"shares_out": 5839770.0,
+"name": "Orangekloud Technology Inc. Class A Ordinary Shares"
 },
 "NXTT": {
 "prev_close": 4.48,
@@ -2524,19 +2377,40 @@
 "shares_out": 2820947.0,
 "name": "Next Technology Holding Inc. Ordinary Shares"
 },
-"OMEX": {
-"prev_close": 10.02,
+"OFAL": {
+"prev_close": 2.48,
 "prev_day": "2026-11-13",
-"avg_vol20": 165031.1,
-"shares_out": 2347568.0,
-"name": "Odyssey Marine Exploration, Inc. Common Stock"
+"avg_vol20": 374743.35,
+"shares_out": 263705.21,
+"name": "OFA Group Class A Ordinary Shares"
 },
-"NXGL": {
-"prev_close": 3.88,
+"OESX": {
+"prev_close": 12.92,
 "prev_day": "2026-11-13",
-"avg_vol20": 39547.4,
-"shares_out": 487383.15,
-"name": "NexGel, Inc Common Stock"
+"avg_vol20": 43733.3,
+"shares_out": 4104551.0,
+"name": "Orion Energy Systems, Inc. Common Stock"
+},
+"OPXS": {
+"prev_close": 8.52,
+"prev_day": "2026-11-13",
+"avg_vol20": 13729.7,
+"shares_out": 6959873.0,
+"name": "Optex Systems Holdings, Inc. Common Stock"
+},
+"OBAI": {
+"prev_close": 1.65,
+"prev_day": "2026-11-13",
+"avg_vol20": 132342.7,
+"shares_out": 1910192.0,
+"name": "Our Bond, Inc. Common Stock"
+},
+"OCC": {
+"prev_close": 10.47,
+"prev_day": "2026-11-13",
+"avg_vol20": 102973.55,
+"shares_out": 8842024.0,
+"name": "Optical Cable Corporation Common Stock"
 },
 "ONFO": {
 "prev_close": 0.7745,
@@ -2545,12 +2419,68 @@
 "shares_out": 2452712.0,
 "name": "Onfolio Holdings Inc. Common Stock"
 },
+"ORIQ": {
+"prev_close": 10.52,
+"prev_day": "2026-11-13",
+"avg_vol20": 20509.7,
+"shares_out": 9032500.0,
+"name": "Origin Investment Corp I Ordinary Shares"
+},
+"NYC": {
+"prev_close": 5.795,
+"prev_day": "2026-11-13",
+"avg_vol20": 2144.6,
+"shares_out": 3568650.0,
+"name": "American Strategic Investment Co."
+},
+"NXTS": {
+"prev_close": 2.21,
+"prev_day": "2026-11-13",
+"avg_vol20": 225927.45,
+"shares_out": 290666.60000000003,
+"name": "Nexentis Technologies Inc. Common Stock"
+},
 "NXPL": {
 "prev_close": 7.02,
 "prev_day": "2026-11-13",
 "avg_vol20": 23645.6,
 "shares_out": 2713222.0,
 "name": "NextPlat Corp Common Stock"
+},
+"OCG": {
+"prev_close": 1.635,
+"prev_day": "2026-11-13",
+"avg_vol20": 28904.7,
+"shares_out": 148960.39999999997,
+"name": "Oriental Culture Holding LTD Ordinary Shares"
+},
+"OPAD": {
+"prev_close": 1.78,
+"prev_day": "2026-11-13",
+"avg_vol20": 35758.0,
+"shares_out": 5137774.0,
+"name": "Offerpad Solutions Inc. Class A Common Stock"
+},
+"NXGL": {
+"prev_close": 3.88,
+"prev_day": "2026-11-13",
+"avg_vol20": 39547.4,
+"shares_out": 487383.15,
+"name": "NexGel, Inc Common Stock"
+},
+"NXTC": {
+"prev_close": 6.4,
+"prev_day": "2026-11-13",
+"avg_vol20": 58807.85,
+"shares_out": 4579023.0,
+"name": "NextCure, Inc. Common Stock"
+},
+"OMEX": {
+"prev_close": 10.02,
+"prev_day": "2026-11-13",
+"avg_vol20": 165031.1,
+"shares_out": 2347568.0,
+"name": "Odyssey Marine Exploration, Inc. Common Stock"
 },
 "NVNO": {
 "prev_close": 6.17,
@@ -2566,68 +2496,19 @@
 "shares_out": 445191.82,
 "name": "Ohmyhome Limited Class A Ordinary Shares"
 },
+"ONCO": {
+"prev_close": 3.21,
+"prev_day": "2026-11-13",
+"avg_vol20": 3232911.65,
+"shares_out": 394910.7,
+"name": "Onconetix, Inc. Common Stock"
+},
 "NXL": {
 "prev_close": 1.48,
 "prev_day": "2026-11-13",
 "avg_vol20": 42776.5,
 "shares_out": 1236560.0,
 "name": "Nexalin Technology, Inc. Common Stock"
-},
-"OCG": {
-"prev_close": 1.635,
-"prev_day": "2026-11-13",
-"avg_vol20": 28904.7,
-"shares_out": 148960.39999999997,
-"name": "Oriental Culture Holding LTD Ordinary Shares"
-},
-"OBAI": {
-"prev_close": 1.65,
-"prev_day": "2026-11-13",
-"avg_vol20": 132342.7,
-"shares_out": 1910192.0,
-"name": "Our Bond, Inc. Common Stock"
-},
-"PBHC": {
-"prev_close": 17.048,
-"prev_day": "2026-11-13",
-"avg_vol20": 2448.95,
-"shares_out": 4745366.0,
-"name": "Pathfinder Bancorp, Inc. Common Stock (MD)"
-},
-"PLRZ": {
-"prev_close": 11.05,
-"prev_day": "2026-11-13",
-"avg_vol20": 16075.75,
-"shares_out": 1608266.0,
-"name": "Polyrizon Ltd. Ordinary Shares"
-},
-"PBM": {
-"prev_close": 3.145,
-"prev_day": "2026-11-13",
-"avg_vol20": 53042.65,
-"shares_out": 2293277.0,
-"name": "Psyence Biomedical Ltd. Common Shares"
-},
-"PLSM": {
-"prev_close": 1.38,
-"prev_day": "2026-11-13",
-"avg_vol20": 17115.65,
-"shares_out": 6502844.0,
-"name": "Pulsenmore Ltd. Ordinary Shares"
-},
-"PMCB": {
-"prev_close": 6.68,
-"prev_day": "2026-11-13",
-"avg_vol20": 190101.6,
-"shares_out": 565034.1578947369,
-"name": "PharmaCyte Biotech, Inc. Common Stock"
-},
-"PAVS": {
-"prev_close": 2.52,
-"prev_day": "2026-11-13",
-"avg_vol20": 46432.3,
-"shares_out": 787.32,
-"name": "Paranovus Entertainment Technology Ltd. Class A Ordinary Sha"
 },
 "PASG": {
 "prev_close": 4.25,
@@ -2636,26 +2517,26 @@
 "shares_out": 3217810.0,
 "name": "Passage Bio, Inc. Common Stock"
 },
-"PAVM": {
-"prev_close": 1.63,
+"PLSM": {
+"prev_close": 1.38,
 "prev_day": "2026-11-13",
-"avg_vol20": 16219.65,
-"shares_out": 7995918.0,
-"name": "PAVmed Inc. Common Stock"
+"avg_vol20": 17115.65,
+"shares_out": 6502844.0,
+"name": "Pulsenmore Ltd. Ordinary Shares"
 },
-"PASW": {
-"prev_close": 1.53,
+"PLRZ": {
+"prev_close": 11.05,
 "prev_day": "2026-11-13",
-"avg_vol20": 662412.2,
-"shares_out": 512500.0,
-"name": "Ping An Biomedical Co., Ltd. Class A Ordinary Shares"
+"avg_vol20": 16075.75,
+"shares_out": 1608266.0,
+"name": "Polyrizon Ltd. Ordinary Shares"
 },
-"OXBR": {
-"prev_close": 0.86,
+"PBHC": {
+"prev_close": 17.048,
 "prev_day": "2026-11-13",
-"avg_vol20": 17473.8,
-"shares_out": 8178577.0,
-"name": "Oxbridge Re Holdings Limited Ordinary Shares"
+"avg_vol20": 2448.95,
+"shares_out": 4745366.0,
+"name": "Pathfinder Bancorp, Inc. Common Stock (MD)"
 },
 "PCSA": {
 "prev_close": 1.86,
@@ -2671,19 +2552,19 @@
 "shares_out": 8996862.0,
 "name": "ProMIS Neurosciences Inc. Common Shares (ON)"
 },
-"PCLA": {
-"prev_close": 6.0001,
+"OXBR": {
+"prev_close": 0.86,
 "prev_day": "2026-11-13",
-"avg_vol20": 1576310.35,
-"shares_out": 38460.2,
-"name": "PicoCELA Inc. American Depositary Shares"
+"avg_vol20": 17473.8,
+"shares_out": 8178577.0,
+"name": "Oxbridge Re Holdings Limited Ordinary Shares"
 },
-"PMI": {
-"prev_close": 7.23,
+"PAVM": {
+"prev_close": 1.63,
 "prev_day": "2026-11-13",
-"avg_vol20": 167850.55,
-"shares_out": 2338634.0,
-"name": "Picard Medical, Inc."
+"avg_vol20": 16219.65,
+"shares_out": 7995918.0,
+"name": "PAVmed Inc. Common Stock"
 },
 "PECE": {
 "prev_close": 10.06,
@@ -2692,68 +2573,40 @@
 "shares_out": 8437500.0,
 "name": "Peace Acquisition Corp Ordinary Shares"
 },
-"PTN": {
-"prev_close": 6.23,
+"PMCB": {
+"prev_close": 6.68,
 "prev_day": "2026-11-13",
-"avg_vol20": 42356.05,
-"shares_out": 1780939.0,
-"name": "Palatin Technologies, Inc. Common Stock"
+"avg_vol20": 190101.6,
+"shares_out": 565034.1578947369,
+"name": "PharmaCyte Biotech, Inc. Common Stock"
 },
-"PXLW": {
-"prev_close": 5.54,
+"PBM": {
+"prev_close": 3.145,
 "prev_day": "2026-11-13",
-"avg_vol20": 969567.2,
-"shares_out": 5972087.0,
-"name": "Pixelworks, Inc. Common Stock"
+"avg_vol20": 53042.65,
+"shares_out": 2293277.0,
+"name": "Psyence Biomedical Ltd. Common Shares"
 },
-"QVCG": {
-"prev_close": 7.98,
+"PMI": {
+"prev_close": 7.23,
 "prev_day": "2026-11-13",
-"avg_vol20": 212339.35,
-"shares_out": 1.0,
-"name": "QVC Group, Inc. Common Stock"
+"avg_vol20": 167850.55,
+"shares_out": 2338634.0,
+"name": "Picard Medical, Inc."
 },
-"PRTS": {
-"prev_close": 8.57,
+"PASW": {
+"prev_close": 1.53,
 "prev_day": "2026-11-13",
-"avg_vol20": 33407.45,
-"shares_out": 8088082.0,
-"name": "CarParts.com, Inc. Common Stock"
+"avg_vol20": 662412.2,
+"shares_out": 512500.0,
+"name": "Ping An Biomedical Co., Ltd. Class A Ordinary Shares"
 },
-"PRFX": {
-"prev_close": 0.7826,
+"PCLA": {
+"prev_close": 6.0001,
 "prev_day": "2026-11-13",
-"avg_vol20": 275416.05,
-"shares_out": 166122.6,
-"name": "PRF Technologies Ltd. Ordinary Shares"
-},
-"PULM": {
-"prev_close": 1.29,
-"prev_day": "2026-11-13",
-"avg_vol20": 38655.6,
-"shares_out": 3652285.0,
-"name": "Pulmatrix, Inc. Common Stock"
-},
-"RAND": {
-"prev_close": 9.6001,
-"prev_day": "2026-11-13",
-"avg_vol20": 778.65,
-"shares_out": 2969814.0,
-"name": "Rand Capital Corporation Common Stock"
-},
-"RANG": {
-"prev_close": 10.95,
-"prev_day": "2026-11-13",
-"avg_vol20": 2132.9,
-"shares_out": 6697971.0,
-"name": "Range Capital Acquisition Corp. Ordinary Shares"
-},
-"PW": {
-"prev_close": 6.6767,
-"prev_day": "2026-11-13",
-"avg_vol20": 7658.15,
-"shares_out": 367120.0,
-"name": "Power REIT"
+"avg_vol20": 1576310.35,
+"shares_out": 38460.2,
+"name": "PicoCELA Inc. American Depositary Shares"
 },
 "PPCB": {
 "prev_close": 1.9409,
@@ -2762,12 +2615,47 @@
 "shares_out": 1048247.0,
 "name": "Propanc Biopharma, Inc. Common Stock"
 },
+"RAND": {
+"prev_close": 9.6001,
+"prev_day": "2026-11-13",
+"avg_vol20": 778.65,
+"shares_out": 2969814.0,
+"name": "Rand Capital Corporation Common Stock"
+},
+"PRTS": {
+"prev_close": 8.57,
+"prev_day": "2026-11-13",
+"avg_vol20": 33407.45,
+"shares_out": 8088082.0,
+"name": "CarParts.com, Inc. Common Stock"
+},
+"RANG": {
+"prev_close": 10.95,
+"prev_day": "2026-11-13",
+"avg_vol20": 2132.9,
+"shares_out": 6697971.0,
+"name": "Range Capital Acquisition Corp. Ordinary Shares"
+},
 "PROV": {
 "prev_close": 18.45,
 "prev_day": "2026-11-13",
 "avg_vol20": 17170.55,
 "shares_out": 6111227.0,
 "name": "Provident Financial Holdings, Inc. Common Stock"
+},
+"PULM": {
+"prev_close": 1.29,
+"prev_day": "2026-11-13",
+"avg_vol20": 38655.6,
+"shares_out": 3652285.0,
+"name": "Pulmatrix, Inc. Common Stock"
+},
+"PRFX": {
+"prev_close": 0.7826,
+"prev_day": "2026-11-13",
+"avg_vol20": 275416.05,
+"shares_out": 166122.6,
+"name": "PRF Technologies Ltd. Ordinary Shares"
 },
 "RCON": {
 "prev_close": 0.8749,
@@ -2783,6 +2671,20 @@
 "shares_out": 3746092.0,
 "name": "Presurance Holdings, Inc. Common Stock"
 },
+"PW": {
+"prev_close": 6.6767,
+"prev_day": "2026-11-13",
+"avg_vol20": 7658.15,
+"shares_out": 367120.0,
+"name": "Power REIT"
+},
+"PTN": {
+"prev_close": 6.23,
+"prev_day": "2026-11-13",
+"avg_vol20": 42356.05,
+"shares_out": 1780939.0,
+"name": "Palatin Technologies, Inc. Common Stock"
+},
 "PTHS": {
 "prev_close": 7.44,
 "prev_day": "2026-11-13",
@@ -2790,12 +2692,19 @@
 "shares_out": 3930709.0,
 "name": "Pelthos Therapeutics Inc."
 },
-"RDAC": {
-"prev_close": 11.1,
+"PXLW": {
+"prev_close": 5.54,
 "prev_day": "2026-11-13",
-"avg_vol20": 478724.9,
-"shares_out": 3435357.0,
-"name": "Rising Dragon Acquisition Corp. Ordinary Shares"
+"avg_vol20": 969567.2,
+"shares_out": 5972087.0,
+"name": "Pixelworks, Inc. Common Stock"
+},
+"RUBI": {
+"prev_close": 0.8656,
+"prev_day": "2026-11-13",
+"avg_vol20": 5949518.75,
+"shares_out": 7.907712820512822,
+"name": "Rubico Inc. Common Stock"
 },
 "RVSN": {
 "prev_close": 2.195,
@@ -2804,19 +2713,12 @@
 "shares_out": 2192186.0,
 "name": "Rail Vision Ltd. Ordinary Share"
 },
-"REBN": {
-"prev_close": 0.9501,
+"RGNT": {
+"prev_close": 1.23,
 "prev_day": "2026-11-13",
-"avg_vol20": 80281.3,
-"shares_out": 8620122.0,
-"name": "Reborn Coffee, Inc. Common Stock"
-},
-"RMTI": {
-"prev_close": 7.03,
-"prev_day": "2026-11-13",
-"avg_vol20": 21733.8,
-"shares_out": 3971968.0,
-"name": "Rockwell Medical, Inc. Common Stock"
+"avg_vol20": 48363.8,
+"shares_out": 5179378.0,
+"name": "Regentis Biomaterials Ltd."
 },
 "RIBB": {
 "prev_close": 8.901,
@@ -2825,12 +2727,19 @@
 "shares_out": 5013446.0,
 "name": "Ribbon Acquisition Corp Class A Ordinary Shares"
 },
-"RDGT": {
-"prev_close": 1.06,
+"REVB": {
+"prev_close": 4.265,
 "prev_day": "2026-11-13",
-"avg_vol20": 134747.0,
-"shares_out": 887272.2533333334,
-"name": "Ridgetech, Inc. Ordinary Shares"
+"avg_vol20": 37401.7,
+"shares_out": 683442.0,
+"name": "Revelation Biosciences, Inc. Common Stock"
+},
+"RDAC": {
+"prev_close": 11.1,
+"prev_day": "2026-11-13",
+"avg_vol20": 478724.9,
+"shares_out": 3435357.0,
+"name": "Rising Dragon Acquisition Corp. Ordinary Shares"
 },
 "RENX": {
 "prev_close": 1.28,
@@ -2838,6 +2747,20 @@
 "avg_vol20": 85059.3,
 "shares_out": 2646209.0,
 "name": "RenX Enterprises Corp. Common Stock"
+},
+"REBN": {
+"prev_close": 0.9501,
+"prev_day": "2026-11-13",
+"avg_vol20": 80281.3,
+"shares_out": 8620122.0,
+"name": "Reborn Coffee, Inc. Common Stock"
+},
+"RETO": {
+"prev_close": 5.6,
+"prev_day": "2026-11-13",
+"avg_vol20": 590431.25,
+"shares_out": 2948.7328125000004,
+"name": "ReTo Eco-Solutions, Inc. Class A Shares"
 },
 "RLYB": {
 "prev_close": 15.72,
@@ -2853,13 +2776,6 @@
 "shares_out": 9601236.0,
 "name": "Rocky Mountain Chocolate Factory, Inc. Common Stock"
 },
-"RUBI": {
-"prev_close": 0.8656,
-"prev_day": "2026-11-13",
-"avg_vol20": 5949518.75,
-"shares_out": 7.907712820512822,
-"name": "Rubico Inc. Common Stock"
-},
 "RPT": {
 "prev_close": 10.76,
 "prev_day": "2026-11-13",
@@ -2867,12 +2783,12 @@
 "shares_out": 7909947.0,
 "name": "Rithm Property Trust Inc."
 },
-"RETO": {
-"prev_close": 5.6,
+"RMTI": {
+"prev_close": 7.03,
 "prev_day": "2026-11-13",
-"avg_vol20": 590431.25,
-"shares_out": 2948.7328125000004,
-"name": "ReTo Eco-Solutions, Inc. Class A Shares"
+"avg_vol20": 21733.8,
+"shares_out": 3971968.0,
+"name": "Rockwell Medical, Inc. Common Stock"
 },
 "RYM": {
 "prev_close": 13.51,
@@ -2881,89 +2797,12 @@
 "shares_out": 2180128.0,
 "name": "RYTHM, Inc. Common Stock"
 },
-"RGNT": {
-"prev_close": 1.23,
+"RDGT": {
+"prev_close": 1.06,
 "prev_day": "2026-11-13",
-"avg_vol20": 48363.8,
-"shares_out": 5179378.0,
-"name": "Regentis Biomaterials Ltd."
-},
-"REVB": {
-"prev_close": 4.265,
-"prev_day": "2026-11-13",
-"avg_vol20": 37401.7,
-"shares_out": 683442.0,
-"name": "Revelation Biosciences, Inc. Common Stock"
-},
-"RMIX": {
-"prev_close": 5.08,
-"prev_day": "2026-11-13",
-"avg_vol20": 724990.95,
-"shares_out": 100.0,
-"name": "Suncrete, Inc. Class A Common Stock"
-},
-"SGA": {
-"prev_close": 7.02,
-"prev_day": "2026-11-13",
-"avg_vol20": 17628.4,
-"shares_out": 6353465.0,
-"name": "Saga Communications, Inc. Class A Common Stock (FL)"
-},
-"SCLX": {
-"prev_close": 1.43,
-"prev_day": "2026-11-13",
-"avg_vol20": 40994.7,
-"shares_out": 8493000.0,
-"name": "Scilex Holding Company Common Stock"
-},
-"SCNX": {
-"prev_close": 2.9,
-"prev_day": "2026-11-13",
-"avg_vol20": 25441.95,
-"shares_out": 1642565.84,
-"name": "Scienture Holdings, Inc. Common Stock"
-},
-"SKIL": {
-"prev_close": 2.96,
-"prev_day": "2026-11-13",
-"avg_vol20": 60151.1,
-"shares_out": 9100444.0,
-"name": "Skillsoft Corp."
-},
-"SKIN": {
-"prev_close": 16.31,
-"prev_day": "2026-11-13",
-"avg_vol20": 75242.8,
-"shares_out": 6542468.0,
-"name": "SkinHealth Systems Inc. Class A Common Stock"
-},
-"SINT": {
-"prev_close": 1.345,
-"prev_day": "2026-11-13",
-"avg_vol20": 27294.95,
-"shares_out": 7558241.0,
-"name": "SiNtx Technologies, Inc. Common Stock"
-},
-"SKYQ": {
-"prev_close": 1.15,
-"prev_day": "2026-11-13",
-"avg_vol20": 1056026.0,
-"shares_out": 8833390.0,
-"name": "Sky Quarry Inc. Common Stock"
-},
-"SCAG": {
-"prev_close": 0.9,
-"prev_day": "2026-11-13",
-"avg_vol20": 105363.75,
-"shares_out": 4816266.133333333,
-"name": "Scage Future American Depositary Shares"
-},
-"SCYX": {
-"prev_close": 3.21,
-"prev_day": "2026-11-13",
-"avg_vol20": 64021.7,
-"shares_out": 9953155.0,
-"name": "SCYNEXIS, Inc. Common Stock"
+"avg_vol20": 134747.0,
+"shares_out": 887272.2533333334,
+"name": "Ridgetech, Inc. Ordinary Shares"
 },
 "SHPH": {
 "prev_close": 4.53,
@@ -2972,40 +2811,12 @@
 "shares_out": 4764696.0,
 "name": "Shuttle Pharmaceuticals Holdings, Inc. Common Stock"
 },
-"SGLY": {
-"prev_close": 0.6803,
+"SKIL": {
+"prev_close": 2.96,
 "prev_day": "2026-11-13",
-"avg_vol20": 2589936.2,
-"shares_out": 5403788.0,
-"name": "Singularity Future Technology Ltd. Common Stock"
-},
-"SILO": {
-"prev_close": 1.84,
-"prev_day": "2026-11-13",
-"avg_vol20": 41763.95,
-"shares_out": 2156292.0,
-"name": "Silo Pharma, Inc. Common Stock"
-},
-"SKYE": {
-"prev_close": 1.09,
-"prev_day": "2026-11-13",
-"avg_vol20": 120375.3,
-"shares_out": 4423469.0,
-"name": "Skye Bioscience, Inc. Common Stock"
-},
-"SFHG": {
-"prev_close": 2.0,
-"prev_day": "2026-11-13",
-"avg_vol20": 3315.6,
-"shares_out": 4060000.0,
-"name": "Samfine Creation Holdings Group Limited Class A Ordinary Sha"
-},
-"SBFM": {
-"prev_close": 2.7,
-"prev_day": "2026-11-13",
-"avg_vol20": 484837.05,
-"shares_out": 823772.0,
-"name": "Sunshine Biopharma Inc. Common Stock"
+"avg_vol20": 60151.1,
+"shares_out": 9100444.0,
+"name": "Skillsoft Corp."
 },
 "SIF": {
 "prev_close": 15.68,
@@ -3014,19 +2825,26 @@
 "shares_out": 6254128.0,
 "name": "SIFCO Industries, Inc."
 },
+"SCNX": {
+"prev_close": 2.9,
+"prev_day": "2026-11-13",
+"avg_vol20": 25441.95,
+"shares_out": 1642565.84,
+"name": "Scienture Holdings, Inc. Common Stock"
+},
+"SKIN": {
+"prev_close": 16.31,
+"prev_day": "2026-11-13",
+"avg_vol20": 75242.8,
+"shares_out": 6542468.0,
+"name": "SkinHealth Systems Inc. Class A Common Stock"
+},
 "SLE": {
 "prev_close": 4.06,
 "prev_day": "2026-11-13",
 "avg_vol20": 90963.05,
 "shares_out": 1695120.0,
 "name": "Super League Enterprise, Inc. Common Stock"
-},
-"SLXN": {
-"prev_close": 1.98,
-"prev_day": "2026-11-13",
-"avg_vol20": 957873.0,
-"shares_out": 649528.0,
-"name": "Silexion Therapeutics Corp Ordinary Shares"
 },
 "SDOT": {
 "prev_close": 5.51,
@@ -3035,6 +2853,55 @@
 "shares_out": 1320015.0,
 "name": "Sadot Group Inc. Common Stock"
 },
+"SKYE": {
+"prev_close": 1.09,
+"prev_day": "2026-11-13",
+"avg_vol20": 120375.3,
+"shares_out": 4423469.0,
+"name": "Skye Bioscience, Inc. Common Stock"
+},
+"SLXN": {
+"prev_close": 1.98,
+"prev_day": "2026-11-13",
+"avg_vol20": 957873.0,
+"shares_out": 649528.0,
+"name": "Silexion Therapeutics Corp Ordinary Shares"
+},
+"SBFM": {
+"prev_close": 2.7,
+"prev_day": "2026-11-13",
+"avg_vol20": 484837.05,
+"shares_out": 823772.0,
+"name": "Sunshine Biopharma Inc. Common Stock"
+},
+"SGLY": {
+"prev_close": 0.6803,
+"prev_day": "2026-11-13",
+"avg_vol20": 2589936.2,
+"shares_out": 5403788.0,
+"name": "Singularity Future Technology Ltd. Common Stock"
+},
+"SCYX": {
+"prev_close": 3.21,
+"prev_day": "2026-11-13",
+"avg_vol20": 64021.7,
+"shares_out": 9953155.0,
+"name": "SCYNEXIS, Inc. Common Stock"
+},
+"SCAG": {
+"prev_close": 0.9,
+"prev_day": "2026-11-13",
+"avg_vol20": 105363.75,
+"shares_out": 4816266.133333333,
+"name": "Scage Future American Depositary Shares"
+},
+"SKYQ": {
+"prev_close": 1.15,
+"prev_day": "2026-11-13",
+"avg_vol20": 1056026.0,
+"shares_out": 8833390.0,
+"name": "Sky Quarry Inc. Common Stock"
+},
 "SEGG": {
 "prev_close": 1.02,
 "prev_day": "2026-11-13",
@@ -3042,75 +2909,40 @@
 "shares_out": 4205728.0,
 "name": "Sports Entertainment Gaming Global Corporation Common Stock"
 },
-"SLBT": {
-"prev_close": 0.727,
+"SGA": {
+"prev_close": 7.02,
 "prev_day": "2026-11-13",
-"avg_vol20": 51516.1,
-"shares_out": 1.0,
-"name": "SL Science Holding Limited Ordinary Shares"
+"avg_vol20": 17628.4,
+"shares_out": 6353465.0,
+"name": "Saga Communications, Inc. Class A Common Stock (FL)"
 },
-"STEM": {
-"prev_close": 2.24,
+"SILO": {
+"prev_close": 1.84,
 "prev_day": "2026-11-13",
-"avg_vol20": 291726.3,
-"shares_out": 9626744.0,
-"name": "Stem, Inc."
+"avg_vol20": 41763.95,
+"shares_out": 2156292.0,
+"name": "Silo Pharma, Inc. Common Stock"
 },
-"SONM": {
-"prev_close": 2.17,
+"SFHG": {
+"prev_close": 2.0,
 "prev_day": "2026-11-13",
-"avg_vol20": 14460.65,
-"shares_out": 1488268.0,
-"name": "DNA X, Inc. Common Stock"
+"avg_vol20": 3315.6,
+"shares_out": 4060000.0,
+"name": "Samfine Creation Holdings Group Limited Class A Ordinary Sha"
 },
-"STRR": {
-"prev_close": 9.895,
+"SCLX": {
+"prev_close": 1.43,
 "prev_day": "2026-11-13",
-"avg_vol20": 9399.75,
-"shares_out": 3702134.0,
-"name": "Star Equity Holdings, Inc. Common Stock"
+"avg_vol20": 40994.7,
+"shares_out": 8493000.0,
+"name": "Scilex Holding Company Common Stock"
 },
-"SPCB": {
-"prev_close": 6.17,
+"SINT": {
+"prev_close": 1.345,
 "prev_day": "2026-11-13",
-"avg_vol20": 78378.3,
-"shares_out": 5369367.0,
-"name": "SuperCom, Ltd. Ordinary Shares (Israel)"
-},
-"SNTG": {
-"prev_close": 1.75,
-"prev_day": "2026-11-13",
-"avg_vol20": 7766.0,
-"shares_out": 10000000.0,
-"name": "Sentage Holdings Inc. Class A Ordinary Shares"
-},
-"SPPL": {
-"prev_close": 2.81,
-"prev_day": "2026-11-13",
-"avg_vol20": 34444.55,
-"shares_out": 5786184.0,
-"name": "SIMPPLE LTD. Ordinary Shares"
-},
-"SQFT": {
-"prev_close": 0.81,
-"prev_day": "2026-11-13",
-"avg_vol20": 12070.45,
-"shares_out": 2256381.0,
-"name": "Presidio Property Trust, Inc. Class A Common Stock"
-},
-"STI": {
-"prev_close": 3.73,
-"prev_day": "2026-11-13",
-"avg_vol20": 113403.0,
-"shares_out": 9411893.0,
-"name": "Solidion Technology, Inc. Common Stock"
-},
-"SUNE": {
-"prev_close": 1.955,
-"prev_day": "2026-11-13",
-"avg_vol20": 71279.15,
-"shares_out": 6513108.0,
-"name": "SUNation Energy, Inc. Common Stock"
+"avg_vol20": 27294.95,
+"shares_out": 7558241.0,
+"name": "SiNtx Technologies, Inc. Common Stock"
 },
 "SMX": {
 "prev_close": 4.65,
@@ -3119,19 +2951,12 @@
 "shares_out": 2874.407052203814,
 "name": "SMX (Security Matters) Public Limited Company Ordinary Share"
 },
-"SSEA": {
-"prev_close": 10.45,
+"SPPL": {
+"prev_close": 2.81,
 "prev_day": "2026-11-13",
-"avg_vol20": 499.75,
-"shares_out": 7635871.0,
-"name": "Starry Sea Acquisition Corp Ordinary Shares"
-},
-"SSM": {
-"prev_close": 0.841,
-"prev_day": "2026-11-13",
-"avg_vol20": 83558.2,
-"shares_out": 4095162.0,
-"name": "Sono Group N.V. Ordinary Shares"
+"avg_vol20": 34444.55,
+"shares_out": 5786184.0,
+"name": "SIMPPLE LTD. Ordinary Shares"
 },
 "SNOA": {
 "prev_close": 1.09,
@@ -3140,33 +2965,40 @@
 "shares_out": 5061593.0,
 "name": "Sonoma Pharmaceuticals, Inc. Common Stock"
 },
-"SNES": {
-"prev_close": 0.862,
+"STEM": {
+"prev_close": 2.24,
 "prev_day": "2026-11-13",
-"avg_vol20": 251436.9,
-"shares_out": 6823881.0,
-"name": "SenesTech, Inc. Common Stock"
+"avg_vol20": 291726.3,
+"shares_out": 9626744.0,
+"name": "Stem, Inc."
 },
-"STFS": {
-"prev_close": 4.86,
+"SQFT": {
+"prev_close": 0.81,
 "prev_day": "2026-11-13",
-"avg_vol20": 597400.45,
-"shares_out": 1161276.0,
-"name": "Star Fashion Culture Holdings Limited Class A Ordinary Share"
+"avg_vol20": 12070.45,
+"shares_out": 2256381.0,
+"name": "Presidio Property Trust, Inc. Class A Common Stock"
 },
-"SUGP": {
-"prev_close": 1.23,
+"SUNE": {
+"prev_close": 1.955,
 "prev_day": "2026-11-13",
-"avg_vol20": 47027.65,
-"shares_out": 1531872.0,
-"name": "SU Group Holdings Limited Class A Ordinary Shares"
+"avg_vol20": 71279.15,
+"shares_out": 6513108.0,
+"name": "SUNation Energy, Inc. Common Stock"
 },
-"SMSI": {
-"prev_close": 2.57,
+"SONM": {
+"prev_close": 2.17,
 "prev_day": "2026-11-13",
-"avg_vol20": 15165.85,
-"shares_out": 5585337.0,
-"name": "Smith Micro Software, Inc. Common Stock"
+"avg_vol20": 14460.65,
+"shares_out": 1488268.0,
+"name": "DNA X, Inc. Common Stock"
+},
+"SSEA": {
+"prev_close": 10.45,
+"prev_day": "2026-11-13",
+"avg_vol20": 499.75,
+"shares_out": 7635871.0,
+"name": "Starry Sea Acquisition Corp Ordinary Shares"
 },
 "SMXT": {
 "prev_close": 4.11,
@@ -3175,12 +3007,26 @@
 "shares_out": 4742167.0,
 "name": "Solarmax Technology Inc. Common Stock"
 },
-"SRBK": {
-"prev_close": 18.99,
+"SSM": {
+"prev_close": 0.841,
 "prev_day": "2026-11-13",
-"avg_vol20": 31401.1,
-"shares_out": 7793906.0,
-"name": "SR Bancorp, Inc. Common stock"
+"avg_vol20": 83558.2,
+"shares_out": 4095162.0,
+"name": "Sono Group N.V. Ordinary Shares"
+},
+"STRR": {
+"prev_close": 9.895,
+"prev_day": "2026-11-13",
+"avg_vol20": 9399.75,
+"shares_out": 3702134.0,
+"name": "Star Equity Holdings, Inc. Common Stock"
+},
+"SNES": {
+"prev_close": 0.862,
+"prev_day": "2026-11-13",
+"avg_vol20": 251436.9,
+"shares_out": 6823881.0,
+"name": "SenesTech, Inc. Common Stock"
 },
 "SNWV": {
 "prev_close": 1.82,
@@ -3189,47 +3035,54 @@
 "shares_out": 8602309.0,
 "name": "SANUWAVE Health, Inc. Common Stock"
 },
-"TCRT": {
-"prev_close": 1.63,
+"SUGP": {
+"prev_close": 1.23,
 "prev_day": "2026-11-13",
-"avg_vol20": 2739746.45,
-"shares_out": 2540480.0,
-"name": "Alaunos Therapeutics, Inc. Common Stock"
+"avg_vol20": 47027.65,
+"shares_out": 1531872.0,
+"name": "SU Group Holdings Limited Class A Ordinary Shares"
 },
-"TIL": {
-"prev_close": 6.08,
+"STFS": {
+"prev_close": 4.86,
 "prev_day": "2026-11-13",
-"avg_vol20": 73016.1,
-"shares_out": 6781976.0,
-"name": "Instil Bio, Inc. Common Stock"
+"avg_vol20": 597400.45,
+"shares_out": 1161276.0,
+"name": "Star Fashion Culture Holdings Limited Class A Ordinary Share"
 },
-"TLF": {
-"prev_close": 2.26,
+"SPCB": {
+"prev_close": 6.17,
 "prev_day": "2026-11-13",
-"avg_vol20": 21037.05,
-"shares_out": 8192075.0,
-"name": "Tandy Leather Factory, Inc. Common Stock"
+"avg_vol20": 78378.3,
+"shares_out": 5369367.0,
+"name": "SuperCom, Ltd. Ordinary Shares (Israel)"
 },
-"THH": {
-"prev_close": 1.2,
+"STI": {
+"prev_close": 3.73,
 "prev_day": "2026-11-13",
-"avg_vol20": 13072.6,
-"shares_out": 500466.10000000003,
-"name": "TryHard Holdings Limited Ordinary Shares"
+"avg_vol20": 113403.0,
+"shares_out": 9411893.0,
+"name": "Solidion Technology, Inc. Common Stock"
 },
-"SYNX": {
-"prev_close": 0.7675,
+"SRBK": {
+"prev_close": 18.99,
 "prev_day": "2026-11-13",
-"avg_vol20": 24730.6,
-"shares_out": 6634440.0,
-"name": "Silynxcom Ltd."
+"avg_vol20": 31401.1,
+"shares_out": 7793906.0,
+"name": "SR Bancorp, Inc. Common stock"
 },
-"TNON": {
-"prev_close": 1.41,
+"SNTG": {
+"prev_close": 1.75,
 "prev_day": "2026-11-13",
-"avg_vol20": 127371.8,
-"shares_out": 667047.0,
-"name": "Tenon Medical, Inc. Common Stock"
+"avg_vol20": 7766.0,
+"shares_out": 10000000.0,
+"name": "Sentage Holdings Inc. Class A Ordinary Shares"
+},
+"SMSI": {
+"prev_close": 2.57,
+"prev_day": "2026-11-13",
+"avg_vol20": 15165.85,
+"shares_out": 5585337.0,
+"name": "Smith Micro Software, Inc. Common Stock"
 },
 "TCBS": {
 "prev_close": 17.425,
@@ -3238,40 +3091,12 @@
 "shares_out": 2867227.0,
 "name": "Texas Community Bancshares, Inc. Common Stock"
 },
-"SXTC": {
-"prev_close": 3.0,
+"TOMZ": {
+"prev_close": 2.54,
 "prev_day": "2026-11-13",
-"avg_vol20": 22657639.9,
-"shares_out": 119.75962500000001,
-"name": "China SXT Pharmaceuticals, Inc. Class A Ordinary Shares"
-},
-"TAOX": {
-"prev_close": 2.1,
-"prev_day": "2026-11-13",
-"avg_vol20": 127806.75,
-"shares_out": 7483242.0,
-"name": "Tao Synergies Inc. Common Stock"
-},
-"TPET": {
-"prev_close": 1.71,
-"prev_day": "2026-11-13",
-"avg_vol20": 334040.1,
-"shares_out": 5323907.0,
-"name": "Trio Petroleum Corp."
-},
-"TOPS": {
-"prev_close": 2.7,
-"prev_day": "2026-11-13",
-"avg_vol20": 392548.1,
-"shares_out": 462619.7,
-"name": "TOP Ships Inc."
-},
-"SXTP": {
-"prev_close": 0.5179,
-"prev_day": "2026-11-13",
-"avg_vol20": 1004246.45,
-"shares_out": 3516988.0,
-"name": "60 Degrees Pharmaceuticals, Inc. Common Stock"
+"avg_vol20": 36527.9,
+"shares_out": 8142577.0,
+"name": "TOMI Environmental Solutions, Inc. Common Stock"
 },
 "TAVI": {
 "prev_close": 10.87,
@@ -3280,6 +3105,13 @@
 "shares_out": 8753608.0,
 "name": "Tavia Acquisition Corp. Ordinary Shares"
 },
+"TLF": {
+"prev_close": 2.26,
+"prev_day": "2026-11-13",
+"avg_vol20": 21037.05,
+"shares_out": 8192075.0,
+"name": "Tandy Leather Factory, Inc. Common Stock"
+},
 "TLIH": {
 "prev_close": 5.74,
 "prev_day": "2026-11-13",
@@ -3287,12 +3119,33 @@
 "shares_out": 2940434.2,
 "name": "Ten-League International Holdings Limited Ordinary Shares"
 },
-"TOMZ": {
-"prev_close": 2.54,
+"TNON": {
+"prev_close": 1.41,
 "prev_day": "2026-11-13",
-"avg_vol20": 36527.9,
-"shares_out": 8142577.0,
-"name": "TOMI Environmental Solutions, Inc. Common Stock"
+"avg_vol20": 127371.8,
+"shares_out": 667047.0,
+"name": "Tenon Medical, Inc. Common Stock"
+},
+"TPET": {
+"prev_close": 1.71,
+"prev_day": "2026-11-13",
+"avg_vol20": 334040.1,
+"shares_out": 5323907.0,
+"name": "Trio Petroleum Corp."
+},
+"THH": {
+"prev_close": 1.2,
+"prev_day": "2026-11-13",
+"avg_vol20": 13072.6,
+"shares_out": 500466.10000000003,
+"name": "TryHard Holdings Limited Ordinary Shares"
+},
+"TIL": {
+"prev_close": 6.08,
+"prev_day": "2026-11-13",
+"avg_vol20": 73016.1,
+"shares_out": 6781976.0,
+"name": "Instil Bio, Inc. Common Stock"
 },
 "TNMG": {
 "prev_close": 2.69,
@@ -3301,19 +3154,61 @@
 "shares_out": 319550.625,
 "name": "TNL Mediagene Ordinary Shares"
 },
-"TULP": {
-"prev_close": 2.47,
+"TCRT": {
+"prev_close": 1.63,
 "prev_day": "2026-11-13",
-"avg_vol20": 5880.5,
-"shares_out": 4830965.0,
-"name": "Bloomia Holdings, Inc. Common Stock"
+"avg_vol20": 2739746.45,
+"shares_out": 2540480.0,
+"name": "Alaunos Therapeutics, Inc. Common Stock"
 },
-"TWG": {
-"prev_close": 2.53,
+"TOPS": {
+"prev_close": 2.7,
 "prev_day": "2026-11-13",
-"avg_vol20": 11276495.5,
-"shares_out": 560000.0,
-"name": "Top Wealth Group Holding Limited Class A Ordinary Shares"
+"avg_vol20": 392548.1,
+"shares_out": 462619.7,
+"name": "TOP Ships Inc."
+},
+"SXTC": {
+"prev_close": 3.0,
+"prev_day": "2026-11-13",
+"avg_vol20": 22657639.9,
+"shares_out": 119.75962500000001,
+"name": "China SXT Pharmaceuticals, Inc. Class A Ordinary Shares"
+},
+"SYNX": {
+"prev_close": 0.7675,
+"prev_day": "2026-11-13",
+"avg_vol20": 24730.6,
+"shares_out": 6634440.0,
+"name": "Silynxcom Ltd."
+},
+"SXTP": {
+"prev_close": 0.5179,
+"prev_day": "2026-11-13",
+"avg_vol20": 1004246.45,
+"shares_out": 3516988.0,
+"name": "60 Degrees Pharmaceuticals, Inc. Common Stock"
+},
+"TAOX": {
+"prev_close": 2.1,
+"prev_day": "2026-11-13",
+"avg_vol20": 127806.75,
+"shares_out": 7483242.0,
+"name": "Tao Synergies Inc. Common Stock"
+},
+"UG": {
+"prev_close": 8.46,
+"prev_day": "2026-11-13",
+"avg_vol20": 21684.85,
+"shares_out": 4594319.0,
+"name": "United-Guardian, Inc. Common Stock"
+},
+"UBCP": {
+"prev_close": 14.56,
+"prev_day": "2026-11-13",
+"avg_vol20": 9052.0,
+"shares_out": 5713763.0,
+"name": "United Bancorp, Inc. Common Stock"
 },
 "TVGN": {
 "prev_close": 6.0,
@@ -3322,12 +3217,54 @@
 "shares_out": 6511540.0,
 "name": "Tevogen Inc. Common Stock"
 },
-"UG": {
-"prev_close": 8.46,
+"UPC": {
+"prev_close": 1.51,
 "prev_day": "2026-11-13",
-"avg_vol20": 21684.85,
-"shares_out": 4594319.0,
-"name": "United-Guardian, Inc. Common Stock"
+"avg_vol20": 189409.7,
+"shares_out": 563338.0,
+"name": "Universe Pharmaceuticals Inc. Class A Ordinary Shares"
+},
+"TRUG": {
+"prev_close": 0.519,
+"prev_day": "2026-11-13",
+"avg_vol20": 589367.85,
+"shares_out": 91426.70000000001,
+"name": "TruGolf Holdings, Inc. Class A Common Stock"
+},
+"USEA": {
+"prev_close": 2.96,
+"prev_day": "2026-11-13",
+"avg_vol20": 85225.6,
+"shares_out": 9538139.0,
+"name": "United Maritime Corporation Common Stock"
+},
+"UTSI": {
+"prev_close": 1.93,
+"prev_day": "2026-11-13",
+"avg_vol20": 7309.6,
+"shares_out": 9186976.0,
+"name": "UTStarcom Holdings Corp. Ordinary Shares"
+},
+"TWG": {
+"prev_close": 2.53,
+"prev_day": "2026-11-13",
+"avg_vol20": 11276495.5,
+"shares_out": 560000.0,
+"name": "Top Wealth Group Holding Limited Class A Ordinary Shares"
+},
+"TWAV": {
+"prev_close": 1.23,
+"prev_day": "2026-11-13",
+"avg_vol20": 24594.65,
+"shares_out": 3877219.0,
+"name": "TaoWeave, Inc. Common Stock"
+},
+"UCAR": {
+"prev_close": 2.95,
+"prev_day": "2026-11-13",
+"avg_vol20": 8522.3,
+"shares_out": 24857.420000000002,
+"name": "U Power Limited Class A Ordinary Shares"
 },
 "TRNR": {
 "prev_close": 1.18,
@@ -3343,13 +3280,6 @@
 "shares_out": 2838697.0,
 "name": "Upland Software, Inc. Common Stock"
 },
-"USEA": {
-"prev_close": 2.96,
-"prev_day": "2026-11-13",
-"avg_vol20": 85225.6,
-"shares_out": 9538139.0,
-"name": "United Maritime Corporation Common Stock"
-},
 "TZOO": {
 "prev_close": 5.27,
 "prev_day": "2026-11-13",
@@ -3357,117 +3287,12 @@
 "shares_out": 9966990.0,
 "name": "Travelzoo Common Stock"
 },
-"UCAR": {
-"prev_close": 2.95,
+"TULP": {
+"prev_close": 2.47,
 "prev_day": "2026-11-13",
-"avg_vol20": 8522.3,
-"shares_out": 24857.420000000002,
-"name": "U Power Limited Class A Ordinary Shares"
-},
-"UPC": {
-"prev_close": 1.51,
-"prev_day": "2026-11-13",
-"avg_vol20": 189409.7,
-"shares_out": 563338.0,
-"name": "Universe Pharmaceuticals Inc. Class A Ordinary Shares"
-},
-"UYSC": {
-"prev_close": 11.04,
-"prev_day": "2026-11-13",
-"avg_vol20": 317.1,
-"shares_out": 5221060.0,
-"name": "UY Scuti Acquisition Corp. Ordinary Shares"
-},
-"UTSI": {
-"prev_close": 1.93,
-"prev_day": "2026-11-13",
-"avg_vol20": 7309.6,
-"shares_out": 9186976.0,
-"name": "UTStarcom Holdings Corp. Ordinary Shares"
-},
-"TWAV": {
-"prev_close": 1.23,
-"prev_day": "2026-11-13",
-"avg_vol20": 24594.65,
-"shares_out": 3877219.0,
-"name": "TaoWeave, Inc. Common Stock"
-},
-"TRUG": {
-"prev_close": 0.519,
-"prev_day": "2026-11-13",
-"avg_vol20": 589367.85,
-"shares_out": 91426.70000000001,
-"name": "TruGolf Holdings, Inc. Class A Common Stock"
-},
-"UBCP": {
-"prev_close": 14.56,
-"prev_day": "2026-11-13",
-"avg_vol20": 9052.0,
-"shares_out": 5713763.0,
-"name": "United Bancorp, Inc. Common Stock"
-},
-"WETO": {
-"prev_close": 0.6087,
-"prev_day": "2026-11-13",
-"avg_vol20": 3091481.9,
-"shares_out": 8213.0,
-"name": "Wetour Robotics Limited Ordinary Shares"
-},
-"VEEA": {
-"prev_close": 4.49,
-"prev_day": "2026-11-13",
-"avg_vol20": 383211.75,
-"shares_out": 4071515.0,
-"name": "Veea Inc. Common Stock"
-},
-"VIDA": {
-"prev_close": 0.7539,
-"prev_day": "2026-11-13",
-"avg_vol20": 65293.6,
-"shares_out": 5426400.0,
-"name": "VIDA Global Inc."
-},
-"WFF": {
-"prev_close": 1.1,
-"prev_day": "2026-11-13",
-"avg_vol20": 61439827.5,
-"shares_out": 40304.14400000001,
-"name": "WF Holding Limited Ordinary Shares"
-},
-"VHC": {
-"prev_close": 9.41,
-"prev_day": "2026-11-13",
-"avg_vol20": 13372.2,
-"shares_out": 4216633.0,
-"name": "VirnetX Holding Corp Common Stock"
-},
-"WBUY": {
-"prev_close": 0.5299,
-"prev_day": "2026-11-13",
-"avg_vol20": 207965.25,
-"shares_out": 2436907.0,
-"name": "WEBUY GLOBAL LTD. Class A Ordinary Shares"
-},
-"VEEE": {
-"prev_close": 6.7,
-"prev_day": "2026-11-13",
-"avg_vol20": 24693.35,
-"shares_out": 583974.0,
-"name": "Twin Vee PowerCats Co. Common Stock"
-},
-"VBIO": {
-"prev_close": 0.5293,
-"prev_day": "2026-11-13",
-"avg_vol20": 1006830.2,
-"shares_out": 887589.56,
-"name": "Valion Bio, Inc. Common Stock"
-},
-"WHG": {
-"prev_close": 18.76,
-"prev_day": "2026-11-13",
-"avg_vol20": 8314.1,
-"shares_out": 9517454.0,
-"name": "WESTWOOD HOLDINGS GROUP, INC."
+"avg_vol20": 5880.5,
+"shares_out": 4830965.0,
+"name": "Bloomia Holdings, Inc. Common Stock"
 },
 "VMAR": {
 "prev_close": 4.25,
@@ -3476,19 +3301,19 @@
 "shares_out": 1226.7842500000002,
 "name": "Vision Marine Technologies Inc. Common Shares"
 },
-"WCT": {
-"prev_close": 2.86,
+"WHG": {
+"prev_close": 18.76,
 "prev_day": "2026-11-13",
-"avg_vol20": 1158453.1,
-"shares_out": 20506.0,
-"name": "Wellchange Holdings Company Limited Class A Ordinary shares"
+"avg_vol20": 8314.1,
+"shares_out": 9517454.0,
+"name": "WESTWOOD HOLDINGS GROUP, INC."
 },
-"VCIG": {
-"prev_close": 3.76,
+"VBIO": {
+"prev_close": 0.5293,
 "prev_day": "2026-11-13",
-"avg_vol20": 4103854.25,
-"shares_out": 1624.0958024691354,
-"name": "VCI Global Limited Ordinary Share"
+"avg_vol20": 1006830.2,
+"shares_out": 887589.56,
+"name": "Valion Bio, Inc. Common Stock"
 },
 "VRM": {
 "prev_close": 6.9501,
@@ -3497,12 +3322,82 @@
 "shares_out": 5274904.0,
 "name": "Vroom, Inc. Common Stock"
 },
+"VEEA": {
+"prev_close": 4.49,
+"prev_day": "2026-11-13",
+"avg_vol20": 383211.75,
+"shares_out": 4071515.0,
+"name": "Veea Inc. Common Stock"
+},
+"WCT": {
+"prev_close": 2.86,
+"prev_day": "2026-11-13",
+"avg_vol20": 1158453.1,
+"shares_out": 20506.0,
+"name": "Wellchange Holdings Company Limited Class A Ordinary shares"
+},
+"WBUY": {
+"prev_close": 0.5299,
+"prev_day": "2026-11-13",
+"avg_vol20": 207965.25,
+"shares_out": 2436907.0,
+"name": "WEBUY GLOBAL LTD. Class A Ordinary Shares"
+},
+"VRAX": {
+"prev_close": 0.6126,
+"prev_day": "2026-11-13",
+"avg_vol20": 856128.9,
+"shares_out": 23168.72,
+"name": "Virax Biolabs Group Limited Ordinary Shares"
+},
+"WETO": {
+"prev_close": 0.6087,
+"prev_day": "2026-11-13",
+"avg_vol20": 3091481.9,
+"shares_out": 8213.0,
+"name": "Wetour Robotics Limited Ordinary Shares"
+},
+"UYSC": {
+"prev_close": 11.04,
+"prev_day": "2026-11-13",
+"avg_vol20": 317.1,
+"shares_out": 5221060.0,
+"name": "UY Scuti Acquisition Corp. Ordinary Shares"
+},
+"VEEE": {
+"prev_close": 6.7,
+"prev_day": "2026-11-13",
+"avg_vol20": 24693.35,
+"shares_out": 583974.0,
+"name": "Twin Vee PowerCats Co. Common Stock"
+},
 "WFCF": {
 "prev_close": 16.3,
 "prev_day": "2026-11-13",
 "avg_vol20": 18789.3,
 "shares_out": 4959764.0,
 "name": "Where Food Comes From, Inc. Common Stock"
+},
+"WFF": {
+"prev_close": 1.1,
+"prev_day": "2026-11-13",
+"avg_vol20": 61439827.5,
+"shares_out": 40304.14400000001,
+"name": "WF Holding Limited Ordinary Shares"
+},
+"WATT": {
+"prev_close": 7.755,
+"prev_day": "2026-11-13",
+"avg_vol20": 144529.35,
+"shares_out": 5527364.0,
+"name": "Energous Corporation Common Stock"
+},
+"VHC": {
+"prev_close": 9.41,
+"prev_day": "2026-11-13",
+"avg_vol20": 13372.2,
+"shares_out": 4216633.0,
+"name": "VirnetX Holding Corp Common Stock"
 },
 "WAFU": {
 "prev_close": 1.4023,
@@ -3518,19 +3413,19 @@
 "shares_out": 6212646.0,
 "name": "Versus Systems Inc. Common Stock"
 },
-"WATT": {
-"prev_close": 7.755,
+"VCIG": {
+"prev_close": 3.76,
 "prev_day": "2026-11-13",
-"avg_vol20": 144529.35,
-"shares_out": 5527364.0,
-"name": "Energous Corporation Common Stock"
+"avg_vol20": 4103854.25,
+"shares_out": 1624.0958024691354,
+"name": "VCI Global Limited Ordinary Share"
 },
-"VRAX": {
-"prev_close": 0.6126,
+"VIDA": {
+"prev_close": 0.7539,
 "prev_day": "2026-11-13",
-"avg_vol20": 856128.9,
-"shares_out": 23168.72,
-"name": "Virax Biolabs Group Limited Ordinary Shares"
+"avg_vol20": 65293.6,
+"shares_out": 5426400.0,
+"name": "VIDA Global Inc."
 },
 "VTIX": {
 "prev_close": 0.5915,
@@ -3539,47 +3434,12 @@
 "shares_out": 8259644.0,
 "name": "Virtuix Holdings Inc. Class A Common Stock"
 },
-"XRPN": {
-"prev_close": 7.85,
+"WVVI": {
+"prev_close": 1.73,
 "prev_day": "2026-11-13",
-"avg_vol20": 568869.7,
-"shares_out": 1.0,
-"name": "Evernorth Holdings Inc. Class A Ordinary Shares"
-},
-"XBIO": {
-"prev_close": 1.66,
-"prev_day": "2026-11-13",
-"avg_vol20": 23510.7,
-"shares_out": 2343181.0,
-"name": "Xenetic Biosciences, Inc. Common Stock"
-},
-"YHC": {
-"prev_close": 1.7,
-"prev_day": "2026-11-13",
-"avg_vol20": 322211.65,
-"shares_out": 1303857.0,
-"name": "LQR House Inc. Common Stock"
-},
-"XWEL": {
-"prev_close": 0.5287,
-"prev_day": "2026-11-13",
-"avg_vol20": 50038.0,
-"shares_out": 8589266.0,
-"name": "XWELL, Inc. Common Stock"
-},
-"XLO": {
-"prev_close": 8.075,
-"prev_day": "2026-11-13",
-"avg_vol20": 14655.7,
-"shares_out": 7063982.0,
-"name": "Xilio Therapeutics, Inc. Common Stock"
-},
-"YMAT": {
-"prev_close": 1.06,
-"prev_day": "2026-11-13",
-"avg_vol20": 9715580.1,
-"shares_out": 2790666.6,
-"name": "J-Star Holding Co., Ltd. Class A Ordinary Shares"
+"avg_vol20": 7320.05,
+"shares_out": 4979529.0,
+"name": "Willamette Valley Vineyards, Inc. Common Stock"
 },
 "WSBK": {
 "prev_close": 13.8895,
@@ -3588,26 +3448,33 @@
 "shares_out": 9295376.0,
 "name": "Winchester Bancorp, Inc. Common Stock"
 },
+"XAIR": {
+"prev_close": 2.13,
+"prev_day": "2026-11-13",
+"avg_vol20": 64234.3,
+"shares_out": 1666104.0,
+"name": "Beyond Air, Inc. Common Stock"
+},
+"WXM": {
+"prev_close": 2.68,
+"prev_day": "2026-11-13",
+"avg_vol20": 74382.15,
+"shares_out": 690000.0,
+"name": "WF International Limited Ordinary Shares"
+},
+"YAAS": {
+"prev_close": 0.81,
+"prev_day": "2026-11-13",
+"avg_vol20": 9416.1,
+"shares_out": 465110.0,
+"name": "Youxin Technology Ltd Class A Ordinary shares"
+},
 "YHGJ": {
 "prev_close": 3.3,
 "prev_day": "2026-11-13",
 "avg_vol20": 52925.65,
 "shares_out": 2609244.0,
 "name": "Yunhong Green CTI Ltd. Common Stock"
-},
-"WNW": {
-"prev_close": 2.07,
-"prev_day": "2026-11-13",
-"avg_vol20": 21992.45,
-"shares_out": 156433.53,
-"name": "Meiwu Technology Company Limited Ordinary Shares"
-},
-"XPON": {
-"prev_close": 2.4249,
-"prev_day": "2026-11-13",
-"avg_vol20": 14903.7,
-"shares_out": 962335.0,
-"name": "Expion Energy, Inc. Common Stock"
 },
 "YYAI": {
 "prev_close": 0.76,
@@ -3616,12 +3483,40 @@
 "shares_out": 4581917.0,
 "name": "AiRWA Inc. Common Stock"
 },
-"WTG": {
-"prev_close": 10.68,
+"WLDS": {
+"prev_close": 1.34,
 "prev_day": "2026-11-13",
-"avg_vol20": 44321.3,
-"shares_out": 1708575.0,
-"name": "Wintergreen Acquisition Corp. Ordinary Shares"
+"avg_vol20": 37051.2,
+"shares_out": 320311.3333333333,
+"name": "Wearable Devices Ltd. Ordinary Share"
+},
+"XLO": {
+"prev_close": 8.075,
+"prev_day": "2026-11-13",
+"avg_vol20": 14655.7,
+"shares_out": 7063982.0,
+"name": "Xilio Therapeutics, Inc. Common Stock"
+},
+"XCUR": {
+"prev_close": 1.08,
+"prev_day": "2026-11-13",
+"avg_vol20": 99117.35,
+"shares_out": 6545995.0,
+"name": "Exicure, Inc. Common Stock"
+},
+"XPON": {
+"prev_close": 2.4249,
+"prev_day": "2026-11-13",
+"avg_vol20": 14903.7,
+"shares_out": 962335.0,
+"name": "Expion Energy, Inc. Common Stock"
+},
+"WNW": {
+"prev_close": 2.07,
+"prev_day": "2026-11-13",
+"avg_vol20": 21992.45,
+"shares_out": 156433.53,
+"name": "Meiwu Technology Company Limited Ordinary Shares"
 },
 "XXII": {
 "prev_close": 0.7701,
@@ -3629,6 +3524,69 @@
 "avg_vol20": 50591520.35,
 "shares_out": 12310.241379310344,
 "name": "22nd Century Group, Inc. Common Stock"
+},
+"ZJYL": {
+"prev_close": 3.5,
+"prev_day": "2026-11-13",
+"avg_vol20": 244227.85,
+"shares_out": 7827355.0,
+"name": "JIN MEDICAL INTERNATIONAL LTD. Class A Ordinary Shares"
+},
+"XGPU": {
+"prev_close": 1.85,
+"prev_day": "2026-11-13",
+"avg_vol20": 40419.15,
+"shares_out": 1002998.0,
+"name": "Reliance Global Group, Inc. Common Stock"
+},
+"WOK": {
+"prev_close": 1.2,
+"prev_day": "2026-11-13",
+"avg_vol20": 116294.45,
+"shares_out": 14.591942000000001,
+"name": "WORK Medical Technology Group LTD Class A Ordinary Shares"
+},
+"WSTN": {
+"prev_close": 10.23,
+"prev_day": "2026-11-13",
+"avg_vol20": 12613.0,
+"shares_out": 8055000.0,
+"name": "Westin Acquisition Corp Class A Ordinary Share"
+},
+"XWEL": {
+"prev_close": 0.5287,
+"prev_day": "2026-11-13",
+"avg_vol20": 50038.0,
+"shares_out": 8589266.0,
+"name": "XWELL, Inc. Common Stock"
+},
+"YMAT": {
+"prev_close": 1.06,
+"prev_day": "2026-11-13",
+"avg_vol20": 9715580.1,
+"shares_out": 2790666.6,
+"name": "J-Star Holding Co., Ltd. Class A Ordinary Shares"
+},
+"XBIO": {
+"prev_close": 1.66,
+"prev_day": "2026-11-13",
+"avg_vol20": 23510.7,
+"shares_out": 2343181.0,
+"name": "Xenetic Biosciences, Inc. Common Stock"
+},
+"WW": {
+"prev_close": 10.37,
+"prev_day": "2026-11-13",
+"avg_vol20": 316384.65,
+"shares_out": 9998760.0,
+"name": "WW International, Inc. Common Stock"
+},
+"YDKG": {
+"prev_close": 0.8333,
+"prev_day": "2026-11-13",
+"avg_vol20": 116890.45,
+"shares_out": 5529189.0,
+"name": "Yueda Digital Holding Class A Ordinary Share"
 },
 "ZDAI": {
 "prev_close": 1.5,
@@ -3644,103 +3602,19 @@
 "shares_out": 6612308.0,
 "name": "ZK International Group Co., Ltd Ordinary Share"
 },
-"WVVI": {
-"prev_close": 1.73,
+"WTG": {
+"prev_close": 10.68,
 "prev_day": "2026-11-13",
-"avg_vol20": 7320.05,
-"shares_out": 4979529.0,
-"name": "Willamette Valley Vineyards, Inc. Common Stock"
+"avg_vol20": 44321.3,
+"shares_out": 1708575.0,
+"name": "Wintergreen Acquisition Corp. Ordinary Shares"
 },
-"WW": {
-"prev_close": 10.37,
+"YHC": {
+"prev_close": 1.7,
 "prev_day": "2026-11-13",
-"avg_vol20": 316384.65,
-"shares_out": 9998760.0,
-"name": "WW International, Inc. Common Stock"
-},
-"ZJYL": {
-"prev_close": 3.5,
-"prev_day": "2026-11-13",
-"avg_vol20": 244227.85,
-"shares_out": 7827355.0,
-"name": "JIN MEDICAL INTERNATIONAL LTD. Class A Ordinary Shares"
-},
-"XAIR": {
-"prev_close": 2.13,
-"prev_day": "2026-11-13",
-"avg_vol20": 64234.3,
-"shares_out": 1666104.0,
-"name": "Beyond Air, Inc. Common Stock"
-},
-"XCUR": {
-"prev_close": 1.08,
-"prev_day": "2026-11-13",
-"avg_vol20": 99117.35,
-"shares_out": 6545995.0,
-"name": "Exicure, Inc. Common Stock"
-},
-"YAAS": {
-"prev_close": 0.81,
-"prev_day": "2026-11-13",
-"avg_vol20": 9416.1,
-"shares_out": 465110.0,
-"name": "Youxin Technology Ltd Class A Ordinary shares"
-},
-"XLAB": {
-"prev_close": 2.14,
-"prev_day": "2026-11-13",
-"avg_vol20": 12625576.8,
-"shares_out": 1500.0,
-"name": "Exascale Labs Holdings Inc. Class A Common Stock"
-},
-"YDKG": {
-"prev_close": 0.8333,
-"prev_day": "2026-11-13",
-"avg_vol20": 116890.45,
-"shares_out": 5529189.0,
-"name": "Yueda Digital Holding Class A Ordinary Share"
-},
-"WLDS": {
-"prev_close": 1.34,
-"prev_day": "2026-11-13",
-"avg_vol20": 37051.2,
-"shares_out": 320311.3333333333,
-"name": "Wearable Devices Ltd. Ordinary Share"
-},
-"WXM": {
-"prev_close": 2.68,
-"prev_day": "2026-11-13",
-"avg_vol20": 74382.15,
-"shares_out": 690000.0,
-"name": "WF International Limited Ordinary Shares"
-},
-"WORX": {
-"prev_close": 1.23,
-"prev_day": "2026-11-13",
-"avg_vol20": 11274084.85,
-"shares_out": 89789.0,
-"name": "SCWorx Corp. Common Stock"
-},
-"WSTN": {
-"prev_close": 10.23,
-"prev_day": "2026-11-13",
-"avg_vol20": 12613.0,
-"shares_out": 8055000.0,
-"name": "Westin Acquisition Corp Class A Ordinary Share"
-},
-"XGPU": {
-"prev_close": 1.85,
-"prev_day": "2026-11-13",
-"avg_vol20": 40419.15,
-"shares_out": 1002998.0,
-"name": "Reliance Global Group, Inc. Common Stock"
-},
-"WOK": {
-"prev_close": 1.2,
-"prev_day": "2026-11-13",
-"avg_vol20": 116294.45,
-"shares_out": 14.591942000000001,
-"name": "WORK Medical Technology Group LTD Class A Ordinary Shares"
+"avg_vol20": 322211.65,
+"shares_out": 1303857.0,
+"name": "LQR House Inc. Common Stock"
 },
 "ZONE": {
 "prev_close": 3.6,
