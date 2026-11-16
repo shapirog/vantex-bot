@@ -239,3 +239,34 @@ def test_stop_checked_before_target_in_same_bar():
     nb = mk([(10, 11.5, 9.0, 10, 1000)], 600)
     px, _, why = V.sim_exit(1, 9.5, 11, nb, 950, 0.0)
     assert why == 'stop'
+
+# ---------------- strong-stocks filter
+def test_strong_filter_rejects_weak_and_falling_stocks():
+    b = breakout_bars()
+    cfg = V.merge(V.DEFAULTS, {'signals': {'strong_only': True, 'strong_min_day_change_pct': 10, 'strong_min_rvol': 1.0, 'strong_require_catalyst': False}})
+    f = V.features('TEST', b, b[-1].m, 9.5, 100_000, quote=Q, cfg=cfg)          # up ~9% on the day: not strong enough
+    e = V.evaluate(f, b, 1, cfg)
+    assert e['status'] == 'rejected' and any('not a strong stock' in r for r in e['reasons'])
+    f = V.features('TEST', b, b[-1].m, 9.0, 100_000, quote=Q, cfg=cfg)          # up ~15%: passes
+    assert V.evaluate(f, b, 1, cfg)['status'] == 'confirmed'
+
+def test_strong_filter_requires_real_news():
+    b = breakout_bars()
+    cfg = V.merge(V.DEFAULTS, {'signals': {'strong_only': True, 'strong_min_day_change_pct': 10, 'strong_min_rvol': 1.0, 'strong_require_catalyst': True}})
+    f = V.features('TEST', b, b[-1].m, 9.0, 100_000, quote=Q, cfg=cfg)
+    assert V.evaluate(f, b, 1, cfg, dict(verified=False, types=[], negative=[]))['status'] == 'rejected'
+    good = dict(verified=True, types=['CONTRACT'], negative=[], headline='Wins contract')
+    assert V.evaluate(f, b, 1, cfg, good)['status'] == 'confirmed'
+    offering = dict(verified=True, types=['OFFERING'], negative=['OFFERING'], headline='Prices offering')
+    assert V.evaluate(f, b, 1, cfg, offering)['status'] == 'rejected'
+
+def test_block_negative_news():
+    b = breakout_bars()
+    cfg = V.merge(V.DEFAULTS, {'signals': {'block_negative_news': True}})
+    f = feat(b)
+    assert V.evaluate(f, b, 1, cfg, dict(verified=False, types=[], negative=['OFFERING']))['status'] == 'rejected'
+    assert V.evaluate(f, b, 1, cfg, dict(verified=False, types=[], negative=[]))['status'] == 'confirmed'
+
+def test_default_rules_unchanged():
+    b = breakout_bars()
+    assert not V.strong_checks(feat(b), 1, None, CFG['signals'])
