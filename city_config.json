@@ -1,0 +1,66 @@
+{
+  "universe": {
+    "exchanges": [
+      "NASDAQ",
+      "NYSE",
+      "AMEX",
+      "ARCA",
+      "BATS"
+    ],
+    "min_price": 0.5,
+    "max_price": 0,
+    "min_avg_dollar_volume": 1000000,
+    "min_market_cap": 0,
+    "max_market_cap": 0,
+    "min_atr_pct": 0
+  },
+  "candidates": {
+    "deep_scan": 40,
+    "move_pct": 3.0,
+    "unusual_rvol": 3.0,
+    "near_level_pct": 0.5,
+    "min_today_dollar_volume_pre": 50000,
+    "min_today_dollar_volume_rth": 250000
+  },
+  "signals": {
+    "confirm_minutes": 1,
+    "breakout_buffer_pct": 0.1,
+    "min_rvol": 2.0,
+    "min_bar_volume_mult": 1.5,
+    "hold_bars": 2,
+    "retest_tolerance_pct": 0.3,
+    "lookback_bars": 6,
+    "max_spread_pct": 0.5,
+    "max_vwap_extension_atr": 3.0,
+    "max_level_extension_atr": 2.0,
+    "wick_max": 0.6,
+    "outlier_atr": 4.0,
+    "ema_fast": 9,
+    "ema_slow": 20,
+    "chart_emas": [
+      9,
+      20
+    ],
+    "target_r": 2.0
+  },
+  "risk": {
+    "risk_per_trade_pct": 0.5,
+    "max_daily_loss_pct": 1.5,
+    "max_open_positions": 2,
+    "max_exposure_pct": 50.0,
+    "max_position_pct": 25.0,
+    "allow_short_orders": false,
+    "max_day_trades": 3,
+    "entries_from": "09:35",
+    "entries_until": "15:30",
+    "flat_at": "15:50",
+    "limit_offset_pct": 0.05,
+    "entry_timeout_s": 60,
+    "one_entry_per_symbol_per_day": true
+  },
+  "feed": {
+    "require_realtime_sip": true,
+    "max_quote_age_s": 90,
+    "max_bar_age_s": 180
+  }
+}
