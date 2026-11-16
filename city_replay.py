@@ -15,7 +15,7 @@ Known limits: the stock list is today's (delisted stocks are missing = survivors
 minutes; news headlines are as stored now (later edits can't be undone); the spread for unconfirmed signals is not fetched.
 Results -> branch 'live-replay': replay/<day>.json, index.json, eval_<split>.json, eval_<split>.md
 """
-import json, math, os, random, re, subprocess, sys, time
+import json, math, os, random, re, shutil, subprocess, sys, time
 from collections import Counter, defaultdict
 from datetime import date, datetime, timedelta, timezone
 from zoneinfo import ZoneInfo
@@ -223,6 +223,14 @@ class Replay:
                            R=round(pnl / p['risk'], 3) if p['risk'] else None, exposure=round(p['qty'] * p['entry'], 2)))
         events.append(dict(m=b.m, kind='exit', sym=p['sym'], why=why, px=round(px, 4), pnl=round(pnl, 2)))
 
+def parse_day(txt):
+    """accepts 2026-11-13, 2026/11/13, 11/13/2026, 11-13-2026 and phone-keyboard dashes or stray spaces"""
+    t = re.sub(r'[\u2010-\u2015\u2212/.\s]+', '-', txt.strip()).strip('-')
+    p = [x for x in t.split('-') if x]
+    if len(p) == 3 and len(p[0]) == 4: return date(int(p[0]), int(p[1]), int(p[2]))
+    if len(p) == 3 and len(p[2]) == 4: return date(int(p[2]), int(p[0]), int(p[1]))
+    raise SystemExit(f'Could not read the date {txt!r}: use YYYY-MM-DD, for example 2026-11-13')
+
 def only_spread_pending(e):
     return e['status'] == 'developing' and [c['name'] for c in e['checks'] if c['ok'] is not True] == ['spread acceptable']
 
@@ -268,7 +276,7 @@ def publish(files, branch='live-replay'):
     tok = os.environ.get('GH_TOKEN')
     # keep earlier replays: start from the current branch content
     if tok and os.environ.get('GITHUB_REPOSITORY') and not os.path.exists(f'{OUT}/.fetched'):
-        subprocess.run(['rm', '-rf', OUT]); os.makedirs(OUT)
+        shutil.rmtree(OUT, ignore_errors=True); os.makedirs(OUT, exist_ok=True)
         r = subprocess.run(['git', 'clone', '-q', '--depth', '1', '-b', branch, f'https://x-access-token:{tok}@github.com/{REPO}.git', OUT], capture_output=True)
         if r.returncode != 0: os.makedirs(OUT, exist_ok=True)
         open(f'{OUT}/.fetched', 'w').close()
@@ -276,7 +284,7 @@ def publish(files, branch='live-replay'):
         os.makedirs(os.path.dirname(f'{OUT}/{name}') or OUT, exist_ok=True)
         if name.endswith('.md'): open(f'{OUT}/{name}', 'w').write(obj)
         else: json.dump(obj, open(f'{OUT}/{name}', 'w'), separators=(',', ':'), default=str)
-    if not (tok and os.environ.get('GITHUB_REPOSITORY')): return
+    if not files or not (tok and os.environ.get('GITHUB_REPOSITORY')): return   # nothing new to push
     g = ['git', '-C', OUT, '-c', 'user.name=vantex-bot', '-c', 'user.email=vantex-bot@users.noreply.github.com']
     subprocess.run(['rm', '-rf', f'{OUT}/.git']); subprocess.run(['git', 'init', '-q', '-b', branch, OUT], check=True)
     subprocess.run(g + ['add', '-A', '--', '.', ':!.fetched'], check=True); subprocess.run(g + ['commit', '-q', '-m', 'replay'], check=True)
@@ -289,7 +297,7 @@ def main():
     RP = Replay(Data(key, sec), key, sec, cfg)
     mode = sys.argv[1] if len(sys.argv) > 1 else 'replay'
     if mode == 'replay':
-        d = date.fromisoformat(sys.argv[2]) if len(sys.argv) > 2 and sys.argv[2] else None
+        d = parse_day(sys.argv[2]) if len(sys.argv) > 2 and sys.argv[2].strip() else None
         ss = RP.sessions(date.today() - timedelta(days=10), date.today() - timedelta(days=1))
         if d is None: d, cm = ss[-1]
         else: cm = dict(RP.sessions(d, d)).get(d)
