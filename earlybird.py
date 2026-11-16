@@ -4,7 +4,8 @@ Vantex Early Bird - tiny-float mover ALERTS from 3:00 AM to 4:00 PM ET. Read-onl
 Each weekday:
   ~2:30 AM  builds today's watch list: active NASDAQ/NYSE/AMEX common stocks, last close $0.50-$20,
             shares outstanding <= 10M (latest SEC filing; split-adjusted), with 20-day average volume.
-  3:00 AM-4:00 PM EVERY MINUTE (long-running jobs handed over at 7:55 AM and 12:55 PM because GitHub jobs stop at 6 hours):
+  3:00 AM-4:00 PM EVERY MINUTE. Runs relay each other non-stop Sunday 6 PM -> Friday 4 PM: each run lasts ~5.5 h (GitHub's
+            6-hour limit) and then starts the next run itself, because GitHub's own schedule has skipped runs.
             before 4:00 AM  -> Alpaca 'overnight' feed: the REAL-TIME indicative quote midpoint (overnight trades are
                                15 min late on the free plan, so they are only used if newer)
             from 4:00 AM    -> (premarket and regular session) real-time full-market SIP if the paid plan is active; otherwise the freshest of LIVE IEX
@@ -36,8 +37,8 @@ UP, REALERT, FRESH_MIN = 10.0, 15.0, 60
 MIN_DV = {'overnight': 10_000, 'premarket': 25_000, 'regular': 100_000}
 START, END = 3 * 60, 16 * 60
 LOOP_S = 60                                   # scan every minute
-MAX_RUN_S = 330 * 60                          # GitHub jobs stop at 6 h; three runs cover 3:00 AM-4:00 PM
-HANDOFFS = (7 * 60 + 55, 12 * 60 + 55)        # a run stops at the first hand-over time after it started; the next run takes over
+MAX_RUN_S = 330 * 60                          # GitHub jobs stop at 6 h: each run lasts 5.5 h, then starts the next one itself
+BUILD_AT = 2 * 60 + 30                        # today's watch list is built from 2:30 AM
 
 def sh(*a, check=True): return subprocess.run(list(a), check=check, capture_output=True, text=True)
 
@@ -204,30 +205,47 @@ def scan_once(W, st, today):
     log(now.strftime('%H:%M:%S'), session, [n for n, S in srcs if S], 'candidates', len(cands), 'alerts', [h['sym'] for h in hits])
     return hits
 
+def relay():
+    """start the next Early Bird run ourselves (GitHub's own schedule has skipped runs)"""
+    if not TOK: return
+    try:
+        r = requests.post(f'https://api.github.com/repos/{REPO}/actions/workflows/earlybird.yml/dispatches',
+                          headers={'Authorization': f'Bearer {TOK}', 'Accept': 'application/vnd.github+json'},
+                          json={'ref': 'main', 'inputs': {'force': '0'}}, timeout=20)
+        log('relay: next run requested', r.status_code, r.text[:120])
+    except Exception as e: log('relay failed', e)
+
+def off_hours(now):
+    """True from Friday 4 PM to Sunday 6 PM ET: the relay stops and the Sunday-evening schedule restarts it"""
+    wd, m = now.weekday(), now.hour * 60 + now.minute
+    return wd == 5 or (wd == 6 and m < 18 * 60) or (wd == 4 and m >= END)
+
 def main():
-    now = datetime.now(ET); today = now.date()
     checkout()
-    U = rd('universe.json', {})
-    W = U.get('stocks') if U.get('day') == today.isoformat() else None
-    if W is None:
-        W = build_universe(today); save(f'watch list {today}')
-    force = os.environ.get('EB_FORCE') == '1'                          # manual test run: one scan now, whatever the time
-    st = rd('state.json', {})
-    if st.get('day') != today.isoformat(): st = dict(day=today.isoformat(), alerted={})
-    if force: scan_once(W, st, today); return
-    if today.weekday() >= 5: log('weekend'); return
-    t_start = time.time()
-    while True:                                                         # one long run: a scan every LOOP_S seconds
-        now = datetime.now(ET); m = now.hour * 60 + now.minute
-        if m >= END or (time.time() - t_start) > MAX_RUN_S or any(t_start_m(t_start) < h - 10 and h <= m for h in HANDOFFS): break
-        if m >= START:
+    if os.environ.get('EB_FORCE') == '1':                              # manual test: one scan now, whatever the time
+        today = datetime.now(ET).date(); U = rd('universe.json', {})
+        W = U.get('stocks') if U.get('day') == today.isoformat() else None
+        if W is None: W = build_universe(today); save(f'watch list {today}')
+        st = rd('state.json', {})
+        if st.get('day') != today.isoformat(): st = dict(day=today.isoformat(), alerted={})
+        scan_once(W, st, today); return
+    t_start = time.time(); W, st, wday = None, None, None
+    while time.time() - t_start < MAX_RUN_S:                            # one run lasts ~5.5 h, then hands over to the next
+        now = datetime.now(ET); today = now.date(); m = now.hour * 60 + now.minute
+        if off_hours(now): log('weekend - relay stops until Sunday 6 PM ET'); return
+        if wday != today:                                               # new day: fresh alert memory, watch list rebuilt from 2:30 AM
+            W, wday = None, today
+            st = rd('state.json', {})
+            if st.get('day') != today.isoformat(): st = dict(day=today.isoformat(), alerted={})
+        if W is None and m >= BUILD_AT and today.weekday() < 5:
+            U = rd('universe.json', {})
+            W = U.get('stocks') if U.get('day') == today.isoformat() else None
+            if W is None: W = build_universe(today); save(f'watch list {today}')
+        if W is not None and START <= m < END and today.weekday() < 5:
             try: scan_once(W, st, today)
             except Exception as e: log('scan error', type(e).__name__, str(e)[:200])
         time.sleep(max(5, LOOP_S - (time.time() % LOOP_S)))
-    log('loop finished at', datetime.now(ET).strftime('%H:%M'))
-
-def t_start_m(t):
-    d = datetime.fromtimestamp(t, ET); return d.hour * 60 + d.minute
+    relay()
 
 if __name__ == '__main__':
     main()
