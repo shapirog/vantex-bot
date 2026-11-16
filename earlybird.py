@@ -2,13 +2,15 @@
 Vantex Early Bird - tiny-float mover ALERTS from 3:00 to 9:30 AM ET. Read-only: places NO orders (paper keys only).
 
 Each weekday:
-  ~2:40 AM  builds today's watch list: active NASDAQ/NYSE/AMEX common stocks, last close $0.50-$20,
+  ~2:30 AM  builds today's watch list: active NASDAQ/NYSE/AMEX common stocks, last close $0.50-$20,
             shares outstanding <= 10M (latest SEC filing; split-adjusted), with 20-day average volume.
-  3:00-9:30 every ~10 min:
-            before 4:00 AM  -> Alpaca 'overnight' feed (Blue Ocean ATS, 8 PM-4 AM session; trades 15 min delayed on free plan)
-            from 4:00 AM    -> 'delayed_sip' snapshots (15 min delayed on the free plan), falling back to live IEX
+  3:00-9:30 EVERY MINUTE (one long-running job, handed over at 7:55 AM because GitHub jobs stop at 6 hours):
+            before 4:00 AM  -> Alpaca 'overnight' feed: the REAL-TIME indicative quote midpoint (overnight trades are
+                               15 min late on the free plan, so they are only used if newer)
+            from 4:00 AM    -> real-time full-market SIP if the paid plan is active; otherwise the freshest of LIVE IEX
+                               (one exchange) and 15-min-delayed SIP. Every alert says LIVE or how old its price is.
             ALERT when a watch-list stock is >= +10% vs yesterday's close, has traded in the last 60 min, and has
-            >= $10K (overnight) / $25K (premarket) traded today. Re-alerts only if it climbs another 15 points.
+            >= $10K (overnight) / $25K (premarket) traded today (volume can lag: overnight and full-market volume are 15 min late on the free plan). Re-alerts only if it climbs another 15 points.
             Push to your phone (NTFY_TOPIC) with % change, price, volume, shares outstanding and the latest headline.
 Every alert is logged to the 'live-earlybird' branch (alerts.jsonl) so we can later test which alerts actually ran.
 This is a WATCH tool. It is not a tested strategy and it does not trade.
@@ -32,7 +34,10 @@ BRANCH = 'live-earlybird'
 PMIN, PMAX, SH_MAX = 0.50, 20.0, 10_000_000
 UP, REALERT, FRESH_MIN = 10.0, 15.0, 60
 MIN_DV = {'overnight': 10_000, 'premarket': 25_000}
-START, END = 3 * 60 - 5, 9 * 60 + 35
+START, END = 3 * 60, 9 * 60 + 30
+LOOP_S = 60                                   # scan every minute
+MAX_RUN_S = 330 * 60                          # GitHub jobs stop at 6 h; two runs cover 3:00-9:30
+HANDOFF = 7 * 60 + 55                         # the 2:30 AM run stops at 7:55 so the 7:50 run takes over
 
 def sh(*a, check=True): return subprocess.run(list(a), check=check, capture_output=True, text=True)
 
@@ -91,7 +96,8 @@ def ts(t):
 
 def volumes(syms, start, feed):
     """shares traded since `start` from 1-minute bars (boats = overnight venue, sip = 16 min delayed, iex = live)"""
-    end = datetime.now(timezone.utc) - (timedelta(minutes=16) if feed in ('sip', 'boats') else timedelta(0))
+    live = feed == 'sip_live'; feed = 'sip' if live else feed
+    end = datetime.now(timezone.utc) - (timedelta(minutes=16) if feed in ('sip', 'boats') and not live else timedelta(0))
     V, tok = {s: 0.0 for s in syms}, None
     for _ in range(20):
         p = dict(symbols=','.join(syms), timeframe='1Min', start=start.astimezone(timezone.utc).isoformat(), end=end.isoformat(), limit=10000, feed=feed)
@@ -121,46 +127,61 @@ def push(title, body):
 def fmt(n):
     return f'{n / 1e6:.1f}M' if n >= 1e6 else f'{n / 1e3:.0f}K' if n >= 1e3 else str(int(n))
 
-def main():
-    now = datetime.now(ET); today = now.date(); m = now.hour * 60 + now.minute
-    checkout()
-    U = rd('universe.json', {})
-    W = U.get('stocks') if U.get('day') == today.isoformat() else None
-    if W is None:
-        W = build_universe(today); save(f'watch list {today}')
-    force = os.environ.get('EB_FORCE') == '1'                          # manual test run: scan now, whatever the time
-    if not force and (not (START <= m <= END) or today.weekday() >= 5): log('outside 3:00-9:30 AM ET; watch list ready'); return
+PLAN = {'sip_live': None}
+
+def pick(sn_list, overnight):
+    """freshest live-ish price from several snapshots of one stock -> (price, time, source, bid, ask) or None.
+    Overnight: the real-time indicative quote midpoint (trades on the free plan are 15 min late)."""
+    best = None
+    for src, sn in sn_list:
+        if not sn: continue
+        q, lt = sn.get('latestQuote') or {}, sn.get('latestTrade') or {}
+        bp, ap = q.get('bp') or 0, q.get('ap') or 0
+        opts = []
+        if lt.get('p'): opts.append((lt['p'], ts(lt.get('t')), f'{src} trade'))
+        if overnight and bp > 0 and ap > bp and (ap - bp) / ((ap + bp) / 2) <= 0.05: opts.append(((bp + ap) / 2, ts(q.get('t')), f'{src} quote mid'))
+        for px, t, how in opts:
+            if t and (best is None or t > best[1]): best = (px, t, how, bp or None, ap or None)
+    return best
+
+def scan_once(W, st, today):
+    now = datetime.now(ET); m = now.hour * 60 + now.minute
     session = 'overnight' if (m < 240 or m >= 20 * 60) else 'premarket'
-    feeds = ['overnight'] if session == 'overnight' else ['delayed_sip', 'iex']
-    S, used = None, None
-    for f in feeds:
-        S = snapshots(sorted(W), f)
-        if S: used = f; break
-    if not S: log('no snapshot data from', feeds); return
-    st = rd('state.json', {})
-    if st.get('day') != today.isoformat(): st = dict(day=today.isoformat(), alerted={})
+    syms = sorted(W)
+    if session == 'overnight':
+        srcs = [('overnight', snapshots(syms, 'overnight'))]
+    else:
+        if PLAN['sip_live'] is None:                                   # real-time full market works only on the paid plan
+            PLAN['sip_live'] = bool(snapshots(syms[:50], 'sip')); log('real-time SIP plan active:', PLAN['sip_live'])
+        if PLAN['sip_live']: srcs = [('sip live', snapshots(syms, 'sip'))]
+        else: srcs = [('iex live', snapshots(syms, 'iex')), ('sip 15-min delayed', snapshots(syms, 'delayed_sip'))]
+    if not any(S for _, S in srcs): log('no snapshot data'); return []
     cands = []
-    for s, sn in S.items():
-        w = W.get(s)
-        if not w: continue
-        lt, q = sn.get('latestTrade') or {}, sn.get('latestQuote') or {}
-        px = lt.get('p'); t = ts(lt.get('t'))
-        if not px or not t or (datetime.now(timezone.utc) - t).total_seconds() > (FRESH_MIN + (15 if used != 'iex' else 0)) * 60: continue
-        chg = (px / w['prev_close'] - 1) * 100
+    for s in syms:
+        b = pick([(name, (S or {}).get(s)) for name, S in srcs], session == 'overnight')
+        if not b: continue
+        px, t, how, bp, ap = b
+        age = (datetime.now(timezone.utc) - t).total_seconds() / 60
+        if age > FRESH_MIN: continue
+        chg = (px / W[s]['prev_close'] - 1) * 100
         if chg < UP: continue
         last = st['alerted'].get(s)
         if last is not None and chg < last + REALERT: continue
-        cands.append(dict(sym=s, chg=round(chg, 1), px=px, shares_out=w['shares_out'], avg_vol20=w['avg_vol20'],
-                          bid=q.get('bp'), ask=q.get('ap'), trade_time=t.astimezone(ET).strftime('%H:%M'), feed=used, session=session))
+        cands.append(dict(sym=s, chg=round(chg, 1), px=round(px, 4), age_min=round(age, 1), source=how, shares_out=W[s]['shares_out'],
+                          avg_vol20=W[s]['avg_vol20'], bid=bp, ask=ap, session=session))
     hits = []
     if cands:
+        cs = [c['sym'] for c in cands]
         if session == 'overnight':
-            vfeed, vstart = 'boats', datetime.combine(today - timedelta(days=1), datetime.min.time(), ET) + timedelta(hours=20)
+            V = volumes(cs, datetime.combine(today - timedelta(days=1), datetime.min.time(), ET) + timedelta(hours=20), 'boats')
+            for c in cands: c['vol'] = V.get(c['sym'], 0.0); c['vol_note'] = 'overnight volume, 15 min late'
         else:
-            vfeed, vstart = ('iex' if used == 'iex' else 'sip'), datetime.combine(today, datetime.min.time(), ET) + timedelta(hours=4)
-        V = volumes([c['sym'] for c in cands], vstart, vfeed)
+            start = datetime.combine(today, datetime.min.time(), ET) + timedelta(hours=4)
+            if srcs[0][0] == 'sip live': V1, V2 = volumes(cs, start, 'sip_live'), {}
+            else: V1, V2 = volumes(cs, start, 'sip'), volumes(cs, start, 'iex')
+            for c in cands: c['vol'] = max(V1.get(c['sym'], 0.0), V2.get(c['sym'], 0.0)); c['vol_note'] = 'premarket volume'
         for c in cands:
-            c['vol'] = V.get(c['sym'], 0.0); c['dv'] = round(c['px'] * c['vol']); c['volume_feed'] = vfeed
+            c['dv'] = round(c['px'] * c['vol'])
             if c['dv'] >= MIN_DV[session]: hits.append(c)
     hits.sort(key=lambda h: -h['chg'])
     if hits:
@@ -168,19 +189,43 @@ def main():
         lines = []
         for h in hits[:8]:
             sp = f" spread {((h['ask'] - h['bid']) / ((h['ask'] + h['bid']) / 2) * 100):.1f}%" if h['bid'] and h['ask'] and h['ask'] > h['bid'] else ''
-            lines.append(f"{h['sym']} +{h['chg']}% ${h['px']} | vol {fmt(h['vol'])} (${fmt(h['dv'])}) | {fmt(h['shares_out'])} sh out{sp}"
+            fresh = 'LIVE' if h['age_min'] < 2 and 'delayed' not in h['source'] else f"{h['age_min']:.0f} min old"
+            lines.append(f"{h['sym']} +{h['chg']}% ${h['px']} ({fresh}, {h['source']}) | vol {fmt(h['vol'])} (${fmt(h['dv'])}) | {fmt(h['shares_out'])} sh out{sp}"
                          + (f"\n  {H[h['sym']]}" if h['sym'] in H else '\n  no news found'))
-        delay = '' if used == 'iex' else ' (prices ~15 min delayed)'
         push(f"Early Bird {now.strftime('%-I:%M %p')} {session}: {len(hits)} tiny-float mover{'s' if len(hits) > 1 else ''}",
-             '\n'.join(lines) + f"\n{delay.strip()}\nWatch only - not a tested buy signal.")
+             '\n'.join(lines) + '\nWatch only - not a tested buy signal.')
         for h in hits:
             st['alerted'][h['sym']] = h['chg']; h['news'] = H.get(h['sym']); h['at'] = now.isoformat(timespec='seconds')
         with open(f'{OUT}/alerts.jsonl', 'a') as f:
             for h in hits: f.write(json.dumps(h) + '\n')
-    json.dump(st, open(f'{OUT}/state.json', 'w'))
-    log(session, used, 'snapshots', len(S), 'alerts', [h['sym'] for h in hits])
-    if hits or not os.path.exists(f'{OUT}/.saved-{today}'):
-        open(f'{OUT}/.saved-{today}', 'w').close(); save(f'early bird {now:%H:%M}')
+        json.dump(st, open(f'{OUT}/state.json', 'w')); save(f'early bird alert {now:%H:%M}')
+    log(now.strftime('%H:%M:%S'), session, [n for n, S in srcs if S], 'candidates', len(cands), 'alerts', [h['sym'] for h in hits])
+    return hits
+
+def main():
+    now = datetime.now(ET); today = now.date()
+    checkout()
+    U = rd('universe.json', {})
+    W = U.get('stocks') if U.get('day') == today.isoformat() else None
+    if W is None:
+        W = build_universe(today); save(f'watch list {today}')
+    force = os.environ.get('EB_FORCE') == '1'                          # manual test run: one scan now, whatever the time
+    st = rd('state.json', {})
+    if st.get('day') != today.isoformat(): st = dict(day=today.isoformat(), alerted={})
+    if force: scan_once(W, st, today); return
+    if today.weekday() >= 5: log('weekend'); return
+    t_start = time.time()
+    while True:                                                         # one long run: a scan every LOOP_S seconds
+        now = datetime.now(ET); m = now.hour * 60 + now.minute
+        if m > END or (time.time() - t_start) > MAX_RUN_S or (HANDOFF and m >= HANDOFF and t_start_m(t_start) < HANDOFF): break
+        if m >= START:
+            try: scan_once(W, st, today)
+            except Exception as e: log('scan error', type(e).__name__, str(e)[:200])
+        time.sleep(max(5, LOOP_S - (time.time() % LOOP_S)))
+    log('loop finished at', datetime.now(ET).strftime('%H:%M'))
+
+def t_start_m(t):
+    d = datetime.fromtimestamp(t, ET); return d.hour * 60 + d.minute
 
 if __name__ == '__main__':
     main()
