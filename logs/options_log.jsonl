@@ -22,3 +22,4 @@
 {"event": "opt_skip", "und": "MU", "dir": -1, "why": "backtest turned off \"range break\"", "ts": "2026-11-17T11:10:36-05:00"}
 {"event": "opt_skip", "und": "UBER", "dir": -1, "why": "news points the other way: Uber and Kohl's Announce Nationwide On-Demand Delivery Partnership", "ts": "2026-11-17T12:06:03-05:00"}
 {"event": "handoff", "why": "runtime limit", "ts": "2026-11-17T14:30:28-05:00"}
+{"event": "market_closed", "ts": "2026-11-17T17:22:56-05:00"}
