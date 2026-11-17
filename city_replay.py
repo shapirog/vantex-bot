@@ -26,6 +26,7 @@ import requests
 import vantex_core as V
 from vantex_core import Bar
 from city_engine import Data, to_bar, epoch, NAME_EXCLUDE, CONTEXT_ETFS
+import city_sec
 ET = ZoneInfo('America/New_York')
 REPO = os.environ.get('GITHUB_REPOSITORY', 'shapirog/vantex-bot')
 OUT = os.environ.get('VANTEX_REPLAY_DIR', '/tmp/vantex-replay')
@@ -43,6 +44,7 @@ class Replay:
         self.common = sorted(a['symbol'] for a in self.assets if a.get('exchange') in U['exchanges'] and a.get('tradable') and a['symbol'].isalpha()
                              and not any(re.search(rx, (a.get('name') or '').lower()) for _, rx in NAME_EXCLUDE))
         self.names = {a['symbol']: (a.get('name') or '')[:60] for a in self.assets}
+        self.sec = city_sec.SEC()                                      # SEC filings, cached per stock for the whole run
 
     def sessions(self, a, b):
         r = requests.get(f'{TRADE}/v2/calendar', headers=self.h, params=dict(start=a.isoformat(), end=b.isoformat()), timeout=30)
@@ -170,7 +172,8 @@ class Replay:
                 cat = self.catalyst_at(s, f, ts, d, day_ts, groups)
                 if sess == 'regular' and s not in strong_seen and f['chg_pct'] >= 10 and (f['rvol'] or 0) >= 5:
                     strong_seen[s] = dict(sym=s, m=m, chg=round(f['chg_pct'], 1), rvol=round(f['rvol'], 1), news=cat.get('n', 0), news_all_day=len(self._symnews.get(s) or []), verified=cat['verified'],
-                                          types=cat['types'][:3], negative=cat['negative'][:3], headline=(cat.get('headline') or cat.get('latest') or '')[:120])
+                                          types=cat['types'][:3], negative=cat['negative'][:3], headline=(cat.get('headline') or cat.get('latest') or '')[:120],
+                                          sec=bool((cat.get('sec') or {}).get('catalyst')), sec_negative=(cat.get('sec') or {}).get('negative', []))
                 eL = V.evaluate(f, B, 1, cfg, cat); eS = V.evaluate(f, B, -1, cfg, cat)
                 # the spread is the only thing bars can't show: fetch the quote at that moment when it is all a setup waits on
                 if sess == 'regular' and any(only_spread_pending(e) for e in (eL, eS)):
@@ -224,6 +227,8 @@ class Replay:
         vis = [n for n in L if n['t'] and n['t'] < ts]
         c = V.catalyst_for(s, V.group_news(vis, ts, day_ts - 8 * 3600) if vis else [])
         c['latest'] = vis[-1]['h'] if vis else None
+        if self.cfg['signals'].get('use_sec', True):                    # official filings: catalysts the news feed missed, and dilution
+            c = city_sec.merge(c, city_sec.check(self.sec.filings(s), ts, day_ts - 14 * 3600))
         return c
 
     def try_entry(self, s, side, e, f, B, L, i, m, ts, eq, eq0, open_pos, traded, st, cfg, blocks, events, d):
@@ -274,8 +279,8 @@ def parse_day(txt):
 
 VARIANT_NOTES = {
     'A_original': dict(name='A. Original rules', what='every confirmed breakout or breakdown, any stock in the universe'),
-    'B_strong_news': dict(name='B. Strong stocks with real news', what='longs only on stocks already up 10%+ on the day, 5x normal volume, a fresh verified news catalyst, and no dilution news'),
-    'C_strong_volume': dict(name='C. Strong stocks, news not required', what='longs only on stocks already up 10%+ on the day with 5x normal volume and no dilution news'),
+    'B_strong_news': dict(name='B. Strong stocks with real news', what='longs only on stocks already up 10%+ on the day, 5x normal volume, a fresh verified catalyst (news or an SEC 8-K), and no dilution news or filings'),
+    'C_strong_volume': dict(name='C. Strong stocks, news not required', what='longs only on stocks already up 10%+ on the day with 5x normal volume and no dilution news or filings'),
     'D_pullback_news': dict(name='D. Strong + news, pullback entry', what='same stocks as B, but waits for the first pullback after the high of day that holds above VWAP, buys the turn back up, stop under the pullback low'),
     'E_pullback': dict(name='E. Strong, pullback entry, news not required', what='same stocks as C, with the pullback entry from D'),
 }
@@ -402,7 +407,8 @@ def main():
                    note='Same days, same data, same costs and fills for every variant. Every confirmed signal is taken (no day-trade limit) so each rule set is judged on enough trades.')
         seen = [dict(x, day=r['day']) for r in res.get('A_original', []) for x in r.get('strong_seen', [])]
         out['news_check'] = dict(strong_movers=len(seen), with_any_news=sum(1 for x in seen if x['news']), in_feed_all_day=sum(1 for x in seen if x['news_all_day']), with_verified_catalyst=sum(1 for x in seen if x['verified']),
-                                 with_negative_news=sum(1 for x in seen if x['negative']), movers=seen)
+                                 with_negative_news=sum(1 for x in seen if x['negative']), with_sec_catalyst=sum(1 for x in seen if x.get('sec')),
+                                 with_sec_dilution=sum(1 for x in seen if x.get('sec_negative')), movers=seen)
         rows = ['| rule set | trades | win rate | net P&L after costs | avg R | worst day | max drawdown |', '|---|---|---|---|---|---|---|']
         for k, v in out['variants'].items():
             S = v['summary']; rows.append(f"| {v['name']} | {S['trades']} | {S['win_rate_pct']}% | ${S['net_pnl']} | {S['avg_R']} | {S['worst_day']} | ${S['max_drawdown']} |")
@@ -410,9 +416,9 @@ def main():
              [f"- **{v['name']}**: {v['what']}" for v in out['variants'].values()]
         nc = out['news_check']
         md += ['', '## News check: stocks up 10%+ on 5x volume', '',
-               f"{nc['strong_movers']} strong movers; {nc['with_any_news']} had news before the move was seen; {nc['in_feed_all_day']} had any news in the feed that day; {nc['with_verified_catalyst']} had a verified catalyst; {nc['with_negative_news']} had dilution/negative news.", '',
-               '| day | stock | time | change | volume | news before | news all day | verified | headline |', '|---|---|---|---|---|---|---|---|---|'] + \
-              [f"| {x['day']} | {x['sym']} | {x['m'] // 60}:{x['m'] % 60:02d} | +{x['chg']}% | {x['rvol']}x | {x['news']} | {x['news_all_day']} | {'yes ' + ','.join(x['types']) if x['verified'] else 'no'} | {x['headline'].replace('|', '/')} |" for x in nc['movers'][:150]]
+               f"{nc['strong_movers']} strong movers; {nc['with_any_news']} had news before the move was seen; {nc['in_feed_all_day']} had any news in the feed that day; {nc['with_sec_catalyst']} had an SEC 8-K catalyst; {nc['with_verified_catalyst']} had a verified catalyst (news or SEC); {nc['with_negative_news']} had dilution/negative news ({nc['with_sec_dilution']} from SEC filings).", '',
+               '| day | stock | time | change | volume | news before | news all day | verified | negative | headline |', '|---|---|---|---|---|---|---|---|---|---|'] + \
+              [f"| {x['day']} | {x['sym']} | {x['m'] // 60}:{x['m'] % 60:02d} | +{x['chg']}% | {x['rvol']}x | {x['news']} | {x['news_all_day']} | {'yes ' + ','.join(x['types']) if x['verified'] else 'no'} | {','.join(x['negative']) or '-'} | {x['headline'].replace('|', '/')} |" for x in nc['movers'][:200]]
         publish({})
         publish({f'compare_{split}.json': out, f'compare_{split}.md': '\n'.join(md) + '\n'})
     else:
