@@ -52,6 +52,12 @@ DEFAULTS = {
         'strong_min_rvol': 5.0,                           # time-of-day relative volume
         'strong_require_catalyst': True,                  # a fresh, verified, non-negative news catalyst (bearish: any verified or negative news)
         'block_negative_news': False,                     # longs: never buy a stock with offering / dilution / compliance news
+        # how to enter: 'breakout' = buy the break of a level (original); 'pullback' = after the high of day, wait for the
+        # first pullback that holds above VWAP and buy the first candle that turns back up, stop under the pullback low
+        'entry_style': 'breakout',
+        'pb_min_atr': 0.5,                                # pullback must be at least this many 5-minute ATRs deep
+        'pb_max_retrace': 0.6,                            # ...and give back no more than this share of the move from VWAP to the high
+        'pb_max_bars': 15,                                # a pullback longer than this (minutes) has lost momentum
     },
     'risk': {
         'risk_per_trade_pct': 0.50,                       # $12.50 on $2,500
@@ -328,9 +334,56 @@ def strong_checks(f, side, catalyst, S):
         out.append(('no dilution / negative news', False, ', '.join(catalyst['negative'])))
     return out
 
+def _pullback(f, bars, side, cfg=DEFAULTS):
+    """First pullback after the high of day: holds above VWAP on lighter volume, then a candle closes back up.
+    Long only. Same output shape and status meanings as _evaluate."""
+    S = cfg['signals']
+    out = dict(side=side, status='watching', checks=[], warnings=[], level=None, level_name='pullback', trigger=None, stop=None, target=None, reasons=[])
+    if f is None or not bars: out['status'] = 'rejected'; out['reasons'] = ['no data']; return out
+    if side < 0: out['reasons'] = ['pullback entries are long-only']; return out
+    off = next((i for i, b in enumerate(bars) if b.m >= RTH_OPEN), None)
+    if off is None or len(bars) - off < 5: out['reasons'] = ['not enough regular-session bars yet']; return out
+    rth = bars[off:]; vw = vwap_series(bars)[off:]
+    a = f['atr5']; px = f['price']
+    hi_i = max(range(len(rth)), key=lambda i: (rth[i].h, -i))                 # first bar that made today's high
+    hod = rth[hi_i].h; after = rth[hi_i + 1:]
+    out.update(level=hod)
+    if len(after) < 2: out['reasons'] = ['at or near the high of day, no pullback yet']; return out
+    pb, trig = after[:-1], after[-1]
+    pb_low = min(b.l for b in pb)
+    move = hod - vw[hi_i]
+    C = out['checks']
+    def chk(n, ok, d): C.append(dict(name=n, ok=ok, detail=d))
+    lead = rth[max(0, hi_i - 4):hi_i + 1]; lead_v = sum(b.v for b in lead) / len(lead); pb_v = sum(b.v for b in pb) / len(pb)
+    held = all(b.l > vw[hi_i + 1 + j] for j, b in enumerate(pb))
+    chk('pulled back', hod - pb_low >= S['pb_min_atr'] * a, f"{hod - pb_low:.4g} off the high ({(hod - pb_low) / a:.1f} ATR, need {S['pb_min_atr']})")
+    chk('held above VWAP', held, 'every pullback bar stayed above VWAP' if held else 'pullback broke VWAP')
+    chk('shallow pullback', move > 0 and hod - pb_low <= S['pb_max_retrace'] * move, f"gave back {(hod - pb_low) / move * 100:.0f}% of the move from VWAP" if move > 0 else 'high is not above VWAP')
+    chk('fresh pullback', len(pb) <= S['pb_max_bars'], f"{len(pb)} minutes since the high (max {S['pb_max_bars']})")
+    chk('lighter volume on the pullback', pb_v < lead_v, f"pullback {pb_v:,.0f}/min vs {lead_v:,.0f}/min into the high")
+    turned = trig.c > pb[-1].h and trig.c > trig.o
+    chk('turns back up', turned, f"close {trig.c:.4g} {'above' if turned else 'not above'} prior candle high {pb[-1].h:.4g}")
+    chk('volume on the turn', trig.v >= pb_v, f"{trig.v:,.0f} vs {pb_v:,.0f} average on the pullback")
+    sp = f['spread_pct']
+    chk('spread acceptable', None if sp is None else sp <= S['max_spread_pct'], 'no real-time quote' if sp is None else f"{sp:.2f}% (max {S['max_spread_pct']}%)")
+    mind = cfg['candidates']['min_today_dollar_volume_rth']
+    chk('liquidity', f['dollar_volume'] >= mind, f"${f['dollar_volume'] / 1e6:.2f}M traded today (min ${mind / 1e6:.2f}M)")
+    stop = pb_low - 0.1 * a; risk = px - stop
+    if risk > 0: out.update(trigger=px, stop=round(stop, 4), target=round(px + S['target_r'] * risk, 4))
+    failed = [c['name'] for c in C if c['ok'] is False]; pending = [c['name'] for c in C if c['ok'] is None]
+    structure = {'held above VWAP', 'shallow pullback', 'fresh pullback'}
+    if risk <= 0: out['status'] = 'rejected'; failed.append('stop above price')
+    elif set(failed) & structure: out['status'] = 'rejected'
+    elif failed: out['status'] = 'developing' if set(failed) <= {'turns back up', 'volume on the turn', 'pulled back', 'lighter volume on the pullback'} else 'rejected'
+    elif pending: out['status'] = 'developing'
+    else: out['status'] = 'confirmed'
+    out['reasons'] = ['all confirmations passed'] if out['status'] == 'confirmed' else \
+        ([f"failed: {', '.join(failed)}"] if failed else []) + ([f"waiting: {', '.join(pending)}"] if pending else [])
+    return out
+
 def evaluate(f, bars, side, cfg=DEFAULTS, catalyst=None):
     """One side of one stock, plus the optional strong-stocks filter. Only 'confirmed' may become an order."""
-    out = _evaluate(f, bars, side, cfg, catalyst)
+    out = (_pullback if cfg['signals'].get('entry_style') == 'pullback' else _evaluate)(f, bars, side, cfg)
     if f is None: return out
     sc = strong_checks(f, side, catalyst, cfg['signals'])
     if not sc: return out
