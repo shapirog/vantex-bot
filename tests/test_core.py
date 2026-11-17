@@ -270,3 +270,10 @@ def test_block_negative_news():
 def test_default_rules_unchanged():
     b = breakout_bars()
     assert not V.strong_checks(feat(b), 1, None, CFG['signals'])
+
+def test_small_cap_catalyst_wording_is_recognised():
+    assert 'PRODUCT' in V.classify('Acme Launches New AI Platform')['types']
+    assert 'PRODUCT' in V.classify('Acme Receives $12 Million Order From Utility')['types']
+    assert 'PATENT' in V.classify('Acme Granted U.S. Patent For Battery Tech')['types']
+    assert 'TRIAL' in V.classify('Acme Reports Positive Results From Study')['types']
+    assert V.classify('Order of business: Acme annual meeting')['types'] == []
