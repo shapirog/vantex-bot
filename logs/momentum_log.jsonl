@@ -4938,3 +4938,4 @@
 {"event": "mom_scan", "sym": "SMWB", "dir": 1, "ok": false, "info": "not enough bars", "ts": "2026-11-17T14:30:57-05:00"}
 {"event": "mom_scan", "sym": "CEPL", "dir": 1, "ok": false, "info": "not enough bars", "ts": "2026-11-17T14:30:58-05:00"}
 {"event": "mom_scan", "sym": "PICS", "dir": -1, "ok": false, "info": "not enough bars", "ts": "2026-11-17T14:30:58-05:00"}
+{"event": "market_closed", "ts": "2026-11-17T17:17:52-05:00"}
