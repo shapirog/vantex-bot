@@ -588,3 +588,104 @@
 {"event": "market_closed", "next_open": "2026-11-17T09:30:00-05:00", "ts": "2026-11-16T20:00:32-05:00"}
 {"event": "day_done", "why": "loss_limit already hit today", "ts": "2026-11-16T21:00:34-05:00"}
 {"event": "market_closed", "next_open": "2026-11-17T09:30:00-05:00", "ts": "2026-11-16T21:00:34-05:00"}
+{"event": "market_scan", "stocks": 12360, "ts": "2026-11-17T09:30:19-05:00"}
+{"event": "orb_skip", "sym": "QQQ", "why": "1 share ($661) is bigger than the $493 position size", "ts": "2026-11-17T09:35:03-05:00"}
+{"event": "orb_skip", "sym": "MSFT", "why": "1 share ($514) is bigger than the $493 position size", "ts": "2026-11-17T09:35:03-05:00"}
+{"event": "orb_signal", "sym": "NVDA", "dir": -1, "price": 155.64, "stop": 157.43, "target": 137.68, "qty": 3, "ts": "2026-11-17T09:35:03-05:00"}
+{"event": "order", "sym": "NVDA", "side": "sell", "qty": 3.0, "cid": "ORB-NVDA-20261117-1794926103", "status": 200, "resp": "pending_new", "ts": "2026-11-17T09:35:04-05:00"}
+{"event": "orb_signal", "sym": "AMZN", "dir": 1, "price": 258.24, "stop": 257.42, "target": 266.39, "qty": 1, "ts": "2026-11-17T09:35:04-05:00"}
+{"event": "order", "sym": "AMZN", "side": "buy", "qty": 1.0, "cid": "ORB-AMZN-20261117-1794926104", "status": 200, "resp": "pending_new", "ts": "2026-11-17T09:35:05-05:00"}
+{"event": "orb_signal", "sym": "TSLA", "dir": -1, "price": 381.12, "stop": 382.1, "target": 371.32, "qty": 1, "ts": "2026-11-17T09:35:05-05:00"}
+{"event": "order", "sym": "TSLA", "side": "sell", "qty": 1.0, "cid": "ORB-TSLA-20261117-1794926105", "status": 200, "resp": "pending_new", "ts": "2026-11-17T09:35:06-05:00"}
+{"event": "market_scan", "stocks": 12360, "ts": "2026-11-17T09:35:43-05:00"}
+{"event": "market_scan", "stocks": 12360, "ts": "2026-11-17T09:40:57-05:00"}
+{"event": "market_scan", "stocks": 12360, "ts": "2026-11-17T09:46:12-05:00"}
+{"event": "market_scan", "stocks": 12360, "ts": "2026-11-17T09:51:26-05:00"}
+{"event": "market_scan", "stocks": 12360, "ts": "2026-11-17T09:56:47-05:00"}
+{"event": "na_check", "sym": "QQQ", "slot": 30, "price": 662.36, "upper": 668.04, "lower": 656.85, "vwap": 661.58, "have": 0, "want": 0, "ts": "2026-11-17T10:00:10-05:00"}
+{"event": "na_check", "sym": "AAPL", "slot": 30, "price": 354.86, "upper": 356.2, "lower": 349.46, "vwap": 353.22, "have": 0, "want": 0, "ts": "2026-11-17T10:00:10-05:00"}
+{"event": "na_check", "sym": "NVDA", "slot": 30, "price": 155.76, "upper": 159.6, "lower": 153.47, "vwap": 155.81, "have": 0, "want": 0, "ts": "2026-11-17T10:00:11-05:00"}
+{"event": "na_check", "sym": "AMZN", "slot": 30, "price": 259.23, "upper": 261.59, "lower": 253.48, "vwap": 258.4, "have": 0, "want": 0, "ts": "2026-11-17T10:00:12-05:00"}
+{"event": "na_check", "sym": "GOOGL", "slot": 30, "price": 283.2, "upper": 286.54, "lower": 280.52, "vwap": 282.11, "have": 0, "want": 0, "ts": "2026-11-17T10:00:12-05:00"}
+{"event": "na_check", "sym": "TSLA", "slot": 30, "price": 381.45, "upper": 390.29, "lower": 371.73, "vwap": 381.01, "have": 0, "want": 0, "ts": "2026-11-17T10:00:13-05:00"}
+{"event": "market_scan", "stocks": 12360, "ts": "2026-11-17T10:02:11-05:00"}
+{"event": "market_scan", "stocks": 12360, "ts": "2026-11-17T10:07:30-05:00"}
+{"event": "market_scan", "stocks": 12360, "ts": "2026-11-17T10:12:56-05:00"}
+{"event": "market_scan", "stocks": 12360, "ts": "2026-11-17T10:18:09-05:00"}
+{"event": "market_scan", "stocks": 12360, "ts": "2026-11-17T10:23:25-05:00"}
+{"event": "market_scan", "stocks": 12360, "ts": "2026-11-17T10:28:42-05:00"}
+{"event": "na_check", "sym": "QQQ", "slot": 60, "price": 658.55, "upper": 669.15, "lower": 655.74, "vwap": 660.72, "have": 0, "want": 0, "ts": "2026-11-17T10:30:11-05:00"}
+{"event": "na_check", "sym": "AAPL", "slot": 60, "price": 354.02, "upper": 356.43, "lower": 349.23, "vwap": 353.9, "have": 0, "want": 0, "ts": "2026-11-17T10:30:11-05:00"}
+{"event": "na_check", "sym": "NVDA", "slot": 60, "price": 153.62, "upper": 160.36, "lower": 152.71, "vwap": 155.18, "have": 0, "want": 0, "ts": "2026-11-17T10:30:12-05:00"}
+{"event": "na_check", "sym": "AMZN", "slot": 60, "price": 258.62, "upper": 262.22, "lower": 252.86, "vwap": 258.6, "have": 0, "want": 0, "ts": "2026-11-17T10:30:12-05:00"}
+{"event": "na_check", "sym": "GOOGL", "slot": 60, "price": 282.54, "upper": 287.35, "lower": 279.71, "vwap": 282.28, "have": 0, "want": 0, "ts": "2026-11-17T10:30:12-05:00"}
+{"event": "na_check", "sym": "TSLA", "slot": 60, "price": 381.05, "upper": 391.65, "lower": 370.38, "vwap": 381.21, "have": 0, "want": 0, "ts": "2026-11-17T10:30:12-05:00"}
+{"event": "market_scan", "stocks": 12360, "ts": "2026-11-17T10:34:00-05:00"}
+{"event": "market_scan", "stocks": 12360, "ts": "2026-11-17T10:39:22-05:00"}
+{"event": "market_scan", "stocks": 12360, "ts": "2026-11-17T10:44:40-05:00"}
+{"event": "market_scan", "stocks": 12360, "ts": "2026-11-17T10:49:54-05:00"}
+{"event": "market_scan", "stocks": 12360, "ts": "2026-11-17T10:55:12-05:00"}
+{"event": "na_check", "sym": "QQQ", "slot": 90, "price": 653.0, "upper": 669.55, "lower": 655.34, "vwap": 655.04, "have": 0, "want": -1, "ts": "2026-11-17T11:00:07-05:00"}
+{"event": "na_skip", "sym": "QQQ", "slot": 90, "why": "short needs 1 share ($653); position size is $492", "ts": "2026-11-17T11:00:07-05:00"}
+{"event": "na_check", "sym": "AAPL", "slot": 90, "price": 351.81, "upper": 356.54, "lower": 349.12, "vwap": 353.27, "have": 0, "want": 0, "ts": "2026-11-17T11:00:07-05:00"}
+{"event": "na_check", "sym": "NVDA", "slot": 90, "price": 153.66, "upper": 160.8, "lower": 152.28, "vwap": 153.56, "have": 0, "want": 0, "ts": "2026-11-17T11:00:08-05:00"}
+{"event": "na_check", "sym": "AMZN", "slot": 90, "price": 255.96, "upper": 262.03, "lower": 253.05, "vwap": 257.54, "have": 0, "want": 0, "ts": "2026-11-17T11:00:09-05:00"}
+{"event": "na_check", "sym": "GOOGL", "slot": 90, "price": 281.1, "upper": 287.4, "lower": 279.66, "vwap": 281.86, "have": 0, "want": 0, "ts": "2026-11-17T11:00:09-05:00"}
+{"event": "na_check", "sym": "TSLA", "slot": 90, "price": 379.04, "upper": 392.05, "lower": 369.98, "vwap": 379.71, "have": 0, "want": 0, "ts": "2026-11-17T11:00:10-05:00"}
+{"event": "market_scan", "stocks": 12360, "ts": "2026-11-17T11:00:36-05:00"}
+{"event": "market_scan", "stocks": 12360, "ts": "2026-11-17T11:05:54-05:00"}
+{"event": "market_scan", "stocks": 12360, "ts": "2026-11-17T11:11:18-05:00"}
+{"event": "market_scan", "stocks": 12360, "ts": "2026-11-17T11:16:38-05:00"}
+{"event": "market_scan", "stocks": 12360, "ts": "2026-11-17T11:21:54-05:00"}
+{"event": "market_scan", "stocks": 12360, "ts": "2026-11-17T11:27:10-05:00"}
+{"event": "na_check", "sym": "QQQ", "slot": 120, "price": 653.84, "upper": 668.6, "lower": 656.29, "vwap": 654.89, "have": 0, "want": -1, "ts": "2026-11-17T11:30:01-05:00"}
+{"event": "na_skip", "sym": "QQQ", "slot": 120, "why": "short needs 1 share ($654); position size is $488", "ts": "2026-11-17T11:30:01-05:00"}
+{"event": "na_check", "sym": "AAPL", "slot": 120, "price": 352.26, "upper": 356.4, "lower": 349.26, "vwap": 353.07, "have": 0, "want": 0, "ts": "2026-11-17T11:30:02-05:00"}
+{"event": "na_check", "sym": "NVDA", "slot": 120, "price": 154.6, "upper": 160.5, "lower": 152.57, "vwap": 153.88, "have": 0, "want": 0, "ts": "2026-11-17T11:30:03-05:00"}
+{"event": "na_check", "sym": "AMZN", "slot": 120, "price": 255.26, "upper": 261.5, "lower": 253.57, "vwap": 257.1, "have": 0, "want": 0, "ts": "2026-11-17T11:30:03-05:00"}
+{"event": "na_check", "sym": "GOOGL", "slot": 120, "price": 280.87, "upper": 286.9, "lower": 280.17, "vwap": 281.68, "have": 0, "want": 0, "ts": "2026-11-17T11:30:03-05:00"}
+{"event": "na_check", "sym": "TSLA", "slot": 120, "price": 379.96, "upper": 390.83, "lower": 371.19, "vwap": 379.72, "have": 0, "want": 0, "ts": "2026-11-17T11:30:04-05:00"}
+{"event": "market_scan", "stocks": 12360, "ts": "2026-11-17T11:32:31-05:00"}
+{"event": "market_scan", "stocks": 12360, "ts": "2026-11-17T11:37:49-05:00"}
+{"event": "market_scan", "stocks": 12360, "ts": "2026-11-17T11:43:02-05:00"}
+{"event": "market_scan", "stocks": 12360, "ts": "2026-11-17T11:48:21-05:00"}
+{"event": "market_scan", "stocks": 12360, "ts": "2026-11-17T11:53:38-05:00"}
+{"event": "market_scan", "stocks": 12360, "ts": "2026-11-17T11:59:04-05:00"}
+{"event": "na_check", "sym": "QQQ", "slot": 150, "price": 652.77, "upper": 669.78, "lower": 655.11, "vwap": 654.23, "have": 0, "want": -1, "ts": "2026-11-17T12:00:02-05:00"}
+{"event": "na_skip", "sym": "QQQ", "slot": 150, "why": "short needs 1 share ($653); position size is $487", "ts": "2026-11-17T12:00:02-05:00"}
+{"event": "na_check", "sym": "AAPL", "slot": 150, "price": 352.04, "upper": 356.94, "lower": 348.72, "vwap": 352.88, "have": 0, "want": 0, "ts": "2026-11-17T12:00:02-05:00"}
+{"event": "na_check", "sym": "NVDA", "slot": 150, "price": 153.76, "upper": 160.63, "lower": 152.44, "vwap": 153.81, "have": 0, "want": 0, "ts": "2026-11-17T12:00:02-05:00"}
+{"event": "na_check", "sym": "AMZN", "slot": 150, "price": 255.41, "upper": 261.41, "lower": 253.67, "vwap": 256.73, "have": 0, "want": 0, "ts": "2026-11-17T12:00:03-05:00"}
+{"event": "na_check", "sym": "GOOGL", "slot": 150, "price": 281.07, "upper": 287.21, "lower": 279.86, "vwap": 281.56, "have": 0, "want": 0, "ts": "2026-11-17T12:00:03-05:00"}
+{"event": "na_check", "sym": "TSLA", "slot": 150, "price": 380.39, "upper": 391.52, "lower": 370.51, "vwap": 379.64, "have": 0, "want": 0, "ts": "2026-11-17T12:00:04-05:00"}
+{"event": "market_scan", "stocks": 12360, "ts": "2026-11-17T12:04:20-05:00"}
+{"event": "loss_limit", "pl": -25.31, "ts": "2026-11-17T12:05:52-05:00"}
+{"event": "flatten", "status": [200, 200, 200, 200], "ts": "2026-11-17T12:06:00-05:00"}
+{"event": "market_scan", "stocks": 12360, "ts": "2026-11-17T12:09:33-05:00"}
+{"event": "market_scan", "stocks": 12360, "ts": "2026-11-17T12:14:52-05:00"}
+{"event": "market_scan", "stocks": 12360, "ts": "2026-11-17T12:20:06-05:00"}
+{"event": "market_scan", "stocks": 12360, "ts": "2026-11-17T12:25:22-05:00"}
+{"event": "market_scan", "stocks": 12360, "ts": "2026-11-17T12:30:48-05:00"}
+{"event": "market_scan", "stocks": 12360, "ts": "2026-11-17T12:36:26-05:00"}
+{"event": "market_scan", "stocks": 12360, "ts": "2026-11-17T12:41:52-05:00"}
+{"event": "market_scan", "stocks": 12360, "ts": "2026-11-17T12:47:25-05:00"}
+{"event": "market_scan", "stocks": 12360, "ts": "2026-11-17T12:52:48-05:00"}
+{"event": "market_scan", "stocks": 12360, "ts": "2026-11-17T12:58:15-05:00"}
+{"event": "market_scan", "stocks": 12361, "ts": "2026-11-17T13:03:35-05:00"}
+{"event": "market_scan", "stocks": 12361, "ts": "2026-11-17T13:08:52-05:00"}
+{"event": "market_scan", "stocks": 12361, "ts": "2026-11-17T13:14:20-05:00"}
+{"event": "market_scan", "stocks": 12361, "ts": "2026-11-17T13:19:50-05:00"}
+{"event": "market_scan", "stocks": 12361, "ts": "2026-11-17T13:25:12-05:00"}
+{"event": "market_scan", "stocks": 12361, "ts": "2026-11-17T13:30:44-05:00"}
+{"event": "market_scan", "stocks": 12361, "ts": "2026-11-17T13:36:08-05:00"}
+{"event": "market_scan", "stocks": 12361, "ts": "2026-11-17T13:41:35-05:00"}
+{"event": "market_scan", "stocks": 12361, "ts": "2026-11-17T13:47:02-05:00"}
+{"event": "market_scan", "stocks": 12361, "ts": "2026-11-17T13:52:25-05:00"}
+{"event": "market_scan", "stocks": 12361, "ts": "2026-11-17T13:57:48-05:00"}
+{"event": "market_scan", "stocks": 12361, "ts": "2026-11-17T14:03:24-05:00"}
+{"event": "market_scan", "stocks": 12361, "ts": "2026-11-17T14:08:52-05:00"}
+{"event": "market_scan", "stocks": 12361, "ts": "2026-11-17T14:14:19-05:00"}
+{"event": "market_scan", "stocks": 12361, "ts": "2026-11-17T14:19:47-05:00"}
+{"event": "market_scan", "stocks": 12361, "ts": "2026-11-17T14:25:07-05:00"}
+{"event": "market_scan", "stocks": 12362, "ts": "2026-11-17T14:30:30-05:00"}
+{"event": "handoff", "why": "runtime limit", "ts": "2026-11-17T14:30:45-05:00"}
