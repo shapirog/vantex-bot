@@ -724,3 +724,5 @@
 {"event": "market_closed", "next_open": "2026-11-18T09:30:00-05:00", "ts": "2026-11-17T18:08:20-05:00"}
 {"event": "day_done", "why": "loss_limit already hit today", "ts": "2026-11-17T18:39:14-05:00"}
 {"event": "market_closed", "next_open": "2026-11-18T09:30:00-05:00", "ts": "2026-11-17T18:39:14-05:00"}
+{"event": "day_done", "why": "loss_limit already hit today", "ts": "2026-11-17T18:56:00-05:00"}
+{"event": "market_closed", "next_open": "2026-11-18T09:30:00-05:00", "ts": "2026-11-17T18:56:00-05:00"}
