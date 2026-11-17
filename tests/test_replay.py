@@ -92,3 +92,19 @@ def test_compare_variants_share_data(monkeypatch):
     assert len(out['A_original']['trades']) >= 1                                # ACME breakout (+2% only)
     assert len(out['C_strong_volume']['trades']) == 0                          # +2% is not a strong mover
     assert RP.cfg['signals']['strong_only'] is False                           # the base config is untouched
+
+def test_movers_get_their_own_news_and_are_reported(monkeypatch):
+    M = RMarket(); RP = make(monkeypatch, M)
+    asked = []
+    orig = M.get
+    def spy(url, headers=None, params=None, timeout=None):
+        if urlparse(url).path == '/v1beta1/news' and (params or {}).get('symbols'): asked.append(params['symbols'])
+        return orig(url, headers, params, timeout)
+    M.get = spy
+    res = RP.run_day(TODAY, 16 * 60, state=dict(equity=2500.0, daytrades=[], pdt=False))
+    assert 'GAPR' in asked                                                     # a strong mover gets a news lookup by symbol
+    g = [x for x in res['strong_seen'] if x['sym'] == 'GAPR']
+    assert g and g[0]['chg'] >= 10 and g[0]['verified'] is False
+    f = dict(chg_pct=40.0, rvol=8.0)
+    c = RP.catalyst_at('GAPR', f, NOW.timestamp(), TODAY, datetime.combine(TODAY, datetime.min.time(), CR.ET).timestamp(), [])
+    assert c['n'] >= 1 and c['verified'] is False and c['latest'].startswith('If You Invested')   # promo article is seen but is not a catalyst
