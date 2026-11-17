@@ -5,3 +5,20 @@
 {"event": "market_closed", "ts": "2026-11-16T19:19:50-05:00"}
 {"event": "market_closed", "ts": "2026-11-16T19:51:33-05:00"}
 {"event": "market_closed", "ts": "2026-11-16T20:53:39-05:00"}
+{"event": "opt_skip", "und": "NVDA", "dir": -1, "why": "backtest turned off \"range break\"", "ts": "2026-11-17T10:08:36-05:00"}
+{"event": "opt_skip", "und": "SPY", "dir": -1, "why": "backtest turned off \"index break\"", "ts": "2026-11-17T10:12:56-05:00"}
+{"event": "opt_skip", "und": "QQQ", "dir": -1, "why": "backtest turned off \"index break\"", "ts": "2026-11-17T10:18:22-05:00"}
+{"event": "opt_skip", "und": "PLTR", "dir": -1, "why": "backtest turned off \"range break\"", "ts": "2026-11-17T10:35:47-05:00"}
+{"event": "opt_skip", "und": "AMD", "dir": -1, "why": "backtest turned off \"range break\"", "ts": "2026-11-17T10:36:52-05:00"}
+{"event": "opt_skip", "und": "UBER", "dir": -1, "why": "backtest turned off \"range break\"", "ts": "2026-11-17T10:37:57-05:00"}
+{"event": "opt_skip", "und": "COIN", "dir": -1, "why": "backtest turned off \"range break\"", "ts": "2026-11-17T10:41:12-05:00"}
+{"event": "opt_skip", "und": "AMD", "dir": -1, "why": "cheapest fitting contract $1877 is over the $371 budget", "ts": "2026-11-17T10:44:29-05:00"}
+{"event": "opt_skip", "und": "TSLA", "dir": -1, "why": "backtest turned off \"range break\"", "ts": "2026-11-17T10:45:34-05:00"}
+{"event": "opt_skip", "und": "META", "dir": -1, "why": "backtest turned off \"range break\"", "ts": "2026-11-17T10:45:34-05:00"}
+{"event": "opt_skip", "und": "AMZN", "dir": -1, "why": "news points the other way: Amazon Expands Grocery Delivery to Include Prepared Meals", "ts": "2026-11-17T10:45:34-05:00"}
+{"event": "opt_skip", "und": "COIN", "dir": -1, "why": "open interest under 300 (thin option)", "ts": "2026-11-17T10:46:40-05:00"}
+{"event": "opt_skip", "und": "NFLX", "dir": -1, "why": "backtest turned off \"range break\"", "ts": "2026-11-17T10:48:51-05:00"}
+{"event": "opt_skip", "und": "NVDA", "dir": 1, "why": "cheapest fitting contract $666 is over the $367 budget", "ts": "2026-11-17T11:09:31-05:00"}
+{"event": "opt_skip", "und": "MU", "dir": -1, "why": "backtest turned off \"range break\"", "ts": "2026-11-17T11:10:36-05:00"}
+{"event": "opt_skip", "und": "UBER", "dir": -1, "why": "news points the other way: Uber and Kohl's Announce Nationwide On-Demand Delivery Partnership", "ts": "2026-11-17T12:06:03-05:00"}
+{"event": "handoff", "why": "runtime limit", "ts": "2026-11-17T14:30:28-05:00"}
