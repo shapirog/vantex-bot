@@ -9,7 +9,7 @@ from test_research import series
 def test_sweep_produces_settings_and_respects_filters():
     closes = [100 + i * 0.2 for i in range(260)] + [148.0, 140.0, 133.0, 150.0, 152.0, 153.0, 154.0]
     B = series(closes, v=1_000_000); I = W.indicators(B)
-    d = B[262][0]
+    d = B[260][0]                                                              # the dip starts after this day
     on = MR.stock_trades('AAA', B, I, {x[0]: True for x in B}, B[0][0], B[-1][0])
     off = MR.stock_trades('AAA', B, I, {x[0]: False for x in B}, B[0][0], B[-1][0])
     assert on and any(k[3] is True for k in on) and all(k[3] is False for k in off)
