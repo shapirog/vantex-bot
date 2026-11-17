@@ -30,7 +30,7 @@ ET = ZoneInfo('America/New_York')
 REPO = os.environ.get('GITHUB_REPOSITORY', 'shapirog/vantex-bot')
 OUT = os.environ.get('VANTEX_REPLAY_DIR', '/tmp/vantex-replay')
 TRADE = 'https://paper-api.alpaca.markets'                    # read-only here: assets and calendar
-DEV = (date(2025, 9, 2), date(2026, 4, 30)); TEST = (date(2026, 5, 1), None)
+DEV = (date(2026, 6, 1), date(2026, 9, 30)); TEST = (date(2026, 10, 1), None)   # Alpaca has no news before June 2026
 EXTRA_SLIP = 0.0002
 def log(*a): print(datetime.now(ET).strftime('%H:%M:%S'), *a, flush=True)
 
@@ -276,13 +276,17 @@ VARIANT_NOTES = {
     'A_original': dict(name='A. Original rules', what='every confirmed breakout or breakdown, any stock in the universe'),
     'B_strong_news': dict(name='B. Strong stocks with real news', what='longs only on stocks already up 10%+ on the day, 5x normal volume, a fresh verified news catalyst, and no dilution news'),
     'C_strong_volume': dict(name='C. Strong stocks, news not required', what='longs only on stocks already up 10%+ on the day with 5x normal volume and no dilution news'),
+    'D_pullback_news': dict(name='D. Strong + news, pullback entry', what='same stocks as B, but waits for the first pullback after the high of day that holds above VWAP, buys the turn back up, stop under the pullback low'),
+    'E_pullback': dict(name='E. Strong, pullback entry, news not required', what='same stocks as C, with the pullback entry from D'),
 }
 
 def variant_configs(base):
-    s = dict(strong_only=True, strong_min_day_change_pct=10.0, strong_min_rvol=5.0, block_negative_news=True)
-    return {'A_original': V.merge(base, {'signals': dict(strong_only=False, block_negative_news=False)}),
+    s = dict(strong_only=True, strong_min_day_change_pct=10.0, strong_min_rvol=5.0, block_negative_news=True, entry_style='breakout')
+    return {'A_original': V.merge(base, {'signals': dict(strong_only=False, block_negative_news=False, entry_style='breakout')}),
             'B_strong_news': V.merge(base, {'signals': dict(s, strong_require_catalyst=True)}),
-            'C_strong_volume': V.merge(base, {'signals': dict(s, strong_require_catalyst=False)})}
+            'C_strong_volume': V.merge(base, {'signals': dict(s, strong_require_catalyst=False)}),
+            'D_pullback_news': V.merge(base, {'signals': dict(s, strong_require_catalyst=True, entry_style='pullback')}),
+            'E_pullback': V.merge(base, {'signals': dict(s, strong_require_catalyst=False, entry_style='pullback')})}
 
 def only_spread_pending(e):
     return e['status'] == 'developing' and [c['name'] for c in e['checks'] if c['ok'] is not True] == ['spread acceptable']
