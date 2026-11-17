@@ -277,3 +277,36 @@ def test_small_cap_catalyst_wording_is_recognised():
     assert 'PATENT' in V.classify('Acme Granted U.S. Patent For Battery Tech')['types']
     assert 'TRIAL' in V.classify('Acme Reports Positive Results From Study')['types']
     assert V.classify('Order of business: Acme annual meeting')['types'] == []
+
+# ---------------- pullback entries (first pullback after the high of day)
+PB = V.merge(V.DEFAULTS, {'signals': {'entry_style': 'pullback'}})
+
+def pb_bars(turn=True, vwap_break=False):
+    b = mk([(10.0 + 0.2 * i, 10.25 + 0.2 * i, 9.98 + 0.2 * i, 10.2 + 0.2 * i, 20000) for i in range(10)])   # strong run to ~12.05
+    lows = [11.6, 11.2, 10.8, 10.5] if vwap_break else [11.85, 11.7, 11.55, 11.45]
+    b += mk([(x + 0.12, x + 0.15, x, x + 0.05, 6000) for x in lows], 580)                            # lighter-volume pullback
+    x = lows[-1]
+    b += mk([(x + 0.05, x + 0.40, x + 0.03, x + 0.35, 12000) if turn else (x + 0.05, x + 0.10, x, x + 0.02, 5000)], 584)
+    return b
+
+def pb_eval(b):
+    f = V.features('T', b, b[-1].m, 9.0, 100_000, quote=dict(bid=11.79, ask=11.81), cfg=PB)
+    return f, V.evaluate(f, b, 1, PB)
+
+def test_pullback_confirmed_with_stop_under_pullback_low():
+    f, e = pb_eval(pb_bars())
+    assert e['status'] == 'confirmed', e
+    assert e['stop'] < 11.45 < f['price'] < e['target']
+
+def test_pullback_waits_for_the_turn():
+    f, e = pb_eval(pb_bars(turn=False))
+    assert e['status'] == 'developing'
+
+def test_pullback_that_breaks_vwap_is_rejected():
+    f, e = pb_eval(pb_bars(vwap_break=True))
+    assert e['status'] == 'rejected' and any('VWAP' in r for r in e['reasons'])
+
+def test_pullback_is_long_only_and_off_by_default():
+    f, e = pb_eval(pb_bars())
+    assert V.evaluate(f, pb_bars(), -1, PB)['status'] != 'confirmed'
+    assert V.DEFAULTS['signals']['entry_style'] == 'breakout'
