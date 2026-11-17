@@ -1,0 +1,24 @@
+name: News history probe
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: vantex-city-replay
+  cancel-in-progress: false
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install requests
+      - name: Probe news history (read-only, places no orders)
+        env:
+          APCA_API_KEY_ID: ${{ secrets.APCA_API_KEY_ID }}
+          APCA_API_SECRET_KEY: ${{ secrets.APCA_API_SECRET_KEY }}
+          GH_TOKEN: ${{ github.token }}
+        run: python news_probe.py
