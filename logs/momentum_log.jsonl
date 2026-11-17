@@ -4935,3 +4935,6 @@
 {"event": "mom_scan", "sym": "CEPL", "dir": 1, "ok": false, "info": "not enough bars", "ts": "2026-11-17T14:30:14-05:00"}
 {"event": "mom_scan", "sym": "PICS", "dir": -1, "ok": false, "info": "not enough bars", "ts": "2026-11-17T14:30:15-05:00"}
 {"event": "handoff", "why": "runtime limit", "ts": "2026-11-17T14:30:37-05:00"}
+{"event": "mom_scan", "sym": "SMWB", "dir": 1, "ok": false, "info": "not enough bars", "ts": "2026-11-17T14:30:57-05:00"}
+{"event": "mom_scan", "sym": "CEPL", "dir": 1, "ok": false, "info": "not enough bars", "ts": "2026-11-17T14:30:58-05:00"}
+{"event": "mom_scan", "sym": "PICS", "dir": -1, "ok": false, "info": "not enough bars", "ts": "2026-11-17T14:30:58-05:00"}
