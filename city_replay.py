@@ -99,7 +99,7 @@ class Replay:
                      u=n.get('url') or '', sy=[x for x in (n.get('symbols') or []) if x.isalpha()][:12], sm=(n.get('summary') or '')[:300]) for n in news_raw]
         news.sort(key=lambda x: x['t'] or 0)
         log(d, 'universe', len(uni), 'symbols with bars', len(BARS), 'news', len(news), round(time.time() - t0), 's')
-        self._qcache = {}
+        self._qcache = {}; self._symnews = {}
         return dict(uni=uni, daily=daily, curve=curve, cov=cov, BARS=BARS, news=news)
 
     def run_day(self, d, close_m=960, frames=False, state=None, data=None, cfg=None):
@@ -119,7 +119,7 @@ class Replay:
         st = state or dict(equity=2500.0, daytrades=[])
         eq0 = st['equity']; eq = eq0
         open_pos = {}; traded = set(); trades = []; signals = Counter(); blocks = Counter(); failed_fills = 0; partial_fills = 0
-        frames_out = []; prev = {}; chart_syms = set(); events = []
+        frames_out = []; prev = {}; chart_syms = set(); events = []; strong_seen = {}
         day_ts = datetime.combine(d, datetime.min.time(), ET).timestamp()
         minutes = list(range(V.PM_START + 1, close_m + 1))
         for m in minutes:
@@ -167,7 +167,10 @@ class Replay:
                 dd = daily[s]
                 f = V.features(s, B, m - 1, dd['prior_close'], dd['adv'], curve, None, dd, cfg)
                 if not f: continue
-                cat = V.catalyst_for(s, groups)
+                cat = self.catalyst_at(s, f, ts, d, day_ts, groups)
+                if sess == 'regular' and s not in strong_seen and f['chg_pct'] >= 10 and (f['rvol'] or 0) >= 5:
+                    strong_seen[s] = dict(sym=s, m=m, chg=round(f['chg_pct'], 1), rvol=round(f['rvol'], 1), news=cat.get('n', 0), news_all_day=len(self._symnews.get(s) or []), verified=cat['verified'],
+                                          types=cat['types'][:3], negative=cat['negative'][:3], headline=(cat.get('headline') or cat.get('latest') or '')[:120])
                 eL = V.evaluate(f, B, 1, cfg, cat); eS = V.evaluate(f, B, -1, cfg, cat)
                 # the spread is the only thing bars can't show: fetch the quote at that moment when it is all a setup waits on
                 if sess == 'regular' and any(only_spread_pending(e) for e in (eL, eS)):
@@ -199,13 +202,29 @@ class Replay:
             if L: self.close(p, L[-1].c * (1 - p['side'] * p['slip']), L[-1], 'last-bar', d, trades, events); eq += trades[-1]['pnl']
         st['equity'] = eq
         res = dict(day=d.isoformat(), trades=trades, pnl=round(eq - eq0, 2), equity_end=round(eq, 2), signals={f'{a}:{b}': v for (a, b), v in signals.items()},
-                   blocks=dict(blocks), coverage=dict(cov, eligible=len(uni)), seconds=round(time.time() - t0))
+                   blocks=dict(blocks), coverage=dict(cov, eligible=len(uni)), seconds=round(time.time() - t0), strong_seen=list(strong_seen.values()))
         if frames:
             res['frames'] = frames_out; res['events'] = events
             res['charts'] = {s: [[b.t, round(b.o, 4), round(b.h, 4), round(b.l, 4), round(b.c, 4), int(b.v)] for b in BARS[s]] for s in sorted(chart_syms)[:40]}
             res['names'] = {s: self.names.get(s, '') for s in chart_syms}
         log(d, 'trades', len(trades), 'pnl', res['pnl'], round(time.time() - t0), 's')
         return res
+
+    def catalyst_at(self, s, f, ts, d, day_ts, groups):
+        """News for one stock as of this minute. Movers get their own news fetched by symbol, so a busy news day can't push them out."""
+        if abs(f['chg_pct']) < 5 and (f['rvol'] or 0) < 3: return V.catalyst_for(s, groups)
+        if not hasattr(self, '_symnews'): self._symnews = {}
+        L = self._symnews.get(s)
+        if L is None:
+            a = datetime.combine(d, datetime.min.time(), ET); L = []
+            for n in self.D.news_syms([s], a - timedelta(hours=20), a + timedelta(hours=20)):
+                L.append(dict(id=n.get('id'), t=epoch(n.get('created_at')), received=epoch(n.get('created_at')), h=(n.get('headline') or '')[:240], s=n.get('source') or '',
+                              u=n.get('url') or '', sy=[x for x in (n.get('symbols') or []) if x.isalpha()][:12], sm=(n.get('summary') or '')[:300]))
+            L.sort(key=lambda x: x['t'] or 0); self._symnews[s] = L
+        vis = [n for n in L if n['t'] and n['t'] < ts]
+        c = V.catalyst_for(s, V.group_news(vis, ts, day_ts - 8 * 3600) if vis else [])
+        c['latest'] = vis[-1]['h'] if vis else None
+        return c
 
     def try_entry(self, s, side, e, f, B, L, i, m, ts, eq, eq0, open_pos, traded, st, cfg, blocks, events, d):
         q = self.quote_at(s, ts)
@@ -280,6 +299,20 @@ def news_range(self, start, end, pages=40):
         if not tok: break
     return items
 Data.news_range = news_range
+
+def news_syms(self, syms, start, end, pages=10):
+    """all news tagged with these symbols in the window (oldest first)"""
+    items, tok = [], None
+    for _ in range(pages):
+        p = dict(symbols=','.join(syms), start=start.isoformat(), end=end.isoformat(), limit=50, sort='asc', include_content='false', exclude_contentless='true')
+        if tok: p['page_token'] = tok
+        r = self.get('/v1beta1/news', p, 'news')
+        if r is None or not r.ok: break
+        j = r.json(); items += j.get('news') or []
+        tok = j.get('next_page_token')
+        if not tok: break
+    return items
+Data.news_syms = news_syms
 
 def summarize(days, label):
     T = [t for d in days for t in d['trades']]
@@ -363,11 +396,19 @@ def main():
                                      days=[dict(day=x['day'], pnl=x['pnl'], trades=len(x['trades'])) for x in v],
                                      trades=[dict(t, day=x['day']) for x in v for t in x['trades']]) for k, v in res.items()},
                    note='Same days, same data, same costs and fills for every variant. Every confirmed signal is taken (no day-trade limit) so each rule set is judged on enough trades.')
+        seen = [dict(x, day=r['day']) for r in res.get('A_original', []) for x in r.get('strong_seen', [])]
+        out['news_check'] = dict(strong_movers=len(seen), with_any_news=sum(1 for x in seen if x['news']), in_feed_all_day=sum(1 for x in seen if x['news_all_day']), with_verified_catalyst=sum(1 for x in seen if x['verified']),
+                                 with_negative_news=sum(1 for x in seen if x['negative']), movers=seen)
         rows = ['| rule set | trades | win rate | net P&L after costs | avg R | worst day | max drawdown |', '|---|---|---|---|---|---|---|']
         for k, v in out['variants'].items():
             S = v['summary']; rows.append(f"| {v['name']} | {S['trades']} | {S['win_rate_pct']}% | ${S['net_pnl']} | {S['avg_R']} | {S['worst_day']} | ${S['max_drawdown']} |")
         md = [f"# VANTEX City rule comparison - {split} - {len(pick)} sessions", '', out['note'], ''] + rows + ['', '## What each rule set is'] + \
              [f"- **{v['name']}**: {v['what']}" for v in out['variants'].values()]
+        nc = out['news_check']
+        md += ['', '## News check: stocks up 10%+ on 5x volume', '',
+               f"{nc['strong_movers']} strong movers; {nc['with_any_news']} had news before the move was seen; {nc['in_feed_all_day']} had any news in the feed that day; {nc['with_verified_catalyst']} had a verified catalyst; {nc['with_negative_news']} had dilution/negative news.", '',
+               '| day | stock | time | change | volume | news before | news all day | verified | headline |', '|---|---|---|---|---|---|---|---|---|'] + \
+              [f"| {x['day']} | {x['sym']} | {x['m'] // 60}:{x['m'] % 60:02d} | +{x['chg']}% | {x['rvol']}x | {x['news']} | {x['news_all_day']} | {'yes ' + ','.join(x['types']) if x['verified'] else 'no'} | {x['headline'].replace('|', '/')} |" for x in nc['movers'][:150]]
         publish({})
         publish({f'compare_{split}.json': out, f'compare_{split}.md': '\n'.join(md) + '\n'})
     else:
