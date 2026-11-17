@@ -1,0 +1,31 @@
+name: Vantex City free-data check
+on:
+  workflow_dispatch:
+    inputs:
+      sessions:
+        description: 'number of past sessions to replay'
+        required: false
+        default: '3'
+permissions:
+  contents: write
+concurrency:
+  group: vantex-city-replay
+  cancel-in-progress: false
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 240
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install requests pytest
+      - run: python -m pytest -q tests
+      - name: Free-data replay (read-only, places no orders)
+        env:
+          APCA_API_KEY_ID: ${{ secrets.APCA_API_KEY_ID }}
+          APCA_API_SECRET_KEY: ${{ secrets.APCA_API_SECRET_KEY }}
+          GH_TOKEN: ${{ github.token }}
+          SESSIONS: ${{ inputs.sessions }}
+        run: python city_iexcheck.py "$SESSIONS"
