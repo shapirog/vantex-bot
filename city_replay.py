@@ -358,7 +358,7 @@ def publish(files, branch='live-replay'):
         open(f'{OUT}/.fetched', 'w').close()
     for name, obj in files.items():
         os.makedirs(os.path.dirname(f'{OUT}/{name}') or OUT, exist_ok=True)
-        if name.endswith('.md'): open(f'{OUT}/{name}', 'w').write(obj)
+        if isinstance(obj, str): open(f'{OUT}/{name}', 'w').write(obj)                 # .md / .csv text as-is
         else: json.dump(obj, open(f'{OUT}/{name}', 'w'), separators=(',', ':'), default=str)
     if not files or not (tok and os.environ.get('GITHUB_REPOSITORY')): return   # nothing new to push
     g = ['git', '-C', OUT, '-c', 'user.name=vantex-bot', '-c', 'user.email=vantex-bot@users.noreply.github.com']

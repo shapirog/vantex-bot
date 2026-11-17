@@ -1,0 +1,41 @@
+name: Vantex City research - overnight bias / turnover momentum
+on:
+  workflow_dispatch:
+    inputs:
+      strategy:
+        description: 'overnight (Strategy A) or turnover (Strategy B)'
+        required: true
+        default: 'overnight'
+        type: choice
+        options: ['overnight', 'turnover']
+      split:
+        description: 'dev (Jun 2023 - Dec 2025) or test (2026)'
+        required: true
+        default: 'dev'
+        type: choice
+        options: ['dev', 'test']
+permissions:
+  contents: write
+concurrency:
+  group: vantex-city-replay
+  cancel-in-progress: false
+jobs:
+  research:
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install requests pytest
+      - run: python -m pytest -q tests
+      - name: Research (read-only, places no orders)
+        env:
+          APCA_API_KEY_ID: ${{ secrets.APCA_API_KEY_ID }}
+          APCA_API_SECRET_KEY: ${{ secrets.APCA_API_SECRET_KEY }}
+          GH_TOKEN: ${{ github.token }}
+          STRATEGY: ${{ inputs.strategy }}
+          SPLIT: ${{ inputs.split }}
+        run: |
+          if [ "$STRATEGY" = "overnight" ]; then python city_overnight.py "$SPLIT"; else python city_turnover_mom.py "$SPLIT"; fi
