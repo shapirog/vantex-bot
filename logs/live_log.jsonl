@@ -708,3 +708,5 @@
 {"event": "market_scan", "stocks": 12362, "ts": "2026-11-17T15:51:08-05:00"}
 {"event": "market_scan", "stocks": 12362, "ts": "2026-11-17T15:56:28-05:00"}
 {"event": "market_closed", "next_open": "2026-11-18T09:30:00-05:00", "ts": "2026-11-17T16:00:01-05:00"}
+{"event": "day_done", "why": "loss_limit already hit today", "ts": "2026-11-17T16:19:08-05:00"}
+{"event": "market_closed", "next_open": "2026-11-18T09:30:00-05:00", "ts": "2026-11-17T16:19:08-05:00"}
