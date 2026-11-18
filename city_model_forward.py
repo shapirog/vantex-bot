@@ -38,6 +38,7 @@ def train(stocks, spy):
     import numpy as np
     from sklearn.ensemble import HistGradientBoostingRegressor
     rows = [r for r in build(stocks, spy) if split_of(r['day'])]
+    for r in rows: r['split'] = split_of(r['day'])
     learn = [r for r in rows if r['split'] == 'learn']
     X = lambda L: np.array([[r[k] for k in FEATS] for r in L], dtype=float)
     m = HistGradientBoostingRegressor(max_iter=300, learning_rate=0.05, max_leaf_nodes=31, min_samples_leaf=200, l2_regularization=1.0, random_state=7)
