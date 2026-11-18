@@ -37,7 +37,7 @@ def row_feats(S, i):
     if i < 25: return None
     o, h, l, c, v = S['o'], S['h'], S['l'], S['c'], S['v']
     pc = c[i - 1]
-    if pc <= 0 or o[i] <= 0: return None
+    if o[i] <= 0 or min(c[i - 21:i]) <= 0 or min(h[i - 20:i]) <= 0: return None   # bad / zero bars
     gap = o[i] / pc - 1
     if gap < MIN_GAP or pc < MIN_PX: return None
     adv = sum(c[j] * v[j] for j in range(i - 20, i)) / 20
