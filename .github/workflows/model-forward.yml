@@ -1,0 +1,45 @@
+name: Vantex City - model forward test (no orders)
+on:
+  schedule:
+    - cron: '5 15 * * 1-5'     # ~10:05 ET (EST): record picks
+    - cron: '30 21 * * 1-5'    # ~16:30 ET (EST): score them
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: 'pick or close'
+        required: true
+        default: 'pick'
+        type: choice
+        options: ['pick', 'close']
+      day:
+        description: 'optional YYYY-MM-DD (default today)'
+        required: false
+        default: ''
+permissions:
+  contents: write
+concurrency:
+  group: vantex-forward
+  cancel-in-progress: false
+jobs:
+  forward:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install requests pytest numpy scikit-learn
+      - run: python -m pytest -q tests
+      - name: Forward test (records picks, places no orders)
+        env:
+          APCA_API_KEY_ID: ${{ secrets.APCA_API_KEY_ID }}
+          APCA_API_SECRET_KEY: ${{ secrets.APCA_API_SECRET_KEY }}
+          GH_TOKEN: ${{ github.token }}
+          FWD_DAY: ${{ inputs.day }}
+        run: |
+          MODE="${{ inputs.mode }}"
+          if [ -z "$MODE" ]; then
+            if [ "${{ github.event.schedule }}" = "5 15 * * 1-5" ]; then MODE=pick; else MODE=close; fi
+          fi
+          python city_model_forward.py "$MODE"
