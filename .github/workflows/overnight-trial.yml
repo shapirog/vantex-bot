@@ -1,0 +1,45 @@
+name: Vantex City overnight trial (paper)
+# Paper-only 3-day trial of the overnight-bias strategy on the existing paper account. Times are New York standard time
+# (UTC-5); after the March clock change these crons run an hour later in New York time.
+on:
+  schedule:
+    - cron: '10 20 * * 1-5'   # 3:10 pm: pick stocks, send market-on-close buys at 3:44
+    - cron: '5 1 * * 2-6'     # 8:05 pm: send market-on-open sells for the next morning
+    - cron: '35 14 * * 1-5'   # 9:35 am: sell anything still held, record fills
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: 'dry (show the plan, no orders), buy, sell or check'
+        required: true
+        default: 'dry'
+        type: choice
+        options: ['dry', 'buy', 'sell', 'check']
+permissions:
+  contents: write
+concurrency:
+  group: vantex-overnight-trial
+  cancel-in-progress: false
+jobs:
+  trial:
+    runs-on: ubuntu-latest
+    timeout-minutes: 100
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install requests pytest numpy
+      - run: python -m pytest -q tests
+      - name: Overnight trial (paper account only)
+        env:
+          APCA_API_KEY_ID: ${{ secrets.APCA_API_KEY_ID }}
+          APCA_API_SECRET_KEY: ${{ secrets.APCA_API_SECRET_KEY }}
+          GH_TOKEN: ${{ github.token }}
+          MODE: ${{ inputs.mode }}
+          SCHEDULE: ${{ github.event.schedule }}
+        run: |
+          if [ -n "$MODE" ]; then M="$MODE";
+          elif [ "$SCHEDULE" = "10 20 * * 1-5" ]; then M=buy;
+          elif [ "$SCHEDULE" = "5 1 * * 2-6" ]; then M=sell;
+          else M=check; fi
+          echo "mode: $M"; python city_overnight_live.py "$M"
