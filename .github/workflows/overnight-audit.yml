@@ -1,0 +1,33 @@
+name: Vantex City overnight-bias audit
+on:
+  workflow_dispatch:
+    inputs:
+      split:
+        description: 'dev (Jun 2023 - Dec 2025) or test (2026, untouched: run once at the end)'
+        required: true
+        default: 'dev'
+        type: choice
+        options: ['dev', 'test']
+permissions:
+  contents: write
+concurrency:
+  group: vantex-city-replay
+  cancel-in-progress: false
+jobs:
+  research:
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install requests pytest numpy
+      - run: python -m pytest -q tests
+      - name: Research batch (read-only, places no orders)
+        env:
+          APCA_API_KEY_ID: ${{ secrets.APCA_API_KEY_ID }}
+          APCA_API_SECRET_KEY: ${{ secrets.APCA_API_SECRET_KEY }}
+          GH_TOKEN: ${{ github.token }}
+          SPLIT: ${{ inputs.split }}
+        run: python city_overnight_audit.py
