@@ -54,7 +54,7 @@ def load_branch(name, default):
 
 def do_pick(D, key, sec, day):
     uni = universe(key, sec)
-    s0 = datetime(2023, 3, 1, tzinfo=ET); s1 = datetime.combine(day, datetime.min.time(), ET)
+    s0 = datetime(2023, 3, 1, tzinfo=ET); s1 = datetime.combine(day, datetime.min.time(), ET) - timedelta(minutes=1)   # daily bars are stamped at midnight ET: exclude today
     sp = D.bars(['SPY'], '1Day', s0, s1, 'sip', 'all').get('SPY', [])
     spy = {sp[k]['t'][:10]: sp[k]['o'] / sp[k - 1]['c'] - 1 for k in range(1, len(sp))}
     stocks = load_ohlcv(D, sorted(uni), s0, s1); log('stocks', len(stocks))
