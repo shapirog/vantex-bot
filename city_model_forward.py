@@ -87,7 +87,7 @@ def score_day(D, rec):
     day = date.fromisoformat(rec['day']); a = datetime.combine(day, datetime.min.time(), ET) + timedelta(hours=9, minutes=30)
     M = D.bars(syms, '1Min', a, a + timedelta(hours=6, minutes=30), 'sip', 'raw')
     d0 = datetime.combine(day, datetime.min.time(), ET)
-    Dd = D.bars(syms, '1Day', d0, d0 + timedelta(hours=23), 'sip', 'raw')        # daily bars are stamped at midnight ET
+    Dd = D.bars(syms, '1Day', d0, min(d0 + timedelta(hours=23), datetime.now(ET) - timedelta(minutes=16)), 'sip', 'raw')   # free plan: nothing newer than 15 min        # daily bars are stamped at midnight ET
     px = {}
     for s in syms:
         b = sorted((x for x in map(to_bar, M.get(s, [])) if 570 <= x.m < 960), key=lambda x: x.t)
