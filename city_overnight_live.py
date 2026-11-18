@@ -100,8 +100,8 @@ def order(B, sym, qty, side, tif, typ='market'):
 def do_buy(B, D, key, sec, dry=False):
     st, led = load_state(); today = now().date().isoformat()
     clk = B.clock()
-    if not clk.get('is_open'): log('market closed today, nothing to do'); return
-    if today in st['buy_days']: log('already bought today'); return
+    if not dry and not clk.get('is_open'): log('market closed today, nothing to do'); return
+    if not dry and today in st['buy_days']: log('already bought today'); return
     if len(st['buy_days']) >= TRIAL_DAYS: log(f'trial finished ({TRIAL_DAYS} days): no new buys'); st['events'].append(dict(t=today, kind='trial over')); save(st, led); return
     bl = control_blocks()
     if bl: log('blocked:', bl); st['events'].append(dict(t=today, kind='blocked', why=bl)); save(st, led); return
