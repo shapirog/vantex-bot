@@ -111,6 +111,58 @@ def portfolio_curve(picks, stocks):
     for d in sorted(by): eq *= 1 + sum(by[d]) / TOP; peak = max(peak, eq); dd = max(dd, 1 - eq / peak)
     return round((eq - 1) * 100, 1), round(dd * 100, 1)
 
+def short_trade(S, i, stop_up=0.15):
+    """short at the open of day i, cover at the close, or at a stop 15% above the open (stop assumed first if touched).
+    Returns gross return of the short (positive when the stock falls)."""
+    o = S['o'][i]; stop = o * (1 + stop_up)
+    px = stop if S['h'][i] >= stop else S['c'][i]
+    return (o - px) / o
+
+def short_flags(key, sec):
+    """symbol -> (shortable, easy_to_borrow) as Alpaca shows them TODAY (no history: a known limit)"""
+    import requests
+    from city_replay import TRADE
+    try:
+        r = requests.get(f'{TRADE}/v2/assets', headers={'APCA-API-KEY-ID': key, 'APCA-API-SECRET-KEY': sec}, params=dict(status='active', asset_class='us_equity'), timeout=90)
+        return {x['symbol']: (bool(x.get('shortable')), bool(x.get('easy_to_borrow'))) for x in (r.json() if r.ok else [])}
+    except Exception: return {}
+
+def followups(rows, stocks, flags, last_cal):
+    """fixed before running: S1 short the bottom 5 (price >= $3, shortable + easy to borrow today), 15% stop, costs + borrow;
+    L1 liquid only (price >= $5, $20M+ daily dollar volume): buy the top 3 scores; decile table for liquid names."""
+    out = {}; md2 = []; md = ['# Vantex Score follow-ups', '', 'Same model and scores as model.md (nothing retrained or tuned).', '',
+                    '| test | period | trades | win rate | avg net | median | t-stat | at 2x costs |', '|---|---|---|---|---|---|---|---|']
+    def line(name, sp, rs, rs2):
+        if not rs: return
+        n = len(rs); mu = sum(rs) / n; sd = (sum((x - mu) ** 2 for x in rs) / max(1, n - 1)) ** 0.5; srt = sorted(rs)
+        out[f'{name} | {sp}'] = dict(n=n, win_pct=round(100 * sum(x > 0 for x in rs) / n, 1), avg_pct=round(100 * mu, 3), median_pct=round(100 * srt[n // 2], 3),
+                                     t=round(mu / (sd / n ** 0.5), 2) if sd else None, avg_2x_pct=round(100 * sum(rs2) / n, 3))
+        o = out[f'{name} | {sp}']; md.append(f"| {name} | {sp} | {n} | {o['win_pct']}% | {o['avg_pct']}% | {o['median_pct']}% | {o['t']} | {o['avg_2x_pct']}% |")
+    for sp in ('learn', 'check', 'test'):
+        R = [r for r in rows if r['split'] == sp]
+        for borrow, lab in ((0.005, 'borrow 0.5%/trade'), (0.02, 'borrow 2%/trade')):
+            Rs = [r for r in R if r['px'] >= 3 and flags.get(r['sym'], (False, False)) == (True, True)]
+            P = daily_picks(Rs, 'score', 'bottom'); rs, rs2 = [], []
+            for r in P:
+                S = stocks[r['sym']]; g = short_trade(S, r['i']); c = cost(r['adv'], r['px'])
+                rs.append(g - 2 * c - borrow); rs2.append(g - 4 * c - borrow)
+            line(f'S1 short bottom 5, 15% stop, {lab}', sp, rs, rs2)
+        Rl = [r for r in R if r['px'] >= 5 and r['adv'] >= 20e6]
+        P = sorted(Rl, key=lambda r: -r['score']); by = defaultdict(list)
+        for r in P: by[r['day']].append(r)
+        picks = [x for d in sorted(by) for x in by[d][:3]]; rs, rs2 = [], []
+        for r in picks:
+            S = stocks[r['sym']]; c = cost(r['adv'], r['px']); rs.append(net(S['o'][r['i']], S['c'][r['i']], c)); rs2.append(net(S['o'][r['i']], S['c'][r['i']], 2 * c))
+        line('L1 liquid ($5+, $20M+/day): buy top 3', sp, rs, rs2)
+        if sp == 'test':
+            T = sorted(Rl, key=lambda r: r['score']); md2 = ['', '## Liquid names only ($5+, $20M+/day), 2026 score deciles', '', '| decile | stock-days | avg open->close (gross) | up % |', '|---|---|---|---|']
+            for k in range(10):
+                L = T[k * len(T) // 10:(k + 1) * len(T) // 10]
+                if L: md2.append(f"| {k + 1} | {len(L)} | {100 * sum(r['y'] for r in L) / len(L):+.3f}% | {100 * sum(r['y'] > 0 for r in L) / len(L):.1f}% |")
+    md += md2 + ['', 'Short limits: shortable / easy-to-borrow flags are today\'s (no history), so some past picks may not have been shortable then. '
+                 'Borrow fees on crowded small caps can be far higher than 2% a day, and shorts can be recalled. Uptick-rule (SSR) days are not modelled. A backtest is not proof.']
+    return '\n'.join(md) + '\n', out
+
 def main():
     import numpy as np
     from sklearn.ensemble import HistGradientBoostingRegressor
@@ -165,7 +217,8 @@ def main():
           '', '"random" = 5 random candidates per day; "bottom" = the 5 lowest scores; "all" = every candidate.', '', '## Does a higher score mean a better day? (2026, never seen)', ''] + dec + [
           '', '## What the model leans on (higher = more important, check period)', '', ', '.join(f'{k} {v}' for k, v in imp.items()), '',
           'Daily bars: the official open is used as the fill; a real order at 9:30 on a small stock can fill worse. Stop/target order inside a day is unknown (stop assumed first). A backtest is not proof.']
-    publish({}); publish({'model.json': dict(results=res, importance=imp, rows=len(rows), updated=datetime.now(ET).isoformat(timespec='seconds')),
+    fu_md, fu = followups(rows, stocks, short_flags(key, sec), last_cal)
+    publish({}); publish({'model_followup.md': fu_md, 'model_followup.json': fu, 'model.json': dict(results=res, importance=imp, rows=len(rows), updated=datetime.now(ET).isoformat(timespec='seconds')),
                           'model.md': '\n'.join(md) + '\n', 'model_test_picks.csv': buf.getvalue()})
     log('done')
 

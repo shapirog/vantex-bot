@@ -24,3 +24,15 @@ def test_build_and_picks():
     S = M.evaluate(M.daily_picks(rows, 'score', 'top'), st, 'zzz')
     assert S['trades'] == 2 and S['win_pct'] == 100.0 and S['avg_pct'] < 2.0
     assert M.split_of('2024-01-02') == 'learn' and M.split_of('2025-08-01') == 'check' and M.split_of('2026-03-02') == 'test' and M.split_of('2023-01-03') is None
+
+def test_short_trade_and_followups():
+    S = mk(); i = 28
+    g = M.short_trade(S, i)
+    assert abs(g - (S['o'][i] - S['c'][i]) / S['o'][i]) < 1e-12           # no stop touched: cover at the close
+    S['h'][i] = S['o'][i] * 1.2
+    assert abs(M.short_trade(S, i) + 0.15) < 1e-12                        # stop 15% above the open
+    st = {'AAA': mk(), 'BBB': mk()}
+    rows = M.build(st, {})
+    for k, r in enumerate(rows): r['score'] = k; r['split'] = 'test'
+    md, out = M.followups(rows, st, {'AAA': (True, True), 'BBB': (True, False)}, 'zzz')
+    assert any(k.startswith('S1') for k in out) and all(v['n'] == 1 for k, v in out.items() if k.startswith('S1'))
