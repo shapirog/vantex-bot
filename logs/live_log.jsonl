@@ -812,3 +812,23 @@
 {"event": "market_scan", "stocks": 12362, "ts": "2026-11-18T14:21:18-05:00"}
 {"event": "market_scan", "stocks": 12362, "ts": "2026-11-18T14:26:31-05:00"}
 {"event": "handoff", "why": "runtime limit", "ts": "2026-11-18T14:30:27-05:00"}
+{"event": "day_done", "why": "loss_limit already hit today", "ts": "2026-11-18T14:30:54-05:00"}
+{"event": "market_scan", "stocks": 12362, "ts": "2026-11-18T14:30:57-05:00"}
+{"event": "market_scan", "stocks": 12362, "ts": "2026-11-18T14:36:08-05:00"}
+{"event": "market_scan", "stocks": 12363, "ts": "2026-11-18T14:41:17-05:00"}
+{"event": "market_scan", "stocks": 12363, "ts": "2026-11-18T14:46:22-05:00"}
+{"event": "market_scan", "stocks": 12363, "ts": "2026-11-18T14:51:27-05:00"}
+{"event": "market_scan", "stocks": 12363, "ts": "2026-11-18T14:56:32-05:00"}
+{"event": "market_scan", "stocks": 12363, "ts": "2026-11-18T15:01:38-05:00"}
+{"event": "market_scan", "stocks": 12363, "ts": "2026-11-18T15:06:42-05:00"}
+{"event": "market_scan", "stocks": 12363, "ts": "2026-11-18T15:11:49-05:00"}
+{"event": "market_scan", "stocks": 12363, "ts": "2026-11-18T15:16:55-05:00"}
+{"event": "market_scan", "stocks": 12363, "ts": "2026-11-18T15:22:00-05:00"}
+{"event": "market_scan", "stocks": 12363, "ts": "2026-11-18T15:27:04-05:00"}
+{"event": "market_scan", "stocks": 12363, "ts": "2026-11-18T15:32:13-05:00"}
+{"event": "market_scan", "stocks": 12363, "ts": "2026-11-18T15:37:19-05:00"}
+{"event": "market_scan", "stocks": 12363, "ts": "2026-11-18T15:42:25-05:00"}
+{"event": "market_scan", "stocks": 12363, "ts": "2026-11-18T15:47:31-05:00"}
+{"event": "market_scan", "stocks": 12363, "ts": "2026-11-18T15:52:36-05:00"}
+{"event": "market_scan", "stocks": 12363, "ts": "2026-11-18T15:57:39-05:00"}
+{"event": "market_closed", "next_open": "2026-11-19T09:30:00-05:00", "ts": "2026-11-18T16:00:06-05:00"}
