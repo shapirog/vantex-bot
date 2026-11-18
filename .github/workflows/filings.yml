@@ -1,0 +1,26 @@
+name: Vantex City research - SEC filings (ChatGPT ideas 1 and 3)
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: vantex-model
+  cancel-in-progress: false
+jobs:
+  research:
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install requests pytest numpy
+      - run: python -m pytest -q tests
+      - name: Filings study (read-only, places no orders)
+        env:
+          APCA_API_KEY_ID: ${{ secrets.APCA_API_KEY_ID }}
+          APCA_API_SECRET_KEY: ${{ secrets.APCA_API_SECRET_KEY }}
+          GH_TOKEN: ${{ github.token }}
+          SEC_USER_AGENT: ${{ secrets.SEC_USER_AGENT }}
+        run: python city_filings.py
