@@ -728,3 +728,87 @@
 {"event": "market_closed", "next_open": "2026-11-18T09:30:00-05:00", "ts": "2026-11-17T18:56:00-05:00"}
 {"event": "day_done", "why": "loss_limit already hit today", "ts": "2026-11-17T20:14:13-05:00"}
 {"event": "market_closed", "next_open": "2026-11-18T09:30:00-05:00", "ts": "2026-11-17T20:14:13-05:00"}
+{"event": "market_scan", "stocks": 12358, "ts": "2026-11-18T09:30:13-05:00"}
+{"event": "orb_skip", "sym": "QQQ", "why": "1 share ($660) is bigger than the $485 position size", "ts": "2026-11-18T09:35:10-05:00"}
+{"event": "orb_skip", "sym": "MSFT", "why": "1 share ($506) is bigger than the $485 position size", "ts": "2026-11-18T09:35:11-05:00"}
+{"event": "orb_signal", "sym": "NVDA", "dir": -1, "price": 158.04, "stop": 159.68, "target": 141.64, "qty": 3, "ts": "2026-11-18T09:35:11-05:00"}
+{"event": "order", "sym": "NVDA", "side": "sell", "qty": 3.0, "cid": "ORB-NVDA-20261118-1795012511", "status": 200, "resp": "pending_new", "ts": "2026-11-18T09:35:11-05:00"}
+{"event": "orb_signal", "sym": "AMZN", "dir": 1, "price": 261.02, "stop": 259.65, "target": 274.72, "qty": 1, "ts": "2026-11-18T09:35:11-05:00"}
+{"event": "order", "sym": "AMZN", "side": "buy", "qty": 1.0, "cid": "ORB-AMZN-20261118-1795012511", "status": 200, "resp": "pending_new", "ts": "2026-11-18T09:35:11-05:00"}
+{"event": "orb_signal", "sym": "TSLA", "dir": -1, "price": 380.66, "stop": 389.25, "target": 294.76, "qty": 1, "ts": "2026-11-18T09:35:12-05:00"}
+{"event": "order", "sym": "TSLA", "side": "sell", "qty": 1.0, "cid": "ORB-TSLA-20261118-1795012512", "status": 200, "resp": "pending_new", "ts": "2026-11-18T09:35:12-05:00"}
+{"event": "market_scan", "stocks": 12359, "ts": "2026-11-18T09:35:30-05:00"}
+{"event": "market_scan", "stocks": 12359, "ts": "2026-11-18T09:40:40-05:00"}
+{"event": "market_scan", "stocks": 12359, "ts": "2026-11-18T09:45:50-05:00"}
+{"event": "market_scan", "stocks": 12359, "ts": "2026-11-18T09:51:04-05:00"}
+{"event": "market_scan", "stocks": 12359, "ts": "2026-11-18T09:56:17-05:00"}
+{"event": "na_check", "sym": "QQQ", "slot": 30, "price": 660.88, "upper": 665.92, "lower": 652.13, "vwap": 657.98, "have": 0, "want": 0, "ts": "2026-11-18T10:00:08-05:00"}
+{"event": "na_check", "sym": "AAPL", "slot": 30, "price": 355.76, "upper": 355.4, "lower": 348.55, "vwap": 354.85, "have": 0, "want": 1, "ts": "2026-11-18T10:00:09-05:00"}
+{"event": "order", "sym": "AAPL", "side": "buy", "qty": 1.3641, "cid": "NA-AAPL-20261118-30-1795014009", "status": 200, "resp": "pending_new", "ts": "2026-11-18T10:00:09-05:00"}
+{"event": "na_check", "sym": "NVDA", "slot": 30, "price": 154.84, "upper": 161.87, "lower": 152.79, "vwap": 156.07, "have": 0, "want": 0, "ts": "2026-11-18T10:00:10-05:00"}
+{"event": "na_check", "sym": "AMZN", "slot": 30, "price": 263.28, "upper": 263.62, "lower": 253.97, "vwap": 261.71, "have": 0, "want": 0, "ts": "2026-11-18T10:00:10-05:00"}
+{"event": "na_check", "sym": "GOOGL", "slot": 30, "price": 283.53, "upper": 285.78, "lower": 277.44, "vwap": 282.95, "have": 0, "want": 0, "ts": "2026-11-18T10:00:11-05:00"}
+{"event": "na_check", "sym": "TSLA", "slot": 30, "price": 384.14, "upper": 392.85, "lower": 372.56, "vwap": 382.56, "have": 0, "want": 0, "ts": "2026-11-18T10:00:11-05:00"}
+{"event": "market_scan", "stocks": 12359, "ts": "2026-11-18T10:01:26-05:00"}
+{"event": "market_scan", "stocks": 12359, "ts": "2026-11-18T10:06:41-05:00"}
+{"event": "market_scan", "stocks": 12359, "ts": "2026-11-18T10:11:55-05:00"}
+{"event": "market_scan", "stocks": 12359, "ts": "2026-11-18T10:17:04-05:00"}
+{"event": "market_scan", "stocks": 12359, "ts": "2026-11-18T10:22:16-05:00"}
+{"event": "market_scan", "stocks": 12359, "ts": "2026-11-18T10:27:28-05:00"}
+{"event": "na_check", "sym": "QQQ", "slot": 60, "price": 659.62, "upper": 667.29, "lower": 650.77, "vwap": 659.11, "have": 0, "want": 0, "ts": "2026-11-18T10:30:15-05:00"}
+{"event": "na_check", "sym": "AAPL", "slot": 60, "price": 353.26, "upper": 355.56, "lower": 348.39, "vwap": 354.74, "have": 1, "want": 0, "ts": "2026-11-18T10:30:15-05:00"}
+{"event": "order", "sym": "AAPL", "side": "sell", "qty": 1.3641, "cid": "NA-AAPL-20261118-60-1795015815", "status": 200, "resp": "pending_new", "ts": "2026-11-18T10:30:15-05:00"}
+{"event": "na_check", "sym": "NVDA", "slot": 60, "price": 153.78, "upper": 162.82, "lower": 151.87, "vwap": 155.38, "have": 0, "want": 0, "ts": "2026-11-18T10:30:15-05:00"}
+{"event": "na_check", "sym": "AMZN", "slot": 60, "price": 264.64, "upper": 264.19, "lower": 253.4, "vwap": 262.47, "have": 0, "want": 1, "ts": "2026-11-18T10:30:16-05:00"}
+{"event": "order", "sym": "AMZN", "side": "buy", "qty": 1.8302, "cid": "NA-AMZN-20261118-60-1795015816", "status": 200, "resp": "pending_new", "ts": "2026-11-18T10:30:16-05:00"}
+{"event": "na_check", "sym": "GOOGL", "slot": 60, "price": 282.23, "upper": 286.6, "lower": 276.63, "vwap": 283.0, "have": 0, "want": 0, "ts": "2026-11-18T10:30:16-05:00"}
+{"event": "na_check", "sym": "TSLA", "slot": 60, "price": 381.68, "upper": 394.11, "lower": 371.31, "vwap": 382.97, "have": 0, "want": 0, "ts": "2026-11-18T10:30:16-05:00"}
+{"event": "market_scan", "stocks": 12359, "ts": "2026-11-18T10:32:36-05:00"}
+{"event": "market_scan", "stocks": 12359, "ts": "2026-11-18T10:37:45-05:00"}
+{"event": "market_scan", "stocks": 12359, "ts": "2026-11-18T10:42:56-05:00"}
+{"event": "loss_limit", "pl": -24.6, "ts": "2026-11-18T10:48:00-05:00"}
+{"event": "flatten", "status": [200, 200, 200, 200, 200, 403], "ts": "2026-11-18T10:48:10-05:00"}
+{"event": "market_scan", "stocks": 12359, "ts": "2026-11-18T10:48:17-05:00"}
+{"event": "market_scan", "stocks": 12359, "ts": "2026-11-18T10:53:29-05:00"}
+{"event": "market_scan", "stocks": 12359, "ts": "2026-11-18T10:58:43-05:00"}
+{"event": "market_scan", "stocks": 12359, "ts": "2026-11-18T11:03:55-05:00"}
+{"event": "market_scan", "stocks": 12359, "ts": "2026-11-18T11:09:03-05:00"}
+{"event": "market_scan", "stocks": 12359, "ts": "2026-11-18T11:14:17-05:00"}
+{"event": "market_scan", "stocks": 12359, "ts": "2026-11-18T11:19:29-05:00"}
+{"event": "market_scan", "stocks": 12359, "ts": "2026-11-18T11:24:40-05:00"}
+{"event": "market_scan", "stocks": 12359, "ts": "2026-11-18T11:29:50-05:00"}
+{"event": "market_scan", "stocks": 12359, "ts": "2026-11-18T11:34:59-05:00"}
+{"event": "market_scan", "stocks": 12359, "ts": "2026-11-18T11:40:16-05:00"}
+{"event": "market_scan", "stocks": 12359, "ts": "2026-11-18T11:45:27-05:00"}
+{"event": "market_scan", "stocks": 12360, "ts": "2026-11-18T11:50:39-05:00"}
+{"event": "market_scan", "stocks": 12360, "ts": "2026-11-18T11:55:47-05:00"}
+{"event": "market_scan", "stocks": 12360, "ts": "2026-11-18T12:00:59-05:00"}
+{"event": "market_scan", "stocks": 12360, "ts": "2026-11-18T12:06:12-05:00"}
+{"event": "market_scan", "stocks": 12360, "ts": "2026-11-18T12:11:24-05:00"}
+{"event": "market_scan", "stocks": 12360, "ts": "2026-11-18T12:16:36-05:00"}
+{"event": "market_scan", "stocks": 12360, "ts": "2026-11-18T12:21:46-05:00"}
+{"event": "market_scan", "stocks": 12360, "ts": "2026-11-18T12:26:57-05:00"}
+{"event": "market_scan", "stocks": 12360, "ts": "2026-11-18T12:32:11-05:00"}
+{"event": "market_scan", "stocks": 12360, "ts": "2026-11-18T12:37:21-05:00"}
+{"event": "market_scan", "stocks": 12360, "ts": "2026-11-18T12:42:34-05:00"}
+{"event": "market_scan", "stocks": 12360, "ts": "2026-11-18T12:47:43-05:00"}
+{"event": "market_scan", "stocks": 12360, "ts": "2026-11-18T12:52:55-05:00"}
+{"event": "market_scan", "stocks": 12360, "ts": "2026-11-18T12:58:06-05:00"}
+{"event": "market_scan", "stocks": 12360, "ts": "2026-11-18T13:03:18-05:00"}
+{"event": "market_scan", "stocks": 12360, "ts": "2026-11-18T13:08:30-05:00"}
+{"event": "market_scan", "stocks": 12360, "ts": "2026-11-18T13:13:37-05:00"}
+{"event": "market_scan", "stocks": 12360, "ts": "2026-11-18T13:18:49-05:00"}
+{"event": "market_scan", "stocks": 12360, "ts": "2026-11-18T13:24:03-05:00"}
+{"event": "market_scan", "stocks": 12360, "ts": "2026-11-18T13:29:15-05:00"}
+{"event": "market_scan", "stocks": 12361, "ts": "2026-11-18T13:34:27-05:00"}
+{"event": "market_scan", "stocks": 12361, "ts": "2026-11-18T13:39:36-05:00"}
+{"event": "market_scan", "stocks": 12361, "ts": "2026-11-18T13:44:46-05:00"}
+{"event": "market_scan", "stocks": 12361, "ts": "2026-11-18T13:50:00-05:00"}
+{"event": "market_scan", "stocks": 12361, "ts": "2026-11-18T13:55:13-05:00"}
+{"event": "market_scan", "stocks": 12361, "ts": "2026-11-18T14:00:29-05:00"}
+{"event": "market_scan", "stocks": 12361, "ts": "2026-11-18T14:05:39-05:00"}
+{"event": "market_scan", "stocks": 12361, "ts": "2026-11-18T14:10:50-05:00"}
+{"event": "market_scan", "stocks": 12361, "ts": "2026-11-18T14:16:04-05:00"}
+{"event": "market_scan", "stocks": 12362, "ts": "2026-11-18T14:21:18-05:00"}
+{"event": "market_scan", "stocks": 12362, "ts": "2026-11-18T14:26:31-05:00"}
+{"event": "handoff", "why": "runtime limit", "ts": "2026-11-18T14:30:27-05:00"}
