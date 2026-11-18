@@ -7496,3 +7496,9 @@
 {"event": "mom_scan", "sym": "PRE", "dir": -1, "ok": false, "info": "not enough bars", "ts": "2026-11-18T14:30:01-05:00"}
 {"event": "mom_scan", "sym": "ARDT", "dir": -1, "ok": false, "info": "break not held 3 minutes", "ts": "2026-11-18T14:30:01-05:00"}
 {"event": "handoff", "why": "runtime limit", "ts": "2026-11-18T14:30:21-05:00"}
+{"event": "mom_scan", "sym": "LAES", "dir": 1, "ok": false, "info": "not enough bars", "ts": "2026-11-18T14:30:37-05:00"}
+{"event": "mom_scan", "sym": "CSHR", "dir": 1, "ok": false, "info": "not enough bars", "ts": "2026-11-18T14:30:38-05:00"}
+{"event": "mom_scan", "sym": "KULR", "dir": 1, "ok": false, "info": "not enough bars", "ts": "2026-11-18T14:30:38-05:00"}
+{"event": "mom_scan", "sym": "DRIO", "dir": 1, "ok": false, "info": "not enough bars", "ts": "2026-11-18T14:30:38-05:00"}
+{"event": "mom_scan", "sym": "PRE", "dir": -1, "ok": false, "info": "not enough bars", "ts": "2026-11-18T14:30:38-05:00"}
+{"event": "mom_scan", "sym": "ARDT", "dir": -1, "ok": false, "info": "break not held 3 minutes", "ts": "2026-11-18T14:30:38-05:00"}
