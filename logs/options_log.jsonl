@@ -38,3 +38,19 @@
 {"event": "market_closed", "ts": "2026-11-18T17:58:49-05:00"}
 {"event": "market_closed", "ts": "2026-11-18T18:25:18-05:00"}
 {"event": "market_closed", "ts": "2026-11-18T19:30:34-05:00"}
+{"event": "opt_skip", "und": "TSLA", "dir": -1, "why": "backtest turned off \"range break\"", "ts": "2026-11-19T09:55:14-05:00"}
+{"event": "opt_skip", "und": "UBER", "dir": -1, "why": "news points the other way: Uber Technologies Partners with AutoParts.com to Launch Auto Parts Category on Uber Eats", "ts": "2026-11-19T10:03:39-05:00"}
+{"event": "opt_skip", "und": "QQQ", "dir": -1, "why": "backtest turned off \"index break\"", "ts": "2026-11-19T10:17:45-05:00"}
+{"event": "opt_skip", "und": "SPY", "dir": -1, "why": "backtest turned off \"index break\"", "ts": "2026-11-19T10:17:45-05:00"}
+{"event": "opt_skip", "und": "AMD", "dir": -1, "why": "open interest under 300 (thin option)", "ts": "2026-11-19T10:26:26-05:00"}
+{"event": "opt_skip", "und": "MSFT", "dir": -1, "why": "news points the other way: Microsoft Announces AI Innovations and Salesforce Partnership at Ignite", "ts": "2026-11-19T10:35:07-05:00"}
+{"event": "opt_skip", "und": "NFLX", "dir": -1, "why": "backtest turned off \"range break\"", "ts": "2026-11-19T10:44:53-05:00"}
+{"event": "opt_skip", "und": "AVGO", "dir": -1, "why": "backtest turned off \"range break\"", "ts": "2026-11-19T10:44:53-05:00"}
+{"event": "opt_skip", "und": "META", "dir": -1, "why": "news points the other way: UBS Raises Meta Platforms Price Target Following Muse AI Adoption", "ts": "2026-11-19T10:45:58-05:00"}
+{"event": "opt_skip", "und": "BA", "dir": -1, "why": "backtest turned off \"range break\"", "ts": "2026-11-19T11:08:46-05:00"}
+{"event": "opt_skip", "und": "MU", "dir": -1, "why": "backtest turned off \"range break\"", "ts": "2026-11-19T11:25:03-05:00"}
+{"event": "opt_skip", "und": "AMZN", "dir": -1, "why": "news points the other way: Amazon Web Services Hong Kong Receives Sustainable Technology Adoption Award", "ts": "2026-11-19T11:38:07-05:00"}
+{"event": "opt_skip", "und": "PLTR", "dir": -1, "why": "backtest turned off \"range break\"", "ts": "2026-11-19T11:53:23-05:00"}
+{"event": "opt_skip", "und": "MU", "dir": -1, "why": "open interest under 300 (thin option)", "ts": "2026-11-19T11:57:45-05:00"}
+{"event": "opt_skip", "und": "AVGO", "dir": -1, "why": "open interest under 300 (thin option)", "ts": "2026-11-19T12:11:55-05:00"}
+{"event": "handoff", "why": "runtime limit", "ts": "2026-11-19T14:30:34-05:00"}
