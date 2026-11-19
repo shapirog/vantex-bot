@@ -984,3 +984,43 @@
 {"event": "na_check", "sym": "GOOGL", "slot": 300, "price": 279.07, "upper": 298.52, "lower": 278.29, "vwap": 288.17, "have": 0, "want": 0, "ts": "2026-11-19T14:30:16-05:00"}
 {"event": "na_check", "sym": "TSLA", "slot": 300, "price": 377.99, "upper": 399.04, "lower": 374.56, "vwap": 381.93, "have": 0, "want": 0, "ts": "2026-11-19T14:30:16-05:00"}
 {"event": "handoff", "why": "runtime limit", "ts": "2026-11-19T14:30:26-05:00"}
+{"event": "na_check", "sym": "QQQ", "slot": 300, "price": 651.1, "upper": 679.13, "lower": 651.71, "vwap": 658.35, "have": 0, "want": -1, "ts": "2026-11-19T14:30:49-05:00"}
+{"event": "na_skip", "sym": "QQQ", "slot": 300, "why": "short needs 1 share ($651); position size is $474", "ts": "2026-11-19T14:30:49-05:00"}
+{"event": "na_check", "sym": "AAPL", "slot": 300, "price": 350.04, "upper": 357.94, "lower": 347.35, "vwap": 349.31, "have": 0, "want": 0, "ts": "2026-11-19T14:30:50-05:00"}
+{"event": "na_check", "sym": "NVDA", "slot": 300, "price": 148.83, "upper": 157.6, "lower": 146.24, "vwap": 152.67, "have": 0, "want": 0, "ts": "2026-11-19T14:30:51-05:00"}
+{"event": "na_check", "sym": "AMZN", "slot": 300, "price": 259.62, "upper": 277.24, "lower": 263.08, "vwap": 266.83, "have": -1, "want": -1, "ts": "2026-11-19T14:30:52-05:00"}
+{"event": "na_check", "sym": "GOOGL", "slot": 300, "price": 279.07, "upper": 298.52, "lower": 278.29, "vwap": 288.17, "have": 0, "want": 0, "ts": "2026-11-19T14:30:53-05:00"}
+{"event": "na_check", "sym": "TSLA", "slot": 300, "price": 377.99, "upper": 399.04, "lower": 374.56, "vwap": 381.93, "have": 0, "want": 0, "ts": "2026-11-19T14:30:54-05:00"}
+{"event": "market_scan", "stocks": 12367, "ts": "2026-11-19T14:31:02-05:00"}
+{"event": "market_scan", "stocks": 12367, "ts": "2026-11-19T14:36:14-05:00"}
+{"event": "market_scan", "stocks": 12367, "ts": "2026-11-19T14:41:25-05:00"}
+{"event": "market_scan", "stocks": 12367, "ts": "2026-11-19T14:46:36-05:00"}
+{"event": "market_scan", "stocks": 12367, "ts": "2026-11-19T14:51:47-05:00"}
+{"event": "market_scan", "stocks": 12367, "ts": "2026-11-19T14:56:54-05:00"}
+{"event": "na_check", "sym": "QQQ", "slot": 330, "price": 647.45, "upper": 678.9, "lower": 651.93, "vwap": 657.88, "have": 0, "want": -1, "ts": "2026-11-19T15:00:11-05:00"}
+{"event": "na_skip", "sym": "QQQ", "slot": 330, "why": "short needs 1 share ($647); position size is $474", "ts": "2026-11-19T15:00:11-05:00"}
+{"event": "na_check", "sym": "AAPL", "slot": 330, "price": 349.3, "upper": 357.4, "lower": 347.89, "vwap": 349.33, "have": 0, "want": 0, "ts": "2026-11-19T15:00:11-05:00"}
+{"event": "na_check", "sym": "NVDA", "slot": 330, "price": 147.39, "upper": 157.69, "lower": 146.14, "vwap": 152.41, "have": 0, "want": 0, "ts": "2026-11-19T15:00:11-05:00"}
+{"event": "na_check", "sym": "AMZN", "slot": 330, "price": 257.67, "upper": 277.11, "lower": 263.22, "vwap": 266.42, "have": -1, "want": -1, "ts": "2026-11-19T15:00:11-05:00"}
+{"event": "na_check", "sym": "GOOGL", "slot": 330, "price": 276.38, "upper": 298.48, "lower": 278.33, "vwap": 287.53, "have": 0, "want": -1, "ts": "2026-11-19T15:00:11-05:00"}
+{"event": "order", "sym": "GOOGL", "side": "sell", "qty": 1.0, "cid": "NA-GOOGL-20261119-330-1795118411", "status": 200, "resp": "pending_new", "ts": "2026-11-19T15:00:12-05:00"}
+{"event": "na_check", "sym": "TSLA", "slot": 330, "price": 375.84, "upper": 399.18, "lower": 374.42, "vwap": 381.72, "have": 0, "want": 0, "ts": "2026-11-19T15:00:12-05:00"}
+{"event": "market_scan", "stocks": 12367, "ts": "2026-11-19T15:02:09-05:00"}
+{"event": "market_scan", "stocks": 12367, "ts": "2026-11-19T15:07:20-05:00"}
+{"event": "market_scan", "stocks": 12367, "ts": "2026-11-19T15:12:33-05:00"}
+{"event": "market_scan", "stocks": 12367, "ts": "2026-11-19T15:17:45-05:00"}
+{"event": "market_scan", "stocks": 12367, "ts": "2026-11-19T15:22:53-05:00"}
+{"event": "market_scan", "stocks": 12367, "ts": "2026-11-19T15:28:04-05:00"}
+{"event": "na_check", "sym": "QQQ", "slot": 360, "price": 646.14, "upper": 679.71, "lower": 651.13, "vwap": 657.11, "have": 0, "want": -1, "ts": "2026-11-19T15:30:05-05:00"}
+{"event": "na_skip", "sym": "QQQ", "slot": 360, "why": "short needs 1 share ($646); position size is $475", "ts": "2026-11-19T15:30:05-05:00"}
+{"event": "na_check", "sym": "AAPL", "slot": 360, "price": 349.16, "upper": 357.55, "lower": 347.74, "vwap": 349.31, "have": 0, "want": 0, "ts": "2026-11-19T15:30:05-05:00"}
+{"event": "na_check", "sym": "NVDA", "slot": 360, "price": 147.18, "upper": 157.77, "lower": 146.07, "vwap": 152.05, "have": 0, "want": 0, "ts": "2026-11-19T15:30:05-05:00"}
+{"event": "na_check", "sym": "AMZN", "slot": 360, "price": 257.44, "upper": 277.0, "lower": 263.32, "vwap": 265.92, "have": -1, "want": -1, "ts": "2026-11-19T15:30:05-05:00"}
+{"event": "na_check", "sym": "GOOGL", "slot": 360, "price": 273.71, "upper": 298.46, "lower": 278.35, "vwap": 286.38, "have": -1, "want": -1, "ts": "2026-11-19T15:30:06-05:00"}
+{"event": "na_check", "sym": "TSLA", "slot": 360, "price": 375.02, "upper": 400.01, "lower": 373.6, "vwap": 381.0, "have": 0, "want": 0, "ts": "2026-11-19T15:30:06-05:00"}
+{"event": "market_scan", "stocks": 12367, "ts": "2026-11-19T15:33:18-05:00"}
+{"event": "market_scan", "stocks": 12367, "ts": "2026-11-19T15:38:29-05:00"}
+{"event": "market_scan", "stocks": 12367, "ts": "2026-11-19T15:43:41-05:00"}
+{"event": "market_scan", "stocks": 12367, "ts": "2026-11-19T15:48:51-05:00"}
+{"event": "market_scan", "stocks": 12367, "ts": "2026-11-19T15:54:02-05:00"}
+{"event": "flatten", "status": [200, 200, 403, 403], "ts": "2026-11-19T15:55:17-05:00"}
