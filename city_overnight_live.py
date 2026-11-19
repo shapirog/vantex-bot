@@ -141,8 +141,34 @@ def do_buy(B, D, key, sec, dry=False):
     log('filled', len(st['open']))
     save(st, led)
 
+def ovn_orders(B, day):
+    """this trial's orders since midnight New York time on `day` (client_order_id starts with PREFIX)"""
+    after = datetime.combine(date.fromisoformat(day), datetime.min.time(), ET).isoformat()
+    return [o for o in (B.orders('all', after=after) or []) if str(o.get('client_order_id', '')).startswith(PREFIX)]
+
+def reconcile(B, st, led, day):
+    """buys that filled AFTER the 4:05 pm record (paper market-on-close fills can post late) are added to the open list,
+    so the evening sell covers every share the trial owns"""
+    have = {(p['sym'], p['entry_day']) for p in st['open']} | {(x['sym'], x['entry_day']) for x in led}
+    added = 0
+    for o in ovn_orders(B, day):
+        q = float(o.get('filled_qty') or 0)
+        if o.get('side') != 'buy' or q <= 0 or (o['symbol'], day) in have: continue
+        pos = dict(sym=o['symbol'], qty=int(q), entry_price=float(o['filled_avg_price']), entry_day=day, tif=o.get('time_in_force'), t=None, late_fill=True)
+        st['open'].append(pos); led.append(dict(pos)); added += 1
+    if added: st['events'].append(dict(t=now().isoformat(timespec='minutes'), kind='late fills added', n=added))
+    return added
+
+def do_orders(B):
+    st = load_state()[0]; day = st['buy_days'][-1] if st['buy_days'] else now().date().isoformat()
+    for o in ovn_orders(B, day):
+        print(o['symbol'], o['side'], o.get('time_in_force'), o.get('status'), 'filled', o.get('filled_qty'), '@', o.get('filled_avg_price'),
+              'submitted', o.get('submitted_at'), 'filled_at', o.get('filled_at'))
+    print('positions', [(p['symbol'], p['qty']) for p in B.positions()])
+
 def do_sell(B):
     st, led = load_state()
+    if st['buy_days']: reconcile(B, st, led, st['buy_days'][-1])
     for p in st['open']:
         if p.get('sell_order'): continue
         ok, res, body = order(B, p['sym'], p['qty'], 'sell', 'opg')
@@ -152,6 +178,7 @@ def do_sell(B):
 
 def do_check(B):
     st, led = load_state(); still = []
+    if st['buy_days']: reconcile(B, st, led, st['buy_days'][-1])
     for p in st['open']:
         filled = None
         if p.get('sell_order'):
@@ -176,6 +203,7 @@ def main():
     if mode in ('buy', 'dry'): do_buy(B, Data(key, sec), key, sec, dry=(mode == 'dry'))
     elif mode == 'sell': do_sell(B)
     elif mode == 'check': do_check(B)
+    elif mode == 'orders': do_orders(B)
 
 if __name__ == '__main__':
     main()

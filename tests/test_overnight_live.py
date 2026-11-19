@@ -30,3 +30,15 @@ def test_trial_stops_after_three_days(monkeypatch):
     monkeypatch.setattr(L, 'save', lambda st, led: saved.update(st=st))
     L.do_buy(FakeB(), None, 'PK', 'x')
     assert saved['st']['events'][-1]['kind'] == 'trial over'
+
+def test_reconcile_adds_late_fills_once():
+    import city_overnight_live as L
+    class B:
+        def orders(self, status, after=None):
+            return [dict(client_order_id='ovn-buy-NNN-1', side='buy', symbol='NNN', filled_qty='6', filled_avg_price='41.5', time_in_force='cls'),
+                    dict(client_order_id='ovn-buy-RTX-1', side='buy', symbol='RTX', filled_qty='0', filled_avg_price=None, time_in_force='cls'),
+                    dict(client_order_id='other-1', side='buy', symbol='ZZZ', filled_qty='5', filled_avg_price='1')]
+    st = dict(open=[], events=[], buy_days=['2026-11-19']); led = []
+    assert L.reconcile(B(), st, led, '2026-11-19') == 1
+    assert st['open'][0]['sym'] == 'NNN' and st['open'][0]['qty'] == 6 and led[0]['entry_price'] == 41.5
+    assert L.reconcile(B(), st, led, '2026-11-19') == 0
