@@ -9122,3 +9122,4 @@
 {"event": "mom_exit", "sym": "CORD", "why": "end of day", "ts": "2026-11-20T15:50:03-05:00"}
 {"event": "market_closed", "ts": "2026-11-20T16:47:18-05:00"}
 {"event": "market_closed", "ts": "2026-11-20T16:57:42-05:00"}
+{"event": "market_closed", "ts": "2026-11-20T17:16:10-05:00"}
