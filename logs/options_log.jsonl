@@ -79,3 +79,4 @@
 {"event": "opt_skip", "und": "UBER", "dir": -1, "why": "backtest turned off \"range break\"", "ts": "2026-11-20T13:38:32-05:00"}
 {"event": "opt_skip", "und": "NVDA", "dir": -1, "why": "open interest under 300 (thin option)", "ts": "2026-11-20T14:16:37-05:00"}
 {"event": "handoff", "why": "runtime limit", "ts": "2026-11-20T14:30:23-05:00"}
+{"event": "market_closed", "ts": "2026-11-20T16:48:51-05:00"}
