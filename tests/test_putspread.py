@@ -16,7 +16,7 @@ def ob(rows):
 
 def test_run_trade_hold_and_managed():
     exp = date(2024, 3, 15)
-    o = ob({490: [('2024-02-12', 3.0), ('2024-02-20', 1.0)], 485: [('2024-02-12', 2.0), ('2024-02-20', 0.6)]})
+    o = ob({490: [('2024-02-12', 3.0), ('2024-02-20', 0.9)], 485: [('2024-02-12', 2.0), ('2024-02-20', 0.6)]})
     r = P.run_trade(o, 'SPY', exp, 490, 485, '2024-02-12', ['2024-02-20'], 500.0, managed=False)
     credit = 3.0 * 0.97 - 2.0 * 1.03
     assert abs(r['credit'] - credit) < 1e-12 and r['how'] == 'expired' and abs(r['pnl'] - credit) < 1e-12 and abs(r['risk'] - (5 - credit)) < 1e-12
