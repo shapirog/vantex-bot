@@ -53,6 +53,10 @@ def load_branch(name, default):
     except Exception: return default
 
 def do_pick(D, key, sec, day):
+    if load_branch(f'picks/{day.isoformat()}.json', None) is not None:
+        log('picks for', day, 'already recorded: not overwriting'); return
+    if not os.environ.get('FWD_DAY') and (datetime.now(ET).hour, datetime.now(ET).minute) > (11, 0):
+        log('too late in the day for a live pick (a delayed scheduled run): skipping'); return
     uni = universe(key, sec)
     s0 = datetime(2023, 3, 1, tzinfo=ET); s1 = datetime.combine(day, datetime.min.time(), ET) - timedelta(minutes=1)   # daily bars are stamped at midnight ET: exclude today
     sp = D.bars(['SPY'], '1Day', s0, s1, 'sip', 'all').get('SPY', [])

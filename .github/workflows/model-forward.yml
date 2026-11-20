@@ -1,8 +1,5 @@
 name: Vantex City - model forward test (no orders)
 on:
-  schedule:
-    - cron: '5 15 * * 1-5'     # ~10:05 ET (EST): record picks
-    - cron: '30 21 * * 1-5'    # ~16:30 ET (EST): score them
   workflow_dispatch:
     inputs:
       mode:
