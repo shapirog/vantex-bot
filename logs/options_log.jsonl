@@ -60,3 +60,22 @@
 {"event": "market_closed", "ts": "2026-11-19T18:07:35-05:00"}
 {"event": "market_closed", "ts": "2026-11-19T18:37:04-05:00"}
 {"event": "market_closed", "ts": "2026-11-19T19:42:05-05:00"}
+{"event": "opt_skip", "und": "PLTR", "dir": 1, "why": "backtest turned off \"range break\"", "ts": "2026-11-20T10:01:09-05:00"}
+{"event": "opt_skip", "und": "META", "dir": 1, "why": "news points the other way: Meta Warns of China-Linked Accounts Targeting Taiwan Elections on Threads", "ts": "2026-11-20T10:05:22-05:00"}
+{"event": "opt_skip", "und": "MSTR", "dir": -1, "why": "open interest under 300 (thin option)", "ts": "2026-11-20T10:17:03-05:00"}
+{"event": "opt_skip", "und": "BA", "dir": 1, "why": "backtest turned off \"range break\"", "ts": "2026-11-20T10:23:26-05:00"}
+{"event": "opt_skip", "und": "SPY", "dir": -1, "why": "backtest turned off \"index break\"", "ts": "2026-11-20T10:24:30-05:00"}
+{"event": "opt_skip", "und": "COIN", "dir": -1, "why": "open interest under 300 (thin option)", "ts": "2026-11-20T10:24:30-05:00"}
+{"event": "opt_skip", "und": "MU", "dir": -1, "why": "news points the other way: Purpose Investments Launches Purpose Micron (MU) Yield Shares ETF", "ts": "2026-11-20T10:27:42-05:00"}
+{"event": "opt_skip", "und": "QQQ", "dir": -1, "why": "backtest turned off \"index break\"", "ts": "2026-11-20T10:29:48-05:00"}
+{"event": "opt_skip", "und": "TSLA", "dir": -1, "why": "news points the other way: Tesla Receives Regulatory Approval for Assisted Driving in Italy", "ts": "2026-11-20T10:57:24-05:00"}
+{"event": "opt_skip", "und": "META", "dir": -1, "why": "backtest turned off \"range break\"", "ts": "2026-11-20T11:04:50-05:00"}
+{"event": "opt_skip", "und": "PLTR", "dir": -1, "why": "backtest turned off \"range break\"", "ts": "2026-11-20T11:18:40-05:00"}
+{"event": "opt_skip", "und": "BA", "dir": -1, "why": "news points the other way: Northrop Grumman Will Not Contest Boeing's $20 Billion F/A-XX Navy Contract", "ts": "2026-11-20T11:44:07-05:00"}
+{"event": "opt_skip", "und": "NFLX", "dir": -1, "why": "news points the other way: Omdia Analysis Shows Netflix Outperforms YouTube in Daily Viewing Time Across Latin American Markets", "ts": "2026-11-20T11:48:21-05:00"}
+{"event": "opt_skip", "und": "AAPL", "dir": -1, "why": "backtest turned off \"range break\"", "ts": "2026-11-20T12:18:04-05:00"}
+{"event": "opt_skip", "und": "AMZN", "dir": -1, "why": "backtest turned off \"range break\"", "ts": "2026-11-20T12:19:07-05:00"}
+{"event": "opt_skip", "und": "MSFT", "dir": -1, "why": "backtest turned off \"range break\"", "ts": "2026-11-20T13:21:36-05:00"}
+{"event": "opt_skip", "und": "UBER", "dir": -1, "why": "backtest turned off \"range break\"", "ts": "2026-11-20T13:38:32-05:00"}
+{"event": "opt_skip", "und": "NVDA", "dir": -1, "why": "open interest under 300 (thin option)", "ts": "2026-11-20T14:16:37-05:00"}
+{"event": "handoff", "why": "runtime limit", "ts": "2026-11-20T14:30:23-05:00"}
