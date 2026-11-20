@@ -9121,3 +9121,4 @@
 {"event": "mom_reject", "sym": "CORD", "body": {"symbol": "CORD", "qty": "71", "side": "sell", "type": "market", "time_in_force": "day", "client_order_id": "MOM-CORD-x-1795207803"}, "err": "{\"available\":\"0\",\"code\":40310000,\"existing_qty\":\"71\",\"held_for_orders\":\"71\",\"message\":\"insufficient qty available for order (requested: 71, available: 0)\",\"related_orders\":[\"179fcbbb-61fd-458c-bf0c-25", "ts": "2026-11-20T15:50:03-05:00"}
 {"event": "mom_exit", "sym": "CORD", "why": "end of day", "ts": "2026-11-20T15:50:03-05:00"}
 {"event": "market_closed", "ts": "2026-11-20T16:47:18-05:00"}
+{"event": "market_closed", "ts": "2026-11-20T16:57:42-05:00"}
