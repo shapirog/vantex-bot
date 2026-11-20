@@ -24,3 +24,11 @@ def test_run_trade_hold_and_managed():
     assert r['how'] == 'take profit' and r['exit_day'] == '2024-02-20'
     r = P.run_trade(o, 'SPY', exp, 490, 485, '2024-02-12', [], 480.0, managed=False)
     assert abs(r['pnl'] - (credit - 5)) < 1e-12                              # full loss below the long strike
+
+def test_account_sim_respects_capital():
+    T = [dict(entry='2024-02-12', exit_day='2024-03-15', root='SPY', risk=4.0, pnl=1.0),
+         dict(entry='2024-02-12', exit_day='2024-03-15', root='QQQ', risk=4.0, pnl=1.0),
+         dict(entry='2024-02-20', exit_day='2024-03-15', root='IWM', risk=4.0, pnl=-4.0),
+         dict(entry='2024-03-18', exit_day='2024-04-19', root='DIA', risk=4.0, pnl=1.0)]
+    a = P.account_sim(T, start=1000.0)
+    assert a['trades'] == 3 and a['end'] == 1000 + 100 + 100 + 100 and a['max_dd_pct'] == 0.0     # IWM skipped: no room

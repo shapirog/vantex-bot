@@ -30,7 +30,10 @@ from city_options_bt import occ, third_friday, opt_bars
 PEN = 0.03
 ETFS = ['SPY', 'QQQ', 'IWM', 'DIA']
 STAKE = 500.0
-PLANS = {'~1 week': dict(min_days=6, monthly=False, otm=0.02, width=0.015), '~1 month': dict(min_days=30, monthly=True, otm=0.05, width=0.025)}
+PLANS = {'~1 week': dict(min_days=6, monthly=False, otm=0.02, width=0.015), '~1 month': dict(min_days=30, monthly=True, otm=0.05, width=0.025),
+         '~1 month, $5 wide (small account)': dict(min_days=30, monthly=True, otm=0.05, width_abs=5.0, etf_only=True)}
+def wid(P, px): return P.get('width_abs') or px * P['width']
+
 
 def expiry_for(entry, min_days, monthly):
     t = entry + timedelta(days=min_days)
@@ -79,7 +82,7 @@ def run_trade(ob, root, exp, sk, lk, d_in, days_after, und_close_exp, managed):
         for d in days_after:
             s1, l1 = px_on(ob, s_sym, d), px_on(ob, l_sym, d)
             if s1 is None or l1 is None: continue
-            cost = s1 * (1 + PEN) - l1 * (1 - PEN)
+            cost = min(width, max(0.0, s1 * (1 + PEN) - l1 * (1 - PEN)))      # a spread can never cost more than its width
             if cost <= 0.5 * credit: return dict(credit=credit, risk=risk, pnl=credit - cost, how='take profit', exit_day=d)
             if cost >= 2 * credit: return dict(credit=credit, risk=risk, pnl=credit - cost, how='stop', exit_day=d)
     if und_close_exp is None: return None
@@ -100,6 +103,17 @@ def by_month(T):
     xs = list(m.values())
     return dict(months=len(xs), avg_usd=round(sum(xs) / len(xs), 0), up_pct=round(100 * sum(x > 0 for x in xs) / len(xs), 0),
                 worst=min(m.items(), key=lambda x: x[1]) if m else None, total_usd=round(sum(xs), 0)) if xs else dict(months=0)
+
+def account_sim(T, start=2500.0):
+    """1 contract per trade (x100), opened in date order while open risk <= equity; P&L booked at exit"""
+    eq = start; peak = start; dd = 0.0; open_ = []; n = 0; yrs = {}
+    for t in sorted(T, key=lambda x: (x['entry'], x['root'])):
+        for o in [o for o in open_ if o['exit_day'] < t['entry']]:
+            eq += 100 * o['pnl']; open_.remove(o); peak = max(peak, eq); dd = max(dd, 1 - eq / peak); yrs[o['exit_day'][:4]] = round(eq, 0)
+        if sum(100 * o['risk'] for o in open_) + 100 * t['risk'] <= eq: open_.append(t); n += 1
+    for o in sorted(open_, key=lambda x: x['exit_day']):
+        eq += 100 * o['pnl']; peak = max(peak, eq); dd = max(dd, 1 - eq / peak); yrs[o['exit_day'][:4]] = round(eq, 0)
+    return dict(end=eq, total_pct=100 * (eq / start - 1), max_dd_pct=round(100 * dd, 1), trades=n, by_year=yrs)
 
 def main():
     key, sec = os.environ.get('APCA_API_KEY_ID', ''), os.environ.get('APCA_API_SECRET_KEY', '')
@@ -127,18 +141,19 @@ def main():
             if w not in bars.get(root, {}): continue
             px = bars[root][w]['c']
             for lab, P in PLANS.items():
+                if P.get('etf_only') and root not in ETFS: continue
                 exp = expiry_for(e_in, P['min_days'], P['monthly'])
                 if exp.isoformat() > cal[-1]: continue
-                tgt = px * (1 - P['otm']); syms = [occ(root, exp, 'P', x) for x in candidates(px, tgt) + candidates(px, tgt - px * P['width'])]
+                tgt = px * (1 - P['otm']); syms = [occ(root, exp, 'P', x) for x in candidates(px, tgt) + candidates(px, tgt - wid(P, px))]
                 plan.append((root, lab, P, exp, px, tgt, sorted(set(syms))))
         allsyms = sorted({s for p in plan for s in p[6]})
         last_exp = max((p[3] for p in plan), default=e_in)
         ob = opt_bars(D, allsyms, d_in, last_exp.isoformat())
         for root, lab, P, exp, px, tgt, _ in plan:
-            ks = candidates(px, tgt) + candidates(px, tgt - px * P['width'])
+            ks = candidates(px, tgt) + candidates(px, tgt - wid(P, px))
             sk = nearest_traded(ob, root, exp, ks, tgt, d_in)
             if sk is None: continue
-            lk = nearest_traded(ob, root, exp, ks, sk - px * P['width'], d_in, below=sk)
+            lk = nearest_traded(ob, root, exp, ks, sk - wid(P, px), d_in, below=sk)
             if lk is None: continue
             after = [d for d in cal if d_in < d <= exp.isoformat()]
             close_exp = bars[root].get(exp.isoformat(), {}).get('c')
@@ -160,12 +175,16 @@ def main():
                 wm = f"{M['worst'][0]}: ${M['worst'][1]:+,.0f}" if M.get('worst') else ''
                 rows.append(f"| {'SPY/QQQ/IWM/DIA' if kind == 'ETF' else 'top-15 stocks'} | {lab} | {ex} | {S['n']} | {S['win_pct']}% | {S['avg_on_risk_pct']:+}% | {S['median_pct']:+}% | {S['worst_pct']}% | "
                             f"{S['max_loss_trades_pct']}% | {S['t']} | {M['months']} | ${M['avg_usd']:+,.0f} | {M['up_pct']:.0f}% | {wm} | ${M['total_usd']:+,.0f} |")
+    acct = account_sim([t for t in trades if t['plan'].startswith('~1 month, $5') and t['exits'] == 'hold to expiry'])
     spy = bars['SPY']; a, b = '2024-02-12', cal[-1]
     a = min(d for d in spy if d >= a); bh = spy[b]['c'] / spy[a]['o'] - 1
     md = ['# VANTEX City research: selling put credit spreads (Feb 2024 - now)', '',
           'Sell a put ~2% (weekly) or ~5% (monthly) below the price, buy one further below; credit at daily VWAPs minus 3% per leg. '
           'Return = profit / money at risk. Dollar columns: $500 at risk per trade, every signal taken (several trades open at once).', ''] + rows + [
           '', f'SPY buy and hold over the same span: {bh * 100:+.1f}%.', '',
+          '## $2,500 account, monthly $5-wide ETF spreads, held to expiry', '',
+          f"Start $2,500; each week open at most one 1-contract spread per ETF while total money at risk stays <= the account. "
+          f"End: ${acct['end']:,.0f} ({acct['total_pct']:+.1f}%), worst drop {acct['max_dd_pct']}%, trades {acct['trades']}, by year {acct['by_year']}.", '',
           'Daily VWAPs, not live quotes: a real order may get a worse credit. Early assignment and dividends are ignored (European-style settlement at the '
           'expiration close). A backtest is not proof.']
     buf = io.StringIO(); w_ = csv.writer(buf); cols = ['root', 'plan', 'exits', 'entry', 'expiry', 'exit_day', 'und', 'short', 'long', 'credit', 'risk', 'pnl', 'how']
