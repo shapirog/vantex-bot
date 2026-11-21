@@ -28,6 +28,7 @@ ETFS = ['SPY', 'QQQ', 'IWM', 'DIA']
 WIDTH = 5.0
 PLANS = {'3% below, 30d': (0.03, 30), '5% below, 30d': (0.05, 30), '7% below, 30d': (0.07, 30), '5% below, 45d': (0.05, 45)}
 SPLIT = '2025-07-01'
+COST_ABS = (0.0, 0.03, 0.05)       # extra slippage in $ per share per leg on top of 3% (stress test: real bid/ask on cheap puts)
 
 def spy_context(spy, cal):
     """entry-day filters from SPY closes up to the day BEFORE entry (the signal Friday)"""
@@ -87,9 +88,21 @@ def main():
             ce = bars[root].get(exp.isoformat(), {}).get('c')
             if ce is None:
                 prior = [d for d in cal if d <= exp.isoformat()]; ce = bars[root][prior[-1]]['c']
-            r = run_trade(ob, root, exp, sk, lk, d_in, [], ce, False)
-            if r: trades.append(dict(r, root=root, plan=lab, entry=d_in, signal=w, ctx=ctx.get(w)))
+            for pa in COST_ABS:
+                r = run_trade(ob, root, exp, sk, lk, d_in, [], ce, False, pen_abs=pa)
+                if r: trades.append(dict(r, root=root, plan=lab, entry=d_in, signal=w, ctx=ctx.get(w), pen_abs=pa))
         log(w, len(trades))
+    base = [t for t in trades if t['pen_abs'] == 0.0]
+    crow = ['| strike / expiry | ETFs | filter | extra cost per leg | trades | win | avg on risk | dev avg | test avg | @50% risk: end / worst drop |', '|---|---|---|---|---|---|---|---|---|---|']
+    for lab in ('3% below, 30d', '5% below, 30d', '7% below, 30d'):
+        for etf_lab, roots in (('all 4', set(ETFS)), ('SPY+QQQ', {'SPY', 'QQQ'})):
+            for fl in ('none', 'only after SPY -2% week'):
+                for pa in COST_ABS:
+                    T = [t for t in trades if t['pen_abs'] == pa and t['plan'] == lab and t['root'] in roots and t['ctx'] and FILTERS[fl](t['ctx'])]
+                    if not T: continue
+                    A = per_trade(T); dv = per_trade([t for t in T if t['entry'] < SPLIT]); ts = per_trade([t for t in T if t['entry'] >= SPLIT]); a5 = account(T, 0.5)
+                    crow.append(f"| {lab} | {etf_lab} | {fl} | ${pa:.2f} | {A['n']} | {A['win']}% | {A['avg']:+}% | {dv.get('avg', 0):+}% | {ts.get('avg', 0):+}% | ${a5['end']:,} / {a5['max_dd']}% |")
+    trades = base
     rows = ['| strike / expiry | ETFs | filter | trades | win | avg on risk | t | lost all | dev avg | test avg | $2,500 @100% risk: end / worst drop | @50% risk: end / worst drop | @50% dev | @50% test |',
             '|---|---|---|---|---|---|---|---|---|---|---|---|---|---|']
     res = {}

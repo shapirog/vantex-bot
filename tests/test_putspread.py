@@ -32,3 +32,10 @@ def test_account_sim_respects_capital():
          dict(entry='2024-03-18', exit_day='2024-04-19', root='DIA', risk=4.0, pnl=1.0)]
     a = P.account_sim(T, start=1000.0)
     assert a['trades'] == 3 and a['end'] == 1000 + 100 + 100 + 100 and a['max_dd_pct'] == 0.0     # IWM skipped: no room
+
+def test_extra_cost_lowers_credit():
+    exp = date(2024, 3, 15)
+    o = ob({490: [('2024-02-12', 3.0)], 485: [('2024-02-12', 2.0)]})
+    a = P.run_trade(o, 'SPY', exp, 490, 485, '2024-02-12', [], 500.0, managed=False)
+    b = P.run_trade(o, 'SPY', exp, 490, 485, '2024-02-12', [], 500.0, managed=False, pen_abs=0.05)
+    assert abs((a['credit'] - b['credit']) - 0.10) < 1e-12

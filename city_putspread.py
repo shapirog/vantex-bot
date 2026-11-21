@@ -71,18 +71,18 @@ def settle(short_k, long_k, close):
     """value of the spread (what the seller owes) at expiration"""
     return max(0.0, short_k - close) - max(0.0, long_k - close)
 
-def run_trade(ob, root, exp, sk, lk, d_in, days_after, und_close_exp, managed):
+def run_trade(ob, root, exp, sk, lk, d_in, days_after, und_close_exp, managed, pen_abs=0.0):
     s_sym, l_sym = occ(root, exp, 'P', sk), occ(root, exp, 'P', lk)
     s0, l0 = px_on(ob, s_sym, d_in), px_on(ob, l_sym, d_in)
     if s0 is None or l0 is None: return None
-    credit = s0 * (1 - PEN) - l0 * (1 + PEN); width = sk - lk
+    credit = s0 * (1 - PEN) - l0 * (1 + PEN) - 2 * pen_abs; width = sk - lk           # pen_abs: extra $ per share per leg
     if credit <= 0.02 or credit >= width: return None
     risk = width - credit
     if managed:
         for d in days_after:
             s1, l1 = px_on(ob, s_sym, d), px_on(ob, l_sym, d)
             if s1 is None or l1 is None: continue
-            cost = min(width, max(0.0, s1 * (1 + PEN) - l1 * (1 - PEN)))      # a spread can never cost more than its width
+            cost = min(width, max(0.0, s1 * (1 + PEN) - l1 * (1 - PEN) + 2 * pen_abs))      # a spread can never cost more than its width
             if cost <= 0.5 * credit: return dict(credit=credit, risk=risk, pnl=credit - cost, how='take profit', exit_day=d)
             if cost >= 2 * credit: return dict(credit=credit, risk=risk, pnl=credit - cost, how='stop', exit_day=d)
     if und_close_exp is None: return None
