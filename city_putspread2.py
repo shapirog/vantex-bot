@@ -123,6 +123,7 @@ def main():
           '$5-wide monthly put spreads on ETFs, held to expiry. Every variant is listed (fixed before running). Dev = entries Feb 2024 - Jun 2025, test = Jul 2025 - now. '
           '"@50%" = never more than half the account at risk. Account columns start at $2,500.', ''] + rows + ['',
           f"SPY buy and hold: whole span {bh * 100:+.1f}%; dev half {(spy[sd]['o'] / spy[a]['o'] - 1) * 100:+.1f}%; test half {(spy[cal[-1]]['c'] / spy[sd]['o'] - 1) * 100:+.1f}%.", '',
+          '## Cost stress test (extra slippage per share per leg on top of 3%)', ''] + crow + ['',
           'Many variants are compared on only ~2.75 years, so the single best row will look better than it really is. Prefer choices that help in BOTH halves. '
           'Daily VWAP credits; a live order may get less. A backtest is not proof.']
     publish({}); publish({'putspread2.md': '\n'.join(md) + '\n', 'putspread2.json': res})
